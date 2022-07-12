@@ -110,7 +110,7 @@ $datos = array(
 	17 => $nombre_completo,
 	18 => $referido,
 	19 => $anos,
-	19 => $servicio_id	
+	20 => $servicio_id	
 );
 echo json_encode($datos);
 ?>

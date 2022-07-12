@@ -1,7 +1,6 @@
 <script>
 $(document).ready(function() {
 	getSexo();
-	getStatusAtenciones();
 	getDepartamentos();
 	getMunicipio();
 	getPais();
@@ -453,20 +452,6 @@ $(document).ready(function() {
 	});		
 	//FIN FORMULARIO NOTA OPERATORIA	
 });
-
-function getStatusAtenciones(){
-    var url = '<?php echo SERVERURL; ?>php/pacientes/getStatus.php';		
-		
-	$.ajax({
-        type: "POST",
-        url: url,
-	    async: true,
-        success: function(data){	
-		    $('#form_main_atencion_medica_cirugia_bariatrica #estado').html("");
-			$('#form_main_atencion_medica_cirugia_bariatrica #estado').html(data);
-		}			
-     });		
-}
 
 function getSexo(){
     var url = '<?php echo SERVERURL; ?>php/pacientes/getSexo.php';		
@@ -994,7 +979,7 @@ $(document).ready(function() {
 	  pagination(1);
 	});	  
 
-	$('#form_main_atencion_medica_cirugia_bariatrica #estado').on('change',function(){
+	$('#form_main_atencion_medica_cirugia_bariatrica #estado_cirugia').on('change',function(){
 	  pagination(1);
 	});
 	
@@ -1461,10 +1446,10 @@ function pagination(partida){
 	var dato = '';
 	var estado = '';
 	
-    if($('#form_main_atencion_medica_cirugia_bariatrica #estado').val() == "" || $('#form_main_atencion_medica_cirugia_bariatrica #estado').val() == null){
+    if($('#form_main_atencion_medica_cirugia_bariatrica #estado_cirugia').val() == "" || $('#form_main_atencion_medica_cirugia_bariatrica #estado_cirugia').val() == null){
 		estado = 0;
 	}else{
-		estado = $('#form_main_atencion_medica_cirugia_bariatrica #estado').val();
+		estado = $('#form_main_atencion_medica_cirugia_bariatrica #estado_cirugia').val();
 	}
 	
 	if($('#form_main_atencion_medica_cirugia_bariatrica #bs_regis').val() == "" || $('#form_main_atencion_medica_cirugia_bariatrica #bs_regis').val() == null){
@@ -2117,8 +2102,8 @@ function getEstado(){
         url: url,
 	    async: true,
         success: function(data){		
-		    $('#form_main_atencion_medica_cirugia_bariatrica #estado').html("");
-			$('#form_main_atencion_medica_cirugia_bariatrica #estado').html(data);	
+		    $('#form_main_atencion_medica_cirugia_bariatrica #estado_cirugia').html("");
+			$('#form_main_atencion_medica_cirugia_bariatrica #estado_cirugia').html(data);	
 		}			
      });		
 }
@@ -4960,7 +4945,6 @@ function setAtencion(pacientes_id, colaborador_id, servicio_id, agenda_id){
 
 					$('#formularioAtencionesNotaOperatoria #nota_paciente_consulta').attr('readonly', true);
 				
-
 					//INICIO POST OPERTATORIO
 					$('#formularioAtencionesPostOperatoria #agenda_id').val(agenda_id);
 					$('#formularioAtencionesPostOperatoria #pacientes_id').val(pacientes_id);
@@ -6432,13 +6416,15 @@ function viewPostOperatorio(pacientes_id){
 
 			for(var fila=0; fila < datos.length; fila++){
 				llenarPostOperatorio(fila);
+
 				//POST OPERATORIO
 				$('#formularioAtencionesPostOperatoria #expediente_post_fecha_consulta_'+ fila).val(datos[fila]["fecha"]);
 				$('#formularioAtencionesPostOperatoria #expediente_post_nch_'+ fila).val(datos[fila]["postoperacion_id"]);
 				$('#formularioAtencionesPostOperatoria #expediente_post_talla_'+ fila).val(datos[fila]["talla"]);				
 				$('#formularioAtencionesPostOperatoria #expediente_post_peso_actual_'+ fila).val(datos[fila]["peso_actual"]);				
 				$('#formularioAtencionesPostOperatoria #expediente_post_peso_actual_kg_'+ fila).val(datos[fila]["peso_actual_kg"]);				
-				$('#formularioAtencionesPostOperatoria #expediente_post_imc_actual_'+ fila).val(datos[fila]["imc_actual"]);				
+				$('#formularioAtencionesPostOperatoria #expediente_post_imc_actual_'+ fila).val(datos[fila]["imc_actual"]);	
+		
 				$('#formularioAtencionesPostOperatoria #expediente_post_edad_'+ fila).val(datos[fila]["edad"]);				
 				$('#formularioAtencionesPostOperatoria #expediente_post_peso_perdido_'+ fila).val(datos[fila]["peso_perdido"]);
 				$('#formularioAtencionesPostOperatoria #expediente_post_ewl_'+ fila).val(datos[fila]["ewl"]);				
@@ -8160,11 +8146,9 @@ function setAtencionNutricion(pacientes_id, colaborador_id, servicio_id, agenda_
 
 					$('#formulario_antecedentes #edad_consulta').val(datos[6]);
 					$('#formulario_antecedentes #edad_consulta').attr('readonly', true);
-					$('#formulario_antecedentes #atenciones_servicio_id').val(datos[19]);
+					$('#formulario_antecedentes #atenciones_servicio_id').val(datos[20]);
 
 					//DATOS DE LA HISTORIA CLINICA DEL PACIENTE
-					$('#formulario_antecedentes #motivo_consulta').val(datos[19]);
-
 					$('#formulario_antecedentes #agenda_id').val(agenda_id);
 					$('#formulario_antecedentes #pacientes_id').val(pacientes_id);
 					$('#formulario_antecedentes #colaborador_id').val(servicio_id);

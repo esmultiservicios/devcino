@@ -131,7 +131,7 @@ $mysqli->close();//CERRAR CONEXIÓN
 				<div class="input-group-append">				
 					<span class="input-group-text"><div class="sb-nav-link-icon"></div>Atención</span>
 				</div>
-				<select id="estado" name="estado" class="form-control" data-toggle="tooltip" data-placement="top" title="Atención">   				   		 
+				<select id="estado_cirugia" name="estado_cirugia" class="form-control" data-toggle="tooltip" data-placement="top" title="Atención">   				   		 
 					<option value="">Seleccione</option>	         
 				</select>	
 			</div>		   

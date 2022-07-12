@@ -16,11 +16,12 @@ $consulta_expediente = "SELECT c.*, p.expediente AS 'expediente', p.pacientes_id
 	ON p.departamento_id = d.departamento_id
 	INNER JOIN municipios AS m
 	ON p.municipio_id = m.municipio_id
-	INNER JOIN profesion AS pr
+	LEFT JOIN profesion AS pr
 	ON p.profesion_id = pr.profesion_id
 	LEFT JOIN clinico AS c
 	ON p.pacientes_id = c.pacientes_id
 	WHERE p.pacientes_id = '$pacientes_id'";
+
 $result = $mysqli->query($consulta_expediente);   
 
 $expediente = "";
@@ -105,6 +106,9 @@ $respuesta_ant_dm = "";
 $respuesta_saos = "";
 $respuesta_erge = "";
 $respuesta_hta  = "";
+$anos = 0;
+$meses = 0;	  
+$dias = 0;	
 
 if($result->num_rows>0){
 	$consulta_expediente1 = $result->fetch_assoc();
@@ -189,20 +193,15 @@ if($result->num_rows>0){
 	$respuesta_saos = $consulta_expediente1['respuesta_saos'];	
 	$respuesta_erge = $consulta_expediente1['respuesta_erge'];
 	$respuesta_hta = $consulta_expediente1['respuesta_hta'];
-}
 
-//OBTENER LA EDAD DEL USUARIO 
-/*********************************************************************************/
-if(isset($fecha_nacimiento)){
 	$valores_array = getEdad($fecha_nacimiento);
 	$anos = $valores_array['anos'];
 	$meses = $valores_array['meses'];	  
 	$dias = $valores_array['dias'];	
-}else{
-	$anos = 0;
-	$meses = 0;	  
-	$dias = 0;		
 }
+
+//OBTENER LA EDAD DEL USUARIO 
+/*********************************************************************************/
 /*********************************************************************************/
 if ($anos>1 ){
    $palabra_anos = "Años";
