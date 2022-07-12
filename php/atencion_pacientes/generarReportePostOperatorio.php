@@ -18,23 +18,22 @@ $pacientes_id = $_GET['pacientes_id'];
 $noAtencion = 1;
 $anulada = '';
 
-$queryPreoperatorio = "SELECT CONCAT(c.nombre, ' ',c.apellido) AS 'profesional', CONCAT(p.nombre, ' ',p.apellido) AS 'cliente', p.fecha_nacimiento AS 'fecha_nacimiento', p.email AS 'email', p.telefono1 AS 'telefono', pre.*, 		(CASE WHEN pre.psquiatria = '1' THEN 'Sí' ELSE 'No' END) AS 'psquiatria_visto', (CASE WHEN pre.psicologia = '1' THEN 'Sí' ELSE 'No' END) AS 'psicologia_visto', (CASE WHEN pre.nutricion = '1' THEN 'Sí' ELSE 'No' END) AS 'nutricion_visto', (CASE WHEN pre.medicina_interna = '1' THEN 'Sí' ELSE 'No' END) AS 'medicina_interna_visto', s.nombre AS 'servicio'
-	FROM preoperacion AS pre
+$queryPostOperatorio = "SELECT CONCAT(c.nombre, ' ',c.apellido) AS 'profesional', CONCAT(p.nombre, ' ',p.apellido) AS 'cliente', p.fecha_nacimiento AS 'fecha_nacimiento', p.email AS 'email', p.telefono1 AS 'telefono', po.*, s.nombre AS 'servicio'
+	FROM postoperacion AS po
 	INNER JOIN pacientes AS p
-	ON pre.pacientes_id = p.pacientes_id
+	ON po.pacientes_id = p.pacientes_id
 	INNER JOIN colaboradores AS c
-	ON pre.colaborador_id = c.colaborador_id
+	ON po.colaborador_id = c.colaborador_id
 	INNER JOIN servicios AS s
-	ON pre.servicio_id = s.servicio_id
-	WHERE pre.pacientes_id = '$pacientes_id'";	
-$resultPreoperatorio = $mysqli->query($queryPreoperatorio) or die($mysqli->error);
+	ON po.servicio_id = s.servicio_id
+	WHERE po.pacientes_id = '$pacientes_id'";	
+$resultPostOperatorio = $mysqli->query($queryPostOperatorio) or die($mysqli->error);
 
-if($resultPreoperatorio->num_rows>0){
-	$consultaPreoperatorio = $resultPreoperatorio->fetch_assoc();
-	
+if($resultPostOperatorio->num_rows>0){	
+	$consultaPostOperatorio = $resultPostOperatorio->fetch_assoc();
 	//OBTENER LA EDAD DEL USUARIO 
 	/*********************************************************************************/
-	$valores_array = getEdad($consultaPreoperatorio['fecha_nacimiento']);
+	$valores_array = getEdad($consultaPostOperatorio['fecha_nacimiento']);
 	$anos = $valores_array['anos'];
 	$meses = $valores_array['meses'];	  
 	$dias = $valores_array['dias'];	
@@ -61,7 +60,7 @@ if($resultPreoperatorio->num_rows>0){
 
 	$image_server = SERVERURL."img/fondo_pagina.jpg";
 	ob_start();
-	include(dirname('__FILE__').'/reportePreOperatorio.php');
+	include(dirname('__FILE__').'/reportePostOperatorio.php');
 	$html = ob_get_clean();
 
 	// instantiate and use the dompdf class
@@ -74,7 +73,7 @@ if($resultPreoperatorio->num_rows>0){
 	$dompdf->setPaper('letter', 'portrait');
 	// Render the HTML as PDF
 	$dompdf->render();
-	file_put_contents(dirname('__FILE__').'/Reportes/hc_preoperacion_'.$noAtencion.'.pdf', $dompdf->output());
+	file_put_contents(dirname('__FILE__').'/Reportes/hc_poroperatorio_'.$noAtencion.'.pdf', $dompdf->output());
 	
 	// Output the generated PDF to Browser
 	$dompdf->stream('reporte_'.$noAtencion.'.pdf',array('Attachment'=>0));

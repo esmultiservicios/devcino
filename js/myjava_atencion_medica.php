@@ -6998,6 +6998,56 @@ function getPacientes_idPostOPeratorio(postoperacion_id){
 	
 }
 
+$('#formulario_atenciones #report_prieravez').on('click', function(e){
+    e.preventDefault();
+    reportePDFPrimeraVez($('#formulario_atenciones #pacientes_id').val());
+});
+
+function reportePDFPrimeraVez(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/generarReporteAtencion.php?pacientes_id='+pacientes_id;
+    window.open(url);
+}
+
+$('#formularioAtencionesPreoperatorio #report_preoperatorio').on('click', function(e){
+    e.preventDefault();
+    reportePDFPreoPeratorio($('#formularioAtencionesPreoperatorio #pacientes_id').val());
+});
+
+function reportePDFPreoPeratorio(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/generarReportePreOperatorio.php?pacientes_id='+pacientes_id;
+    window.open(url);
+}
+
+$('#formularioAtencionesNotaOperatoria #report_notaoperatoria').on('click', function(e){
+    e.preventDefault();
+    reportePDFNotaOperatoria($('#formularioAtencionesNotaOperatoria #pacientes_id').val());
+});
+
+function reportePDFNotaOperatoria(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/generarReporteNotaOperatoria.php?pacientes_id='+pacientes_id;
+    window.open(url);
+}
+
+$('#formularioAtencionesPostOperatoria #report_postoperatorio').on('click', function(e){
+    e.preventDefault();
+    reportePDFPostOperatorio($('#formularioAtencionesPostOperatoria #pacientes_id').val());
+});
+
+function reportePDFPostOperatorio(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/generarReportePostOperatorio.php?pacientes_id='+pacientes_id;
+    window.open(url);
+}
+
+$('#formulario_buscarAtencion #report_historiaclinica').on('click', function(e){
+    e.preventDefault();
+    reportePDFHistoriaClinica($('#formulario_atenciones #pacientes_id').val());
+});
+
+function reportePDFHistoriaClinica(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/generarReporteHistoriaClinica.php?pacientes_id='+pacientes_id;
+    window.open(url);
+}
+
 //INICIO NUTRICION
 $(document).ready(function() {
 	getConsultorioNutricion();

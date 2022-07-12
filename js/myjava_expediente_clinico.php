@@ -59,6 +59,7 @@ function viewExpediente(pacientes_id){
 		data:'pacientes_id='+pacientes_id,
 		success: function(valores){
 			var datos = eval(valores);
+			$('#formulario_buscarAtencion #expediente_pacientes_id').val(pacientes_id);		
 			$('#formulario_buscarAtencion #expediente_identidad').val(datos[0]);		
 			$('#formulario_buscarAtencion #expediente_cliente').val(datos[1]);
 			$('#formulario_buscarAtencion #expediente_fecha_nacimiento').val(datos[2]);
@@ -995,5 +996,15 @@ function mostrarArchivosNotaOperatoria(pacientes_id){
 			return false;
 		}	
 	});	
+}
+
+$('#formulario_buscarAtencion #report_historiaclinica').on('click', function(e){
+    e.preventDefault();
+    reportePDFHistoriaClinica($('#formulario_buscarAtencion #expediente_pacientes_id').val());
+});
+
+function reportePDFHistoriaClinica(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/generarReporteHistoriaClinica.php?pacientes_id='+pacientes_id;
+    window.open(url);
 }
 </script>

@@ -92,7 +92,7 @@
 					<p>Apellidos, Nombre</p>					
 				</td>
 				<td class="td" width="80%">
-					<p><?php echo $consulta_registro['cliente']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['cliente']; ?></p>					
 				</td>
 			</tr>
 		</table>
@@ -103,7 +103,7 @@
 					<p>Fecha de Nacimiento</p>					
 				</td>
 				<td class="td" width="20%">
-					<p><?php echo $consulta_registro['fecha_nacimiento']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['fecha_nacimiento']; ?></p>					
 				</td>
 				<td class="td" width="20%">
 					<p>
@@ -122,13 +122,13 @@
 					<p>NCH</p>					
 				</td>
 				<td class="td" width="55%">
-					<p><?php echo $consulta_registro['notaoperacion_id']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['notaoperacion_id']; ?></p>					
 				</td>
 				<td class="td" width="10%">
 					<p>Teléfono</p>					
 				</td>
 				<td class="td" width="25%">
-					<p><?php echo $consulta_registro['telefono']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['telefono']; ?></p>					
 				</td>											
 			</tr>
 			<tr>
@@ -136,13 +136,13 @@
 					<p>E-mail</p>					
 				</td>
 				<td class="td" width="55%">
-					<p><?php echo $consulta_registro['email']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['email']; ?></p>					
 				</td>
 				<td class="td" width="10%">
 					<p>Fecha</p>					
 				</td>
 				<td class="td" width="25%">
-					<p><?php echo $consulta_registro['fecha']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['fecha']; ?></p>					
 				</td>											
 			</tr>			
 		</table>
@@ -158,25 +158,25 @@
 					<p>Talla</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['talla']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['talla']; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Peso Actual</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['peso_actual'].' lbs'; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['peso_actual'].' lbs'; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Peso Perdido</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['peso_perdido'].' lbs'; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['peso_perdido'].' lbs'; ?></p>					
 				</td>	
 				<td class="td" width="12.5%">
 					<p>IMC Actual</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['imc_actual']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['imc_actual']; ?></p>					
 				</td>																					
 			</tr>	
 		</table>
@@ -189,7 +189,7 @@
 			</tr>
 			<tr>
 				<td class="td" width="100%">
-					<p><?php echo $consulta_registro['tecnica']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['tecnica']; ?></p>					
 				</td>
 			</tr>
 		</table>
@@ -205,25 +205,25 @@
 					<p>Cirujano</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['cirujano']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['cirujano']; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Asistente</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['asistente'].' lbs'; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['asistente'].' lbs'; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Camara</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['camara'].' lbs'; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['camara'].' lbs'; ?></p>					
 				</td>	
 				<td class="td" width="12.5%">
 					<p>Anestesia</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['anestesia']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['anestesia']; ?></p>					
 				</td>																					
 			</tr>
 			<tr>
@@ -231,7 +231,7 @@
 					<p>Antestesiologo</p>					
 				</td>
 				<td class="td" width="90%" colspan="6">
-					<p><?php echo $consulta_registro['anestesiologo']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['anestesiologo']; ?></p>					
 				</td>																					
 			</tr>				
 		</table>		
@@ -244,7 +244,7 @@
 			</tr>
 			<tr>
 				<td class="td" width="100%">
-					<p><?php echo $consulta_registro['otros']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['otros']; ?></p>					
 				</td>
 			</tr>
 		</table>	
@@ -255,7 +255,7 @@
 					<p>Hallazgos Operativos</p>					
 				</td>
 				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['hallazgos_operativos']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['hallazgos_operativos']; ?></p>					
 				</td>
 			</tr>
 			<tr>
@@ -263,7 +263,7 @@
 					<p>Descripción Operatoria</p>					
 				</td>
 				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['descripcion_operativos']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['descripcion_operativos']; ?></p>					
 				</td>
 			</tr>			
 		</table>
@@ -279,25 +279,25 @@
 					<p>Prueba de Estanqueidad con azul de metileno</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['resultado_prueba']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['resultado_prueba']; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Dreno Blake</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['resultado_blake'].' lbs'; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['resultado_blake'].' lbs'; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Extracción de Piezas</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['resultado_extraccion'].' lbs'; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['resultado_extraccion'].' lbs'; ?></p>					
 				</td>	
 				<td class="td" width="12.5%">
 					<p> Evacuo Neumoperitoneo</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['resultado_evacuo']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['resultado_evacuo']; ?></p>					
 				</td>																					
 			</tr>
 			<tr>
@@ -305,7 +305,7 @@
 					<p>Cierro Piel</p>					
 				</td>
 				<td class="td" width="90%" colspan="6">
-					<p><?php echo $consulta_registro['resultado_cierro']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['resultado_cierro']; ?></p>					
 				</td>																					
 			</tr>				
 		</table>	
@@ -316,7 +316,7 @@
 					<p>Indicaciones</p>					
 				</td>
 				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['indicaciones']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['indicaciones']; ?></p>					
 				</td>
 			</tr>		
 		</table>	
@@ -329,7 +329,7 @@
 			</tr>
 			<tr>
 				<td class="td" width="100%">
-					<p><?php echo $consulta_registro['recomendaciones']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['recomendaciones']; ?></p>					
 				</td>
 			</tr>
 			<tr>
@@ -339,7 +339,7 @@
 			</tr>
 			<tr>
 				<td class="td" width="100%">
-					<p><?php echo $consulta_registro['comentarios']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['comentarios']; ?></p>					
 				</td>
 			</tr>			
 		</table>	
@@ -352,7 +352,7 @@
 			</tr>
 			<tr>
 				<td class="td" width="100%">
-					<p><?php echo $consulta_registro['servicio']; ?></p>					
+					<p><?php echo $consultaNotaOperatoria['servicio']; ?></p>					
 				</td>
 			</tr>
 		</table>

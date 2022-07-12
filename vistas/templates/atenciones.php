@@ -28,7 +28,7 @@
 		<a class="nav-link" id="home-tab" data-toggle="tab" href="#home_form3_hc_nutricion" role="tab" aria-controls="home_form1" aria-selected="false">Historia Clínica Nutrición</a>
 	</li>		
 	<li class="nav-item waves-effect waves-light">
-	<button class="btn btn-dark ml-2" type="submit" id="end_atencion"><div class="sb-nav-link-icon"></div><i class="fas fa-window-close"></i> Finalizar Atención</button>
+		<button class="btn btn-dark ml-2" type="submit" id="end_atencion"><div class="sb-nav-link-icon"></div><i class="fas fa-window-close"></i> Finalizar Atención</button>
 	</li>			
 </ul>
 <!--FIN MENU TAB CONTENT-->
@@ -39,7 +39,12 @@
 	<div class="tab-pane fade active show" id="primera_consulta" role="tabpanel" aria-labelledby="home-tab">
 		<div class="modal-body">		
 			<form class="FormularioAjax" id="formulario_atenciones" action="" method="POST" data-form="" autocomplete="off" enctype="multipart/form-data">
-					<div class="form-row">
+
+				<div class="form-row">
+					<button class="btn btn-danger ml-2" type="submit" id="report_prieravez"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+				</div>	
+
+				<div class="form-row">
 						<div class="col-md-12 mb-3">
 						<input type="hidden" id="agenda_id" name="agenda_id" class="form-control">
 						<input type="hidden" id="pacientes_id" name="pacientes_id" class="form-control">	
@@ -607,6 +612,10 @@
 		<div class="modal-body">
 			<form class="FormularioAjax" id="formularioAtencionesPreoperatorio" action="" method="POST" data-form="" autocomplete="off" enctype="multipart/form-data">
 					<div class="form-row">
+						<button class="btn btn-danger ml-2" type="submit" id="report_preoperatorio"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+					</div>	
+
+					<div class="form-row">
 						<div class="col-md-12 mb-3">
 							<input type="hidden" id="agenda_id" name="agenda_id" class="form-control">
 							<input type="hidden" id="pacientes_id" name="pacientes_id" class="form-control">	
@@ -818,6 +827,10 @@
 	<div class="tab-pane fade" id="nota_operatoria" role="tabpanel" aria-labelledby="home-tab">
 		<div class="modal-body">			
 			<form class="FormularioAjax" id="formularioAtencionesNotaOperatoria" action="" method="POST" data-form="" autocomplete="off" enctype="multipart/form-data">
+					<div class="form-row">
+						<button class="btn btn-danger ml-2" type="submit" id="report_notaoperatoria"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+					</div>	
+
 					<div class="form-row">
 						<div class="col-md-12 mb-3">
 						<input type="hidden" id="agenda_id" name="agenda_id" class="form-control">
@@ -1219,6 +1232,10 @@
 	<div class="tab-pane fade" id="post_operatorio" role="tabpanel" aria-labelledby="home-tab">
 		<div class="modal-body">			
 			<form class="FormularioAjax" id="formularioAtencionesPostOperatoria" action="" method="POST" data-form="" autocomplete="off" enctype="multipart/form-data">
+					<div class="form-row">
+						<button class="btn btn-danger ml-2" type="submit" id="report_postoperatorio"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+					</div>	
+
 					<div class="form-row">
 						<div class="col-md-12 mb-3">
 						<input type="hidden" id="agenda_id" name="agenda_id" class="form-control">
@@ -1637,6 +1654,10 @@
 					Datos Generales
 					</div>
 					<div class="card-body">
+						<div class="form-row">
+							<button class="btn btn-danger ml-2" type="submit" id="report_historiaclinica"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+						</div>	
+						<br>					
 						<div class="form-row">
 							<div class="col-md-2 mb-3">
 								<label for="expediente_identidad">Identidad <span class="priority">*<span/></label>

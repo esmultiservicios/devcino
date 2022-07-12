@@ -18,23 +18,23 @@ $pacientes_id = $_GET['pacientes_id'];
 $noAtencion = 1;
 $anulada = '';
 
-$query = "SELECT CONCAT(c.nombre, ' ',c.apellido) AS 'profesional', CONCAT(p.nombre, ' ',p.apellido) AS 'cliente', p.fecha_nacimiento AS 'fecha_nacimiento', p.email AS 'email', p.telefono1 AS 'telefono', no.*, (CASE WHEN no.prueba = '1' THEN 'Sí' ELSE 'No' END) AS 'resultado_prueba', (CASE WHEN no.blake = '1' THEN 'Sí' ELSE 'No' END) AS 'resultado_blake', (CASE WHEN no.extraccion = '1' THEN 'Sí' ELSE 'No' END) AS 'resultado_extraccion', (CASE WHEN no.evacuo = '1' THEN 'Sí' ELSE 'No' END) AS 'resultado_evacuo', (CASE WHEN no.cierro = '1' THEN 'Sí' ELSE 'No' END) AS 'resultado_cierro', s.nombre AS 'servicio'
-	FROM notaoperacion AS no
+$queryAtencion = "SELECT CONCAT(co.nombre, ' ',co.apellido) AS 'profesional', CONCAT(p.nombre, ' ',p.apellido) AS 'cliente', p.fecha_nacimiento AS 'fecha_nacimiento', p.email AS 'email', p.telefono1 AS 'telefono', c.*, s.nombre AS 'servicio'
+	FROM clinico AS c
 	INNER JOIN pacientes AS p
-	ON no.pacientes_id = p.pacientes_id
-	INNER JOIN colaboradores AS c
-	ON no.colaborador_id = c.colaborador_id
+	ON c.pacientes_id = p.pacientes_id
+	INNER JOIN colaboradores AS co
+	ON c.colaborador_id = co.colaborador_id
 	INNER JOIN servicios AS s
-	ON no.servicio_id = s.servicio_id
-	WHERE no.pacientes_id = '$pacientes_id'";	
-$result = $mysqli->query($query) or die($mysqli->error);
+	ON c.servicio_id = s.servicio_id	
+	WHERE c.pacientes_id = '$pacientes_id'";	
+$resultAtencion = $mysqli->query($queryAtencion) or die($mysqli->error);
 
-if($result->num_rows>0){
-	$consulta_registro = $result->fetch_assoc();
+if($resultAtencion->num_rows>0){
+	$consultaAtencion = $resultAtencion->fetch_assoc();
 	
 	//OBTENER LA EDAD DEL USUARIO 
 	/*********************************************************************************/
-	$valores_array = getEdad($consulta_registro['fecha_nacimiento']);
+	$valores_array = getEdad($consultaAtencion['fecha_nacimiento']);
 	$anos = $valores_array['anos'];
 	$meses = $valores_array['meses'];	  
 	$dias = $valores_array['dias'];	
@@ -61,7 +61,7 @@ if($result->num_rows>0){
 
 	$image_server = SERVERURL."img/fondo_pagina.jpg";
 	ob_start();
-	include(dirname('__FILE__').'/reporteNotaOperatoria.php');
+	include(dirname('__FILE__').'/reporteAtencion.php');
 	$html = ob_get_clean();
 
 	// instantiate and use the dompdf class
@@ -74,7 +74,7 @@ if($result->num_rows>0){
 	$dompdf->setPaper('letter', 'portrait');
 	// Render the HTML as PDF
 	$dompdf->render();
-	file_put_contents(dirname('__FILE__').'/Reportes/hc_notaoperatoria_'.$noAtencion.'.pdf', $dompdf->output());
+	file_put_contents(dirname('__FILE__').'/Reportes/atencion_'.$noAtencion.'.pdf', $dompdf->output());
 	
 	// Output the generated PDF to Browser
 	$dompdf->stream('reporte_'.$noAtencion.'.pdf',array('Attachment'=>0));

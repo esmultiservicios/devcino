@@ -92,7 +92,7 @@
 					<p>Apellidos, Nombre</p>					
 				</td>
 				<td class="td" width="80%">
-					<p><?php echo $consulta_registro['cliente']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['cliente']; ?></p>					
 				</td>
 			</tr>
 		</table>
@@ -103,7 +103,7 @@
 					<p>Fecha de Nacimiento</p>					
 				</td>
 				<td class="td" width="20%">
-					<p><?php echo $consulta_registro['fecha_nacimiento']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['fecha_nacimiento']; ?></p>					
 				</td>
 				<td class="td" width="20%">
 					<p>
@@ -122,13 +122,13 @@
 					<p>NCH</p>					
 				</td>
 				<td class="td" width="55%">
-					<p><?php echo $consulta_registro['preoperacion_id']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['preoperacion_id']; ?></p>					
 				</td>
 				<td class="td" width="10%">
 					<p>Teléfono</p>					
 				</td>
 				<td class="td" width="25%">
-					<p><?php echo $consulta_registro['telefono']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['telefono']; ?></p>					
 				</td>											
 			</tr>
 			<tr>
@@ -136,13 +136,13 @@
 					<p>E-mail</p>					
 				</td>
 				<td class="td" width="55%">
-					<p><?php echo $consulta_registro['email']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['email']; ?></p>					
 				</td>
 				<td class="td" width="10%">
 					<p>Fecha</p>					
 				</td>
 				<td class="td" width="25%">
-					<p><?php echo $consulta_registro['fecha']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['fecha']; ?></p>					
 				</td>											
 			</tr>			
 		</table>
@@ -158,25 +158,25 @@
 					<p>Talla</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['talla']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['talla']; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Peso Actual</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['peso_actual'].' lbs'; ?></p>					
+					<p><?php echo $consultaPreoperatorio['peso_actual'].' lbs'; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Peso Perdido</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['peso_perdido'].' lbs'; ?></p>					
+					<p><?php echo $consultaPreoperatorio['peso_perdido'].' lbs'; ?></p>					
 				</td>	
 				<td class="td" width="12.5%">
 					<p>IMC Actual</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['imc_actual']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['imc_actual']; ?></p>					
 				</td>																					
 			</tr>					
 		</table>
@@ -184,12 +184,12 @@
 		<table class="table">
 			<tr>
 				<td class="td" width="100%" colspan="2" align="center" valign="middle">
-					<p>Resultados Examenes y Estudios de Imagenes Pre-OP</p>					
+					<p>Resultados de Examenes y Estudios de Imagenes Pre-OP</p>					
 				</td>
 			</tr>
 			<tr>
 				<td class="td" width="100%" colspan="2" >
-					<p><?php echo $consulta_registro['resultados']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['resultados']; ?></p>					
 				</td>
 			</tr>			
 		</table>
@@ -205,25 +205,25 @@
 					<p>Psiquiatra</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['psquiatria_visto']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['psquiatria_visto']; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Psicólogo</p>					
 				</td>
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['psicologia_visto']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['psicologia_visto']; ?></p>					
 				</td>
 				<td class="td" width="12.5%">
 					<p>Nutrición</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['nutricion_visto']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['nutricion_visto']; ?></p>					
 				</td>	
 				<td class="td" width="12.5%">
 					<p>Medicina Interna</p>					
 				</td>	
 				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['medicina_interna_visto']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['medicina_interna_visto']; ?></p>					
 				</td>																					
 			</tr>					
 		</table>	
@@ -236,7 +236,7 @@
 			</tr>
 			<tr>
 				<td class="td" width="100%" colspan="2" >
-					<p><?php echo $consulta_registro['recomendaciones']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['recomendaciones']; ?></p>					
 				</td>
 			</tr>			
 		</table>
@@ -247,7 +247,7 @@
 					<p>Fecha Cirugía</p>					
 				</td>	
 				<td class="td" width="90%">
-					<p><?php echo $consulta_registro['fecha_cirugia']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['fecha_cirugia']; ?></p>					
 				</td>	
 			</tr>
 			<tr>
@@ -255,7 +255,7 @@
 					<p>Tipo Cirugía</p>					
 				</td>	
 				<td class="td" width="90%">
-					<p><?php echo $consulta_registro['tipo_cirugia']; ?></p>					
+					<p><?php echo $consultaPreoperatorio['tipo_cirugia']; ?></p>					
 				</td>	
 			</tr>			
 		</table>	
@@ -266,7 +266,7 @@
 					<p>Servicio</p>					
 				</td>	
 				<td class="td" width="90%">
-				<p><?php echo $consulta_registro['servicio']; ?></p>					
+				<p><?php echo $consultaPreoperatorio['servicio']; ?></p>					
 				</td>	
 			</tr>		
 		</table>

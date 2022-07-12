@@ -125,6 +125,11 @@ $mysqli->close();//CERRAR CONEXIÓN
 				Datos Generales
 				</div>
 				<div class="card-body">
+				<input type="hidden" required id="expediente_pacientes_id" name="expediente_pacientes_id" class="form-control" readonly/>
+					<div class="form-row">
+						<button class="btn btn-danger ml-2" type="submit" id="report_historiaclinica"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+					</div>
+					<br/>
 					<div class="form-row">
 						<div class="col-md-2 mb-3">
 							<label for="expediente_identidad">Identidad <span class="priority">*<span/></label>

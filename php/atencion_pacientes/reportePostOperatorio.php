@@ -92,7 +92,7 @@
 					<p>Apellidos, Nombre</p>					
 				</td>
 				<td class="td" width="80%">
-					<p><?php echo $consulta_registro['cliente']; ?></p>					
+					<p><?php echo $consultaPostOperatorio['cliente']; ?></p>					
 				</td>
 			</tr>
 		</table>
@@ -103,7 +103,7 @@
 					<p>Fecha de Nacimiento</p>					
 				</td>
 				<td class="td" width="20%">
-					<p><?php echo $consulta_registro['fecha_nacimiento']; ?></p>					
+					<p><?php echo $consultaPostOperatorio['fecha_nacimiento']; ?></p>					
 				</td>
 				<td class="td" width="20%">
 					<p>
@@ -122,13 +122,13 @@
 					<p>NCH</p>					
 				</td>
 				<td class="td" width="55%">
-					<p><?php echo $consulta_registro['clinico_id']; ?></p>					
+					<p><?php echo $consultaPostOperatorio['postoperacion_id']; ?></p>					
 				</td>
 				<td class="td" width="10%">
 					<p>Teléfono</p>					
 				</td>
 				<td class="td" width="25%">
-					<p><?php echo $consulta_registro['telefono']; ?></p>					
+					<p><?php echo $consultaPostOperatorio['telefono']; ?></p>					
 				</td>											
 			</tr>
 			<tr>
@@ -136,297 +136,188 @@
 					<p>E-mail</p>					
 				</td>
 				<td class="td" width="55%">
-					<p><?php echo $consulta_registro['email']; ?></p>					
+					<p><?php echo $consultaPostOperatorio['email']; ?></p>					
 				</td>
 				<td class="td" width="10%">
 					<p>Fecha</p>					
 				</td>
 				<td class="td" width="25%">
-					<p><?php echo $consulta_registro['fecha']; ?></p>					
+					<p><?php echo $consultaPostOperatorio['fecha']; ?></p>					
 				</td>											
 			</tr>			
 		</table>
-
-		<table class="table">
-			<tr>
-				<td class="td" width="12.5%">
-					<p>Inicio Obecidad</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['inicio_obesidad']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Habito Alimenticio</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['habito_alimenticio']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Tipo Obecidad</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['tipo_obesidad']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>Intentos Perdida peso</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['intentos_perdida_peso']; ?></p>					
-				</td>																					
-			</tr>
-
-			<tr>
-				<td class="td" width="12.5%">
-					<p>Peso Maximo Alcansado</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['peso_maximo_alcansado']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Sedentarismo</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['sedentarismo']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Ejercicio</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['ejercicio_respuesta']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>Erge</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_erge']; ?></p>					
-				</td>																				
-			</tr>				
-
-			<tr>
-				<td class="td" width="12.5%">
-					<p>HTA</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_hta']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Higado Graso</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_higado_graso']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>SAOS</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_saos']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>Articulares</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_articulares']; ?></p>					
-				</td>																								
-			</tr>
-
-			<tr>
-				<td class="td" width="12.5%">
-					<p>Ovarios Poliquisticos</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_ovarios_poliquisticos']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Varices</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_varices']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>Drogas</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_drogas']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>Ant Fami Diabetes</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_ant_fami_diabetes']; ?></p>					
-				</td>																								
-			</tr>
-			
-			<tr>
-				<td class="td" width="12.5%">
-					<p>Ant Fami Obecidad</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_ant_fami_obesidad']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Ant Fami Gastrico</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_ant_fami_cancer_gastrico']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>Enf Psiquiatricas</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_respuesta_ant_fami_psiquiatricas']; ?></p>					
-				</td>																					
-				<td class="td" width="12.5%">
-					<p>DM</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_ant_dm']; ?></p>					
-				</td>				
-			</tr>
-							
-			<tr>
-				<td class="td" width="12.5%">
-					<p>Alergias</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_alergias']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Alcohol</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_alcohol']; ?></p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p>Tabaquismo</p>					
-				</td>	
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_tabaquismo']; ?></p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p>Dislipidemia</p>					
-				</td>
-				<td class="td" width="12.5%">
-					<p><?php echo $consulta_registro['respuesta_dislipidemia']; ?></p>					
-				</td>																									
-			</tr>				
-		</table>
-
-		<table class="table">
-			<tr>
-				<td class="td" width="15%" >
-					<p>Resultado de Examenes</p>					
-				</td>
-				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['cirugia_abdominal']; ?></p>					
-				</td>
-			</tr>
-		</table>
-
-		<table class="table">
-			<tr>
-				<td class="td" width="25%"  colspan="8" align="center" valign="middle">
-					<p>Examen Fisico</p>					
-				</td>				
-			</tr>
-			<tr>
-				<td class="td" width="25%">
-					<p>Talla</p>					
-				</td>
-				<td class="td" width="25%" colspan="3">
-					<p><?php echo $consulta_registro['talla']; ?></p>					
-				</td>
-				<td class="td" width="25%">
-					<p>Peso</p>					
-				</td>
-				<td class="td" width="25%" colspan="3">
-					<p><?php echo $consulta_registro['peso']." lbs"; ?></p>					
-				</td>										
-			</tr>
-			<tr>
-				<td class="td" width="25%">
-					<p>IMC</p>					
-				</td>
-				<td class="td" width="25%" colspan="3">
-					<p><?php echo $consulta_registro['imc']; ?></p>					
-				</td>
-				<td class="td" width="25%">
-					<p>Peso Ideal</p>					
-				</td>
-				<td class="td" width="25%" colspan="3">
-					<p><?php echo $consulta_registro['peso_ideal']." lbs"; ?></p>					
-				</td>										
-			</tr>
-			<tr>
-				<td class="td" width="25%">
-					<p>Exceso de Peso</p>					
-				</td>
-				<td class="td" width="25%" colspan="3">
-					<p><?php echo $consulta_registro['exceso_peso']." lbs"; ?></p>					
-				</td>									
-			</tr>												
-		</table>
-			
-		<table class="table">
-			<tr>
-				<td class="td" width="15%">
-					<p>Hallazgos Anormales al Examen Físico (Diagnostico)</p>					
-				</td>
-				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['diagnostico']; ?></p>					
-				</td>
-			</tr>
-		</table>
-
-		<table class="table">
-			<tr>
-				<td class="td" width="15%" colspan="2" align="center" valign="middle">
-					<p>Examanes de Laboratorio</p>					
-				</td>
-			</tr>
-			<tr>
-				<td class="td" width="15%">
-					<p>Estudios de Imágenes Solicitados</p>					
-				</td>
-				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['estudios_imagenes']; ?></p>					
-				</td>
-			</tr>
-			<tr>
-				<td class="td" width="15%">
-					<p>Referencia A</p>					
-				</td>
-				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['referencia_a']; ?></p>					
-				</td>
-			</tr>
-			<tr>
-				<td class="td" width="15%">
-					<p>Recomendaciones Quirúrgicas</p>					
-				</td>
-				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['recomendaciones']; ?></p>					
-				</td>
-			</tr>
-			<tr>
-				<td class="td" width="15%">
-					<p>Presupuesto Estimado</p>					
-				</td>
-				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['presupuesto']; ?></p>					
-				</td>
-			</tr>														
-		</table>		
-
-		<table class="table">
-			<tr>
-				<td class="td" width="15%" >
-					<p>Observaciones</p>					
-				</td>
-				<td class="td" width="85%">
-					<p><?php echo $consulta_registro['observaciones']; ?></p>					
-				</td>
-			</tr>
-		</table>
+				
+		<?php
+			$table = '<table class="table">';
+				while($registro_postoperatorio = $resultPostOperatorio->fetch_assoc()){
+					$table = $table.'
+						<tr>
+							<td class="td" width="12.5%" colspan="3">
+								<p><b>Fecha Consulta</b></p>					
+							</td>
+							<td class="td" width="12.5%" colspan="3">
+							<p><b>'.$registro_postoperatorio['fecha'].'</b></p>					
+							</td>							
+						</tr>
+						<tr>
+							<td class="td" width="12.5%">
+								<p>Talla</p>					
+							</td>
+							<td class="td" width="12.5%">
+								<p>'.$registro_postoperatorio['talla'].'</p>					
+							</td>	
+							<td class="td" width="12.5%">
+								<p>Peso Actual</p>					
+							</td>
+							<td class="td" width="12.5%">
+								<p>'.$registro_postoperatorio['peso_actual'].'</p>					
+							</td>	
+							<td class="td" width="12.5%">
+								<p>Peso Perdido</p>					
+							</td>
+							<td class="td" width="12.5%">
+								<p>'.$registro_postoperatorio['peso_perdido'].'</p>					
+							</td>															
+						</tr>	
+						<tr>
+							<td class="td" width="12.5%">
+								<p>IMC Actual</p>					
+							</td>
+							<td class="td" width="12.5%">
+								<p>'.$registro_postoperatorio['talla'].'</p>					
+							</td>	
+							<td class="td" width="12.5%" colspan="2">
+								<p>EWL</p>					
+							</td>
+							<td class="td" width="12.5%" colspan="2">
+								<p>'.$registro_postoperatorio['talla'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Otros</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['otros'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Mejoría Enfermedades</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['mejoria'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Estado Actual</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['estado_actual'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Medicamentos que usa</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['medicamentos'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Hallazgos</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['hallazgos'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Comentarios</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['comentarios'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Plan</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['plan'].'</p>					
+							</td>														
+						</tr>
+						<tr>
+							<td class="td" width="12.5%" colspan="6">
+								&nbsp;&nbsp;&nbsp;
+							</td>													
+						</tr>
+						<tr>
+							<td class="td" width="100%" colspan="6" align="center" valign="middle">
+								<p><b>Servicio</b></p>					
+							</td>														
+						</tr>	
+						<tr>
+							<td class="td" width="100%" colspan="6">
+								<p>'.$registro_postoperatorio['servicio'].'</p>					
+							</td>														
+						</tr>																					
+					';
+				}	
+			$table = $table.'</table>';	
+			echo $table;
+		?>
 	</div>
 </body>
 </html>
