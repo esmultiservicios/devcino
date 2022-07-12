@@ -18,7 +18,7 @@ $colaborador_where = "";
 $dato_where = "";
 
 if($colaborador != ""){
-	$where = "WHERE pre.fecha BETWEEN '$desde' AND '$hasta' AND pre.colaborador_id = '$profesional'";
+	$where = "WHERE pre.fecha BETWEEN '$desde' AND '$hasta' AND pre.colaborador_id = '$colaborador'";
 }else if($dato != ""){
 	$where = "WHERE CONCAT(p.nombre,' ',p.apellido) LIKE '%$dato%' OR p.apellido LIKE '$dato%' OR p.identidad LIKE '$dato%'";
 }else{

@@ -26,9 +26,9 @@ if($colaborador != ""){
 }
 
 $query = "SELECT post.postoperacion_id AS 'postoperacion_id',  DATE_FORMAT(post.fecha, '%d/%m/%Y') AS 'fecha', CONCAT(p.nombre,' ',p.apellido) AS 'paciente', p.identidad AS 'identidad', CONCAT(co.nombre,' ',co.apellido) AS 'colaborador', s.nombre AS 'servicio', (CASE WHEN p.genero = 'H' THEN 'Hombre' ELSE 'Mujer' END) AS 'sexo',
-(CASE WHEN post.paciente = 'N' THEN 'N' ELSE 'S' END) AS 'paciente_tipo', post.talla AS 'talla', post.peso_actual AS 'peso_actual', post.imc_actual AS 'imc_actual', post.peso_perdido AS 'peso_perdido',
-(CASE WHEN post.paciente = 'N' THEN 'X' ELSE '' END) AS 'n',
-(CASE WHEN post.paciente = 'S' THEN 'X' ELSE '' END) AS 's',
+(CASE WHEN post.tipo_paciente = 'N' THEN 'N' ELSE 'S' END) AS 'paciente_tipo', post.talla AS 'talla', post.peso_actual AS 'peso_actual', post.imc_actual AS 'imc_actual', post.peso_perdido AS 'peso_perdido',
+(CASE WHEN post.tipo_paciente = 'N' THEN 'X' ELSE '' END) AS 'n',
+(CASE WHEN post.tipo_paciente = 'S' THEN 'X' ELSE '' END) AS 's',
 (CASE WHEN p.genero = 'H' THEN 'X' ELSE '' END) AS 'h',
 (CASE WHEN p.genero = 'M' THEN 'X' ELSE '' END) AS 'm', d.nombre AS 'departamento', m.nombre AS 'municipio', p.localidad AS 'localidad'
 	FROM postoperacion AS post
@@ -75,9 +75,9 @@ if($paginaActual <= 1){
 }
 
 $registro = "SELECT post.postoperacion_id AS 'postoperacion_id',  DATE_FORMAT(post.fecha, '%d/%m/%Y') AS 'fecha', CONCAT(p.nombre,' ',p.apellido) AS 'paciente', p.identidad AS 'identidad', CONCAT(co.nombre,' ',co.apellido) AS 'colaborador', s.nombre AS 'servicio', (CASE WHEN p.genero = 'H' THEN 'Hombre' ELSE 'Mujer' END) AS 'sexo',
-(CASE WHEN post.paciente = 'N' THEN 'N' ELSE 'S' END) AS 'paciente_tipo', post.talla AS 'talla', post.peso_actual AS 'peso_actual', post.imc_actual AS 'imc_actual', post.peso_perdido AS 'peso_perdido',
-(CASE WHEN post.paciente = 'N' THEN 'X' ELSE '' END) AS 'n',
-(CASE WHEN post.paciente = 'S' THEN 'X' ELSE '' END) AS 's',
+(CASE WHEN post.tipo_paciente = 'N' THEN 'N' ELSE 'S' END) AS 'paciente_tipo', post.talla AS 'talla', post.peso_actual AS 'peso_actual', post.imc_actual AS 'imc_actual', post.peso_perdido AS 'peso_perdido',
+(CASE WHEN post.tipo_paciente = 'N' THEN 'X' ELSE '' END) AS 'n',
+(CASE WHEN post.tipo_paciente = 'S' THEN 'X' ELSE '' END) AS 's',
 (CASE WHEN p.genero = 'H' THEN 'X' ELSE '' END) AS 'h',
 (CASE WHEN p.genero = 'M' THEN 'X' ELSE '' END) AS 'm', d.nombre AS 'departamento', m.nombre AS 'municipio', p.localidad AS 'localidad'
 	FROM postoperacion AS post
