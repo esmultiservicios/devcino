@@ -1772,10 +1772,6 @@
 								<input type="text" required id="expediente_sedentarismo" name="expediente_sedentarismo" class="form-control" readonly/>
 							</div>	
 							<div class="col-md-2 mb-3">
-								<label for="expediente_fecha_consulta">Drogas</label>
-								<input type="text" required id="drogas_respuesta" name="drogas_respuesta" class="form-control" readonly />
-							</div>	
-							<div class="col-md-2 mb-3">
 								<label for="expediente_fecha_consulta">Edad</label>
 								<input type="text" required id="expediente_edad_" name="expediente_edad_" class="form-control" readonly />
 							</div>							

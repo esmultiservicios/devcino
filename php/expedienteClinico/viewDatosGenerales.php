@@ -21,7 +21,6 @@ $consulta_expediente = "SELECT c.*, p.expediente AS 'expediente', p.pacientes_id
 	LEFT JOIN clinico AS c
 	ON p.pacientes_id = c.pacientes_id
 	WHERE p.pacientes_id = '$pacientes_id'";
-
 $result = $mysqli->query($consulta_expediente);   
 
 $expediente = "";
