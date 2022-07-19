@@ -33,6 +33,10 @@
 				<input type="hidden" name="colaborador_id" id="colaborador_id" class="form-control">
 				<input type="hidden" name="atenciones_nutricion_id" id="atenciones_nutricion_id" class="form-control">
 
+				<div class="form-row">
+					<button class="btn btn-danger ml-2" type="submit" id="report_prieravez"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+				</div>	
+				<br/>				
 				<div class="card">
 				  <div class="card-header text-white bg-info mb-3" align="center">
 					MOTIVO CONSULTA
@@ -205,7 +209,7 @@
 
 					<div class="form-row">
 						<div class="col-md-12 mb-3">
-							<label for="antecedentes_quirurgicos">Diagnostico</label>
+							<label for="diagnostico">Diagnostico</label>
 							<div class="input-group">
 							  <textarea id="diagnostico" name="diagnostico" placeholder="Diagnostico" class="form-control" maxlength="1000" rows="8"></textarea>	
 							  <div class="input-group-prepend">						  

@@ -3450,10 +3450,14 @@ function viewExpediente(pacientes_id){
 			//INICIO PRIMERA FILA
 			if (datos[24] == 1){
 				$('#formulario_buscarAtencion #expediente_erge_activo').prop('checked', true);
+				$('#formulario_buscarAtencion #expediente_erge_activo').attr("disabled", true);
 				$('#formulario_buscarAtencion #label_expediente_erge_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_erge_respuesta').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_erge_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_erge_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_erge_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_erge_activo').attr("disabled", true);
 			}	
 
 			$('#formulario_buscarAtencion #expediente_erge_respuesta').val(datos[67]);
@@ -3461,9 +3465,13 @@ function viewExpediente(pacientes_id){
 			if (datos[25] == 1){
 				$('#formulario_buscarAtencion #expediente_hta_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_hta_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_hta_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_hta_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_hta_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_hta_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_hta_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_hta_activo').attr("disabled", true);
 			}	
 
 			$('#formulario_buscarAtencion #expediente_hta_respuesta').val(datos[68]);
@@ -3471,9 +3479,13 @@ function viewExpediente(pacientes_id){
 			if (datos[27] == 1){
 				$('#formulario_buscarAtencion #expediente_higado_graso_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_higado_graso_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_higado_graso_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_higado_graso_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_higado_graso_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_higado_graso_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_higado_graso_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_higado_graso_activo').attr("disabled", true);
 			}	
 
 			$('#formulario_buscarAtencion #expediente_higado_graso_respuesta').val(datos[70]);
@@ -3481,9 +3493,13 @@ function viewExpediente(pacientes_id){
 			if (datos[28] == 1){
 				$('#formulario_buscarAtencion #expediente_saos_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_saos_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_saos_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_saos_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_saos_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_saos_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_saos_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_saos_activo').attr("disabled", true);
 			}
 
 			$('#formulario_buscarAtencion #expediente_saos_respuesta').val(datos[80]);
@@ -3491,9 +3507,13 @@ function viewExpediente(pacientes_id){
 			if (datos[29] == 1){
 				$('#formulario_buscarAtencion #expediente_hipotiroidismo_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_hipotiroidismo_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_hipotiroidismo_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_hipotiroidismo_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_hipotiroidismo_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_hipotiroidismo_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_hipotiroidismo_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_hipotiroidismo_activo').attr("disabled", true);
 			}	
 
 			$('#formulario_buscarAtencion #expediente_hipotiroidismo_respuesta').val(datos[71]);
@@ -3501,9 +3521,13 @@ function viewExpediente(pacientes_id){
 			if (datos[30] == 1){
 				$('#formulario_buscarAtencion #expediente_articulares_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_articulares_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_articulares_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_articulares_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_articulares_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_articulares_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_articulares_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_articulares_activo').attr("disabled", true);
 			}				
 
 			$('#formulario_buscarAtencion #expediente_articulares_respuesta').val(datos[72]);
@@ -3513,9 +3537,13 @@ function viewExpediente(pacientes_id){
 			if (datos[31] == 1){
 				$('#formulario_buscarAtencion #expediente_ovarios_poliquisticos_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_ovarios_poliquisticos_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_ovarios_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_ovarios_poliquisticos_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_ovarios_poliquisticos_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_ovarios_poliquisticos_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_ovarios_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_ovarios_poliquisticos_activo').attr("disabled", true);
 			}	
 
 			$('#formulario_buscarAtencion #expediente_ovarios_respuesta').val(datos[73]);
@@ -3523,9 +3551,13 @@ function viewExpediente(pacientes_id){
 			if (datos[32] == 1){
 				$('#formulario_buscarAtencion #expediente_varices_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_varices_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_varices_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_varices_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_varices_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_varices_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_varices_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_varices_activo').attr("disabled", true);
 			}					
 
 			$('#formulario_buscarAtencion #expediente_varices_respuesta').val(datos[74]);
@@ -3533,9 +3565,13 @@ function viewExpediente(pacientes_id){
 			if (datos[37] == 1){
 				$('#formulario_buscarAtencion #expediente_drogas_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_drogas_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_drogas_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_drogas_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_drogas_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_drogas_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_drogas_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_drogas_activo').attr("disabled", true);
 			}	
 
 			$('#formulario_buscarAtencion #expediente_drogas_respuesta').val(datos[38]);	
@@ -3543,9 +3579,13 @@ function viewExpediente(pacientes_id){
 			if (datos[39] == 1){
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_diabetes_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_diabetes_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_ant_fam_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_diabetes_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_diabetes_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_diabetes_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_ant_fam_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_diabetes_activo').attr("disabled", true);
 			}		
 			
 			$('#formulario_buscarAtencion #expediente_ant_fam_respuesta').val(datos[75]);
@@ -3553,9 +3593,13 @@ function viewExpediente(pacientes_id){
 			if (datos[40] == 1){
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_Obesidad_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_Obesidad_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_ant_fam_obecidad_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_Obesidad_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_Obesidad_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_Obesidad_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_ant_fam_obecidad_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_Obesidad_activo').attr("disabled", true);
 			}			
 			
 			$('#formulario_buscarAtencion #expediente_ant_fam_obecidad_respuesta').val(datos[76]);
@@ -3563,9 +3607,13 @@ function viewExpediente(pacientes_id){
 			if (datos[41] == 1){
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_cancer_gastrico_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_cancer_gastrico_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_ant_fam_gastrico_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_cancer_gastrico_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_cancer_gastrico_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_cancer_gastrico_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_ant_fam_gastrico_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_cancer_gastrico_activo').attr("disabled", true);
 			}		
 			
 			$('#formulario_buscarAtencion #expediente_ant_fam_gastrico_respuesta').val(datos[77]);
@@ -3575,9 +3623,13 @@ function viewExpediente(pacientes_id){
 			if (datos[42] == 1){
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_psiquiatricas_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_psiquiatricas_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_enf_psiquiatricas_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_psiquiatricas_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_antecedentes_fami_psiquiatricas_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_fami_psiquiatricas_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_enf_psiquiatricas_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_fami_psiquiatricas_activo').attr("disabled", true);
 			}	
 
 			$('#formulario_buscarAtencion #expediente_enf_psiquiatricas_respuesta').val(datos[78]);
@@ -3585,9 +3637,13 @@ function viewExpediente(pacientes_id){
 			if (datos[43] == 1){
 				$('#formulario_buscarAtencion #expediente_antecedentes_dm_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_dm_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_dm_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_dm_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_antecedentes_dm_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_antecedentes_dm_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_dm_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_antecedentes_dm_activo').attr("disabled", true);
 			}	
 			
 			$('#formulario_buscarAtencion #expediente_dm_respuesta').val(datos[79]);
@@ -3595,9 +3651,13 @@ function viewExpediente(pacientes_id){
 			if (datos[22] == 1){
 				$('#formulario_buscarAtencion #expediente_alergias_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_alergias_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_alergias_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_alergias_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_alergias_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_alergias_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_alergias_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_alergias_activo').attr("disabled", true);
 			}	
 			
 			$('#formulario_buscarAtencion #expediente_alergias_respuesta').val(datos[23]);		
@@ -3605,9 +3665,13 @@ function viewExpediente(pacientes_id){
 			if (datos[35] == 1){
 				$('#formulario_buscarAtencion #expediente_alcohol_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_alcohol_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_alcohol_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_alcohol_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_alcohol_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_alcohol_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_alcohol_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_alcohol_activo').attr("disabled", true);
 			}	
 			
 			$('#formulario_buscarAtencion #expediente_alcohol_respuesta').val(datos[36]);
@@ -3615,9 +3679,13 @@ function viewExpediente(pacientes_id){
 			if (datos[33] == 1){
 				$('#formulario_buscarAtencion #expediente_tabaquismo_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_tabaquismo_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_tabaquismo_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_tabaquismo_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_tabaquismo_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_tabaquismo_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_tabaquismo_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_tabaquismo_activo').attr("disabled", true);
 			}		
 			
 			$('#formulario_buscarAtencion #expediente_tabaquismo_respuesta').val(datos[34]);
@@ -3625,9 +3693,13 @@ function viewExpediente(pacientes_id){
 			if (datos[26] == 1){
 				$('#formulario_buscarAtencion #expediente_dislipidemia_activo').prop('checked', true);
 				$('#formulario_buscarAtencion #label_expediente_dislipidemia_activo').html("Sí");
+				$('#formulario_buscarAtencion #expediente_dislipidemia_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_dislipidemia_activo').attr("disabled", true);
 			}else{
 				$('#formulario_buscarAtencion #expediente_dislipidemia_activo').prop('checked', false);
 				$('#formulario_buscarAtencion #label_expediente_dislipidemia_activo').html("No");
+				$('#formulario_buscarAtencion #expediente_dislipidemia_respuesta').attr("disabled", true);
+				$('#formulario_buscarAtencion #expediente_dislipidemia_activo').attr("disabled", true);
 			}				
 			$('#formulario_buscarAtencion #expediente_dislipidemia_respuesta').val(datos[69]);
 			//FIN TERCERA FILA
@@ -4388,4 +4460,14 @@ function mostrarArchivosNotaOperatoria(pacientes_id){
 	});	
 }
 //FIN ATENCION CIRUGIA
+
+$('#primera_consulta_nutricion #report_prieravez').on('click', function(e){
+    e.preventDefault();
+    reportePDFPrimeraVez($('#primera_consulta_nutricion #pacientes_id').val());
+});
+
+function reportePDFPrimeraVez(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/generarReporteAtencion.php?pacientes_id='+pacientes_id;
+    window.open(url);
+}
 </script>
