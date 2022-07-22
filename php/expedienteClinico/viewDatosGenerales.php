@@ -20,7 +20,7 @@ $consulta_expediente = "SELECT c.*, p.expediente AS 'expediente', p.pacientes_id
 	ON p.profesion_id = pr.profesion_id
 	LEFT JOIN clinico AS c
 	ON p.pacientes_id = c.pacientes_id
-	WHERE p.pacientes_id = '$pacientes_id'";
+	WHERE p.pacientes_id = '$pacientes_id'";	
 $result = $mysqli->query($consulta_expediente);   
 
 $expediente = "";
@@ -107,7 +107,9 @@ $respuesta_erge = "";
 $respuesta_hta  = "";
 $anos = 0;
 $meses = 0;	  
-$dias = 0;	
+$dias = 0;
+$colaborador_id = 0;
+$agenda_id = 0;
 
 if($result->num_rows>0){
 	$consulta_expediente1 = $result->fetch_assoc();
@@ -192,6 +194,8 @@ if($result->num_rows>0){
 	$respuesta_saos = $consulta_expediente1['respuesta_saos'];	
 	$respuesta_erge = $consulta_expediente1['respuesta_erge'];
 	$respuesta_hta = $consulta_expediente1['respuesta_hta'];
+	$colaborador_id = $consulta_expediente1['colaborador_id'];	
+	$agenda_id = $consulta_expediente1['agenda_id'];	
 
 	$valores_array = getEdad($fecha_nacimiento);
 	$anos = $valores_array['anos'];
@@ -301,7 +305,9 @@ $datos = array(
 	77 => $respuesta_ant_fami_cancer_gastrico,
 	78 => $respuesta_respuesta_ant_fami_psiquiatricas,
 	79 => $respuesta_ant_dm,
-	80 => $respuesta_saos
+	80 => $respuesta_saos,
+	81 => $colaborador_id,
+	82 => $agenda_id
 );
 echo json_encode($datos);
 ?>

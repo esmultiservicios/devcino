@@ -4811,12 +4811,12 @@ $(document).ready(function() {
 		$("#formularioAtencionesPostOperatoria #post_peso_actual_kg").val(kg);
 		$("#formularioAtencionesPostOperatoria #post_imc_actual").val(imc);	
 		
-		var peso_anterior = $('#formulario_atenciones #peso').val();
+		var peso_inicial = $('#formulario_atenciones #peso').val();//este es el peso inicial
 		var peso_actual = $('#formularioAtencionesPostOperatoria #post_peso_actual').val();
 		var peso_ideal = $('#formulario_atenciones #peso_ideal').val();
-		$('#formularioAtencionesPostOperatoria #post_peso_perdido').val(peso_anterior - peso_actual);	
+		$('#formularioAtencionesPostOperatoria #post_peso_perdido').val(peso_inicial - peso_actual);	
 		//CALUCLO %EWL
-		var ewl = (peso_anterior - peso_actual /  peso_anterior - peso_ideal) * 100;
+		var ewl = ((peso_inicial - peso_actual) /  (peso_inicial - peso_ideal)) * 100;
 		$('#formularioAtencionesPostOperatoria #post_ewl').val(ewl.toFixed(2));	
 	}
 
@@ -4935,11 +4935,13 @@ $(document).ready(function(e) {
 	});
 });
 
-function setAtencion(pacientes_id, colaborador_id, servicio_id, agenda_id){
+function setAtencion(pacientes_id){
 	$('#main_facturacion').hide();
 	$('#main_atencion').show();
 
 	if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 3 || getUsuarioSistema() == 4){
+		$('#formulario_pacientes_atenciones')[0].reset();		
+
 		var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/consultarPaciente.php';
 		   $.ajax({
 			   type:'POST',
@@ -4952,8 +4954,6 @@ function setAtencion(pacientes_id, colaborador_id, servicio_id, agenda_id){
 
 					$('#formulario_pacientes_atenciones #pro').val('Edición');
 					$('#formulario_pacientes_atenciones #grupo_expediente').show();
-					$('#formulario_pacientes_atenciones #pacientes_id').val(pacientes_id);
-					$('#formulario_pacientes_atenciones #pacientes_id').val(pacientes_id);
 					$('#formulario_pacientes_atenciones #pacientes_id').val(pacientes_id);
 					$('#formulario_pacientes_atenciones #fecha_cita').val(getFechaCita(agenda_id));
 					$('#formulario_seguimiento #fecha_cita').val(getFechaCita(agenda_id));										
@@ -4978,15 +4978,12 @@ function setAtencion(pacientes_id, colaborador_id, servicio_id, agenda_id){
 					$('#perfil_nombre').html(datos[17]);				
 					$('#formulario_pacientes_atenciones #referido').val(datos[18]);
 
-					$('#formulario_antecedentes #edad_consulta').val(datos[6]);
-					$('#formulario_antecedentes #edad_consulta').attr('readonly', true);
-					$('#formulario_antecedentes #atenciones_servicio_id').val(datos[19]);
+					$('#formulario_atenciones #edad_consulta').val(datos[6]);
+					$('#formulario_atenciones #edad_consulta').attr('readonly', true);
+					$('#formulario_atenciones #atenciones_servicio_id').val(datos[19]);
 
 					//DATOS DE LA HISTORIA CLINICA DEL PACIENTE
-					$('#formulario_antecedentes #motivo_consulta').val(datos[19]);
-					$('#formulario_antecedentes #servicio_id').val(servicio_id);
-					$('#formulario_antecedentes #agenda_id').val(agenda_id);
-					$('#formulario_antecedentes #colaborador_id').val(colaborador_id);
+					$('#formulario_atenciones #motivo_consulta').val(datos[19]);
 	
 					$("#formulario_pacientes_atenciones #fecha").attr('readonly', true);
 					$("#formulario_pacientes_atenciones #expediente").attr('readonly', true);
@@ -5821,7 +5818,7 @@ function viewExpediente(pacientes_id){
 			$('#formulario_atenciones #intentos_perdida_peso').val(datos[17]);	
 			$('#formulario_atenciones #peso_maximo_alcanzado').val(datos[18]);
 			$('#formulario_atenciones #peso_maximo_alcanzado_kg').val(datos[59]);		
-			$('#formulario_atenciones #sedentarismo').val(datos[19]);	
+			$('#formulario_atenciones #sedentarismo').val(datos[19]);			
 			
 			if (datos[20] == 1){
 				$('#formulario_atenciones #ejercicio_activo').prop('checked', true);
@@ -6067,6 +6064,10 @@ function viewExpediente(pacientes_id){
 			$('#formulario_atenciones #presupuesto').val(datos[55]);
 			$('#formulario_atenciones #expe_observaciones').val(datos[66]);
 			$('#formulario_atenciones #atenciones_servicio_id').val(datos[64]);
+
+			$('#formulario_atenciones #servicio_id').val(datos[64]);
+			$('#formulario_atenciones #colaborador_id').val(datos[81]);					
+			$('#formulario_atenciones #agenda_id').val(datos[82]);			
 
 			if(datos[65] == null || datos[65] == ""){
 				$('#reg_atencion').show();

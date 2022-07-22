@@ -4721,12 +4721,12 @@ $(document).ready(function() {
 		$("#formularioAtencionesPostOperatoria #post_peso_actual_kg").val(kg);
 		$("#formularioAtencionesPostOperatoria #post_imc_actual").val(imc);	
 		
-		var peso_anterior = $('#formulario_atenciones #peso').val();
+		var peso_inicial = $('#formulario_atenciones #peso').val();
 		var peso_actual = $('#formularioAtencionesPostOperatoria #post_peso_actual').val();
 		var peso_ideal = $('#formulario_atenciones #peso_ideal').val();
-		$('#formularioAtencionesPostOperatoria #post_peso_perdido').val(peso_anterior - peso_actual);	
+		$('#formularioAtencionesPostOperatoria #post_peso_perdido').val(peso_inicial - peso_actual);	
 		//CALUCLO %EWL
-		var ewl = (peso_anterior - peso_actual /  peso_anterior - peso_ideal) * 100;
+		var ewl = ((peso_inicial - peso_actual) /  (peso_inicial - peso_ideal)) * 100;
 		$('#formularioAtencionesPostOperatoria #post_ewl').val(ewl.toFixed(2));	
 	}
 

@@ -543,7 +543,7 @@ if($result->num_rows==0){
 		$totalfiles = count($_FILES['files']['name']);
 
 		//RECORREMOS EL FILE INPUT
-		for($i=0;$i<$totalfiles;$i++){
+		for($i=1;$i<$totalfiles;$i++){
 			$clinico_detalles_id = correlativo('clinico_detalles_id', 'clinico_detalles');	
 			$filename = 'ec_'.$paciente.'_'.$_FILES['files']['name'][$i];
 				
@@ -556,7 +556,7 @@ if($result->num_rows==0){
 				$insert = "INSERT INTO clinico_detalles VALUES('$clinico_detalles_id','$clinico_id','$filename', '$fecha_registro')";
 				$query = $mysqli->query($insert);
 			}
-		}		
+		}	
 		/*********************************************************************************************************************************************************************/
 
 		//INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL

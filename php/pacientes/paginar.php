@@ -64,7 +64,7 @@ $result = $mysqli->query($query);
 $tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
 	<tr>
 		<th width="1.09%">N°</th>
-		<th width="3.09%">Expediente</th>
+		<th width="2.09%">Expediente</th>
 		<th width="4.09%">Identidad</th>
 		<th width="15.09%">Paciente</th>
 		<th width="2.09%">Genero</th>					   
@@ -73,7 +73,7 @@ $tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
 		<th width="15.09%">Correo</th>
 		<th width="11.09%">Dirección</th>
 		<th width="2.09%">Estado</th>						   
-		<th width="34.09%">Opciones</th>
+		<th width="35.09%">Opciones</th>
 	</tr>';
 
 $i=1;						

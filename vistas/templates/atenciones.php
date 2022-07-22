@@ -573,8 +573,8 @@
 									<div class="col-md-12 mb-3">
 										<div class="modal-title" id="mostrar_datos"></div>
 									</div>																					
-							   </div>									
-						   </div>
+							   </div>								   
+						   </div>						   
 						</div>   
 
 						<div class="card">
@@ -586,7 +586,7 @@
 									<div class="col-md-6 mb-3">
 									<label for="expedoente">Servicio <span class="priority">*<span/></label>
 									<div class="input-group mb-3">
-										<select id="atenciones_servicio_id" name="atenciones_servicio_id" class="form-control" data-toggle="tooltip" data-placement="top" title="Pacientes"></select>
+										<select id="atenciones_servicio_id" name="atenciones_servicio_id" class="form-control" data-toggle="tooltip" data-placement="top" title="Pacientes" required="required"></select>
 										<div class="input-group-append" id="buscar_servicios_atenciones" style="display: none">				
 											<a data-toggle="modal" href="#" class="btn btn-outline-success"><div class="sb-nav-link-icon"></div><i class="fas fa-search fa-lg"></i></a>
 										</div>
