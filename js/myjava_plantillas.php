@@ -23,7 +23,7 @@ function funciones(){
 }	
 
 function agregarPlantillas(){
-	if (getUsuarioSistema() == 1 || getUsuarioSistema() == 4){
+	if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 3){
 		funciones();
 		$('#formularioPlantillas').attr({ 'data-form': 'save' });
 		$('#formularioPlantillas').attr({ 'action': '<?php echo SERVERURL; ?>php/plantillas/agregarPlantillas.php' });			

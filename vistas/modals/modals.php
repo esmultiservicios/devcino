@@ -23,7 +23,7 @@
 				</div>
 				<div class="form-row" id="grupo_expediente">
 					<div class="col-md-5 mb-3">
-					  <label>Atipo de tención <span class="priority">*<span/></label>
+					  <label>Tipo de tención <span class="priority">*<span/></label>
 					  <div class="input-group mb-3">
 						  <select id="plantilla_atencion" name="plantilla_atencion" class="custom-select" data-toggle="tooltip" data-placement="top" title="Tipo de Atención" required>
 								<option value="">Seleccione</option>
