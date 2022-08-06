@@ -1,5 +1,5 @@
 <script>
-$(document).ready(pagination(1));puesto();empresa();servicio();pagination_jornada_colaboradores(1);pagination_servicio(1);pagination_puestos(1);puestoServcioColaborador();getJornadaColaborador();getEstatus();
+$(document).ready(pagination(1));puesto();empresa();servicio();pagination_jornada_colaboradores(1);pagination_servicio(1);pagination_puestos(1);puestoServcioColaborador();getJornadaColaborador();getEstatus();puesto();getJornadaColaborador();servicio();	
   $(function(){
 	  $('#nuevo-registro-colaboradores').on('click',function(e){
 		e.preventDefault();
@@ -474,6 +474,7 @@ if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() 
 				var datos = eval(valores);
 				$('#reg').hide();
 				$('#edi').show();
+
 				$('#formulario_colaboradores #pro').val('Edicion');
 				$('#formulario_colaboradores #id-registro').val(id);
 				$('#formulario_colaboradores #nombre').val(datos[0]);	
@@ -482,10 +483,6 @@ if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() 
                 $('#formulario_colaboradores #puesto').val(datos[3]);	
                 $('#formulario_colaboradores #identidad').val(datos[4]);
                 $('#formulario_colaboradores #estatus').val(datos[5]);
-
-				puesto();
-				getJornadaColaborador();
-				servicio();	
 								
 				$('#formulario_colaboradores').attr({ 'data-form': 'update' }); 
 				$('#formulario_colaboradores').attr({ 'action': '<?php echo SERVERURL; ?>php/colaboradores/agregar_edicion.php' });				

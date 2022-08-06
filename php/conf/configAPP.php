@@ -3,13 +3,13 @@
         Parametros de conexión a la DB
     */
 	date_default_timezone_set('America/Tegucigalpa');
-    const SERVERURL = "http://localhost/githubCino /";
+    const SERVERURL = "http://localhost/githubCino/";
 	const SERVEREMPRESA = "CIN-0";
 	const SERVER = "localhost";
     const DB = "clinicarehn_clinicare_cino";
     const USER = "clinicarehn_clinicare";
     const PASS = "Cl|n1c@r32022#%.";
-    const PRODUCT_PATH = "/githubCino /upload/";
+    const PRODUCT_PATH = "/githubCino/upload/";
 
     /*
         Para encrptar y Desencriptar
