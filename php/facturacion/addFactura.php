@@ -7,7 +7,7 @@ $mysqli = connect_mysqli();
 
 $pacientes_id = $_POST['pacientes_id'];
 $facturas_id = $_POST['facturas_id'];
-$fecha = $_POST['fecha'];
+$fecha = date("Y-m-d");
 $colaborador_id = $_POST['colaborador_id'];
 $servicio_id = $_POST['factura_servicio_id'];
 $notes = cleanStringStrtolower($_POST['notes']);
@@ -211,7 +211,8 @@ if($pacientes_id != "" && $colaborador_id != "" && $servicio_id != ""){
 		$update = "UPDATE facturas
 			SET
 				importe = '$total_despues_isv',
-				usuario = '$usuario'			
+				fecha = '$fecha',
+				usuario = '$usuario'		
 			WHERE facturas_id = '$facturas_id'";
 		$mysqli->query($update);			
 
