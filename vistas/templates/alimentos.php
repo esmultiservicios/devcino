@@ -4,7 +4,7 @@
 	</div>
 	<div class="card-body">
 		<form  class="FormularioAjax" id="formulario_alimentos" action="" method="POST" data-form="" autocomplete="off" enctype="multipart/form-data">
-			<input type="text" required id="paciente_alimentos_id" name="paciente_alimentos_id" placeholder="Paciente" class="form-control"/>
+			<input type="hidden" required id="paciente_alimentos_id" name="paciente_alimentos_id" placeholder="Paciente" class="form-control"/>
 			<div class="form-row" id="grupo_pacientes">
 				<div class="col-md-6 mb-6">
 					<label for="paciente_alimentos">Paciente <span class="priority">*<span/></label>
