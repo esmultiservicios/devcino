@@ -16,6 +16,9 @@
 		<a class="nav-link" id="home-tab" data-toggle="tab" href="#home_form2_nutricion" role="tab" aria-controls="home_form1" aria-selected="false">Historia Clínica</a>
 	</li>
 	<li class="nav-item waves-effect waves-light">
+		<a class="nav-link" id="home-tab" data-toggle="tab" href="#home_form4_nutricion" role="tab" aria-controls="home_form1" aria-selected="false">Alimentos</a>
+	</li>		
+	<li class="nav-item waves-effect waves-light">
 		<a class="nav-link" id="home-tab" data-toggle="tab" href="#home_form3_nutricion" role="tab" aria-controls="home_form1" aria-selected="false">Historia Clínica Cirigía</a>
 	</li>	
 </ul>
@@ -34,7 +37,7 @@
 				<input type="hidden" name="atenciones_nutricion_id" id="atenciones_nutricion_id" class="form-control">
 
 				<div class="form-row">
-					<button class="btn btn-danger ml-2" type="submit" id="report_prieravez"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
+					<button class="btn btn-danger ml-2" type="submit" id="report_prieravez_nutricion"><div class="sb-nav-link-icon"></div><i class="fas fa-file-pdf"></i> Reporte</button>				
 				</div>	
 				<br/>				
 				<div class="card">
@@ -290,88 +293,118 @@
 						</div>						  
 						<div class="col-md-3 mb-3">
 							<label for="peso_hab">Peso Habitual</label>
-							<input type="text" class="form-control" name="peso_hab" id="peso_hab" placeholder="Peso Habitual" maxlength="10" />
+							<input type="number" class="form-control" name="peso_hab" id="peso_hab" placeholder="Peso Habitual" maxlength="10"/>
 						</div>					
 						<div class="col-md-3 mb-3">
-							<label for="peso_p25">Peso P25</label>
-							<input type="text" class="form-control" name="peso_p25" id="peso_p25" placeholder="Peso P2P" maxlength="10" />
+							<label for="peso">Peso</label>
+							<input type="number" class="form-control" name="peso" id="peso" placeholder="Peso" maxlength="10"/>
 						</div>	
 						<div class="col-md-3 mb-3">
-							<label for="brazo">Brazo</label>
-							<input type="text" class="form-control" name="brazo" id="brazo" placeholder="Brazo"  maxlength="10" />
-						</div>																				
+							<label for="estatura">Estatura</label>
+							<input type="number" class="form-control" name="estatura" id="estatura" placeholder="Estatura" maxlength="10" />
+						</div>																			
 					</div>	
 
 					<div class="form-row">
 						<div class="col-md-3 mb-3">
-							<label for="muneca">Muñeca</label>
-							<input type="text" class="form-control" name="muneca" id="muneca" placeholder="Muñeca"  maxlength="10" />
-						</div>						
-						<div class="col-md-3 mb-3">
-							<label for="msj">MSJ</label>
-							<input type="text" class="form-control" name="msj" id="msj" placeholder="MSJ" maxlength="10" />
-						</div>					
-						<div class="col-md-3 mb-3">
 							<label for="cintura">Cintura</label>
-							<input type="text" class="form-control" name="cintura" id="cintura" placeholder="Cintura" maxlength="10" />
+							<input type="number" class="form-control" name="cintura" id="cintura" placeholder="Cintura" step="0.01" maxlength="10" />
 						</div>	
 						<div class="col-md-3 mb-3">
 							<label for="cadera">Cadera</label>
-							<input type="text" class="form-control" name="cadera" id="cadera" placeholder="Cadera"  maxlength="10" />
-						</div>																				
-					</div>	
-
-					<div class="form-row">
-						<div class="col-md-3 mb-3">
-							<label for="estatura">Estatura</label>
-							<input type="text" class="form-control" name="estatura" id="estatura" placeholder="Estatura"  maxlength="10" />
-						</div>						
-						<div class="col-md-3 mb-3">
-							<label for="imc">IMC</label>
-							<input type="text" class="form-control" name="imc" id="imc" placeholder="IMC" maxlength="10" />
-						</div>					
-						<div class="col-md-3 mb-3">
-							<label for="talla">Talla</label>
-							<input type="text" class="form-control" name="talla" id="talla" placeholder="Talla" maxlength="10" />
-						</div>	
+							<input type="number" class="form-control" name="cadera" id="cadera" placeholder="Cadera" step="0.01" maxlength="10" />
+						</div>							
 						<div class="col-md-3 mb-3">
 							<label for="indice_cc">Indice CC</label>
-							<input type="text" class="form-control" name="indice_cc" id="indice_cc" placeholder="Indice CC"  maxlength="10" />
-						</div>																											
-					</div>	
-					
-					<div class="form-row">
-						<div class="col-md-3 mb-3">
-							<label for="peso_activo">Peso Activo</label>
-							<input type="text" class="form-control" name="peso_activo" id="peso_activo" placeholder="Peso Activo" maxlength="10" />
-						</div>						
-						<div class="col-md-3 mb-3">
-							<label for="riesgo_vascular">Riesgo Cardiovascular</label>
-							<input type="text" class="form-control" name="riesgo_vascular" id="riesgo_vascular" placeholder="Riesgo Cardiovascular" maxlength="10" />
-						</div>					
-						<div class="col-md-3 mb-3">
-							<label for="porcentaje_grasa">% Grasa</label>
-							<input type="text" class="form-control" name="porcentaje_grasa" id="porcentaje_grasa" placeholder="% Grasa" maxlength="10" />
+							<input type="number" class="form-control" name="indice_cc" id="indice_cc" placeholder="Indice CC" step="0.01" maxlength="10" readonly />
 						</div>	
 						<div class="col-md-3 mb-3">
-							<label for="tipo_dieta">Tipo de Dieta</label>
-							<input type="text" class="form-control" name="tipo_dieta" id="tipo_dieta" placeholder="Tipo de Dieta"  maxlength="10" />
-						</div>																											
+							<label for="brazo">Brazo</label>
+							<input type="number" class="form-control" name="brazo" id="brazo" placeholder="Brazo" step="0.01" maxlength="10" />
+						</div>																													
 					</div>	
-					
-					<div class="form-row">
+
+					<div class="form-row">													
+						<div class="col-md-3 mb-3">
+							<label for="imc">IMC</label>
+							<input type="number" class="form-control" name="imc" id="imc" placeholder="IMC" step="0.01" maxlength="10" readonly />
+						</div>		
+						<div class="col-md-3 mb-3">
+							<label for="msj">MSJ</label>
+							<input type="number" class="form-control" name="msj" id="msj" placeholder="MSJ" step="0.01" maxlength="10" readonly />
+						</div>							
 						<div class="col-md-3 mb-3">
 							<label for="pa">PA</label>
-							<input type="text" class="form-control" name="pa" id="pa" placeholder="PA" maxlength="10" />
-						</div>	
+							<input type="number" class="form-control" name="pa" id="pa" placeholder="PA" step="0.01" maxlength="10" />
+						</div>																										
+					</div>	
+					
+					<div class="form-row">													
 						<div class="col-md-3 mb-3">
-							<label for="abdomen">Abodomen</label>
-							<input type="text" class="form-control" name="abdomen" id="abdomen" placeholder="Abdomen" maxlength="10" />
-						</div>																																							
+							<label for="imc">Sedentario</label>
+							<input type="number" class="form-control" name="sedentario" id="sedentario" placeholder="Sedentario" maxlength="20" readonly />
+						</div>		
+						<div class="col-md-3 mb-3">
+							<label for="act_moderada">Act Moderada</label>
+							<input type="number" class="form-control" name="act_moderada" id="act_moderada" placeholder="Act Moderada" maxlength="20" readonly />
+						</div>							
+						<div class="col-md-3 mb-3">
+							<label for="act_vigorosa">Act Vigorosa</label>
+							<input type="number" class="form-control" name="act_vigorosa" id="act_vigorosa" placeholder="Act Vigorosa" maxlength="20" readonly/>
+						</div>																										
 					</div>						
 
 				  </div>
 				</div>
+						
+				<div class="card">
+				  <div class="card-header text-white bg-info mb-3" align="center">
+					Impedancia
+				  </div>
+				  <div class="card-body">
+
+				  	<div class="form-row">													
+						<div class="col-md-4 mb-3">
+							<label for="impedancia_g">G</label>
+							<input type="text" class="form-control" name="impedancia_g" id="impedancia_g" placeholder="G"  maxlength="20" />
+						</div>		
+						<div class="col-md-4 mb-3">
+							<label for="impedancia_m">M</label>
+							<input type="text" class="form-control" name="impedancia_m" id="impedancia_m" placeholder="M" maxlength="20" />
+						</div>							
+						<div class="col-md-4 mb-3">
+							<label for="impedancia_gv">GV</label>
+							<input type="text" class="form-control" name="impedancia_gv" id="impedancia_gv" placeholder="GV" maxlength="20" />
+						</div>																										
+					</div>				
+
+				  </div>
+				</div>		
+
+				<div class="card">
+				  <div class="card-header text-white bg-info mb-3" align="center">
+					Alimentos
+				  </div>
+				  <div class="card-body">
+
+				  	<div class="form-row">						  
+						<div class="col-md-12 mb-3">
+							<label for="indicaciones">Alimentos</label>
+							<div class="input-group">
+							  <textarea id="alimentos" name="alimentos" placeholder="Alimentos" class="form-control" maxlength="1000" rows="8"></textarea>	
+							  <div class="input-group-prepend">						  
+								<span class="input-group-text">
+									<i class="btn btn-outline-success fas fa-microphone-alt" id="search_alimentos_start"></i>
+									<i class="btn btn-outline-success fas fa-microphone-slash" id="search_alimentos_stop"></i>
+								</span>
+							  </div>								  
+							</div>	
+							<p id="charNum_alimentos">1000 Caracteres</p>
+						</div>																				
+					</div>				
+
+				  </div>
+				</div>						
 
 			</form>
 		</div>
@@ -383,13 +416,16 @@
 			<div class="card-header text-white bg-info mb-3" align="center">
 			Reporte
 			</div>
-			<div class="card-body">
+			<div class="card-body">			
 				<div class="form-row">
-				<div class="col-md-12 mb-3 scrollbar-div">
-					<span id="reporte_consulta"></span>
-				</div>																																	
+					<div class="col-md-12 mb-3 scrollbar-div">	
+						<span id="reporte_consulta"></span>
+					</div>																																	
 				</div>							
 			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success ml-2" form="formulario_antecedentes" type="submit" id="exportReport"><div class="sb-nav-link-icon"></div><i class="fas fa-download fa-lg"></i> Exportar</button>
+		</div>			
 		</div> 
 
 	</div>
@@ -400,6 +436,7 @@
 		<div class="modal-body">
 			<form class="FormularioAjax" id="formulario_pacientes_atenciones" data-async data-target="#rating-modal" action="" method="POST" data-form="" autocomplete="off" enctype="multipart/form-data">
 				<input type="hidden" name="pacientes_id" class="form-control" id="pacientes_id">
+				<input type="hidden" name="edad_paciente" class="form-control" id="edad_paciente">
 				<div class="form-row">
 					<div class="col-md-6 mb-3">
 						<label for="expediente">Expediente</label>
@@ -530,8 +567,8 @@
 			</form>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-primary ml-2" form="formulario_pacientes_atenciones" type="submit" id="regPacientes"><div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Registrar</button>
-			<button class="btn btn-warning ml-2" form="formulario_pacientes_atenciones" type="submit" id="ediPacientes"><div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Editar</button>			
+			<button class="btn btn-primary ml-2" form="formulario_pacientes_atenciones" type="submit" id="regPacientesNutricion"><div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Registrar</button>
+			<button class="btn btn-warning ml-2" form="formulario_pacientes_atenciones" type="submit" id="ediPacientesNutricion"><div class="sb-nav-link-icon"></div><i class="far fa-save fa-lg"></i> Editar</button>			
 		</div>				
 	</div>
 	<!-- FIN DATOS PERSONALES-->
@@ -553,6 +590,17 @@
 		</div>
 	</div>
 	<!-- FIN TAB HOME HISTORIA CLINICA-->
+
+	<!-- INICIO TAB HOME HISTORIA CLINICA-->
+	<div class="tab-pane fade" id="home_form4_nutricion" role="tabpanel" aria-labelledby="home-tab">
+		<div class="modal-footer">
+			<button class="btn btn-primary ml-2" type="submit" id="enviar_enlace_alimentacion" ><div class="sb-nav-link-icon"></div><i class="fas fa-paper-plane"></i> Enviar Formulario</button>
+		</div>			
+		<div class="modal-body">
+			<?php include("templates/alimentos.php"); ?>
+		</div>
+	</div>
+	<!-- FIN TAB HOME HISTORIA CLINICA-->	
 
 	<!-- INICIO TAB HOME HISTORIA CLINICA CIRUGIA-->
 	<div class="tab-pane fade" id="home_form3_nutricion" role="tabpanel" aria-labelledby="home-tab">

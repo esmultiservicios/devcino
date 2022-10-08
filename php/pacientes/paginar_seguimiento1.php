@@ -55,47 +55,59 @@ $result = $mysqli->query($registro) or die($mysqli->error);
 
 $tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
 			<tr>
-			<th width="2.69%">No.</th>
-			<th width="8.69%">Fecha</th>
-			<th width="8.69%">Peso HAB</th>
-			<th width="8.69%">Peso P25 Conslta</th>
-			<th width="8.69%">Brazo</th>				
-			<th width="8.69%">Muñeca</th>		
-			<th width="8.69%">MSJ</th>
-			<th width="8.69%">Cintura</th>
-			<th width="7.69%">Cadera</th>				
-			<th width="7.69%">Indice CC</th>
-			<th width="7.69%">Estatura/th>
-			<th width="7.69%">IMC</th>
-			<th width="7.69%">Talla</th>				
+			<th width="2.26%">No.</th>
+			<th width="8.26%">Fecha</th>
+			<th width="5.26%">Peso HAB</th>
+			<th width="5.26%">Peso</th>
+			<th width="5.26%">Estatura</th>				
+			<th width="5.26%">Cintura</th>		
+			<th width="5.26%">Cadera</th>
+			<th width="5.26%">Indice CC</th>
+			<th width="5.26%">Brazo</th>				
+			<th width="5.26%">IMC</th>
+			<th width="5.26%">MSJ</th>
+			<th width="5.26%">PA</th>
+			<th width="5.26%">Impedancia G</th>				
+			<th width="5.26%">Impedancia M</th>				
+			<th width="5.26%">Impedancia GV</th>
+			<th width="5.26%">Sedentario</th>
+			<th width="5.26%">Act Moderado</th>
+			<th width="5.26%">Act Viugorosa</th>
+			<th width="5.26%">Alimentacion G</th>				
 			</tr>';
 $i = 1;				
 while($registro2 = $result->fetch_assoc()){  
 	$tabla = $tabla.'<tr>
-			<td>'.$i.'</td> 		         		
-			<td>'.$registro2['fecha'].'</td>
-			<td>'.$registro2['peso_hab'].'</td>
-			<td>'.$registro2['peso_p25'].'</td>
-			<td>'.$registro2['brazo'].'</td>
-			<td>'.$registro2['muneca'].'</td>
-			<td>'.$registro2['msj'].'</td>
-			<td>'.$registro2['cintura'].'</td>
-			<td>'.$registro2['cadera'].'</td>
-			<td>'.$registro2['indice_cc'].'</td>			
-			<td>'.$registro2['estatura'].'</td>
-			<td>'.$registro2['imc'].'</td>
-			<td>'.$registro2['talla'].'</td>			
+				<td>'.$i.'</td> 		         		
+				<td>'.$registro2['fecha'].'</td>
+				<td>'.$registro2['peso_hab'].'</td>
+				<td>'.$registro2['peso'].'</td>
+				<td>'.$registro2['estatura'].'</td>
+				<td>'.$registro2['cintura'].'</td>
+				<td>'.$registro2['cadera'].'</td>
+				<td>'.$registro2['indice_cc'].'</td>
+				<td>'.$registro2['brazo'].'</td>
+				<td>'.$registro2['imc'].'</td>			
+				<td>'.$registro2['msj'].'</td>
+				<td>'.$registro2['pa'].'</td>
+				<td>'.$registro2['g'].'</td>					
+				<td>'.$registro2['m'].'</td>
+				<td>'.$registro2['gv'].'</td>			
+				<td>'.$registro2['sedentario'].'</td>
+				<td>'.$registro2['act_moderada'].'</td>
+				<td>'.$registro2['act_vigorosa'].'</td>	
+				<td>'.$registro2['alimentacion'].'</td>				
 			</tr>';	
 			$i++;				
 }
 
 if($nroProductos == 0){
 	$tabla = $tabla.'<tr>
-	   <td colspan="13" style="color:#C7030D">No se encontraron resultados</td>
+	   <td colspan="19" style="color:#C7030D">No se encontraron resultados</td>
 	</tr>';		
 }else{
    $tabla = $tabla.'<tr>
-	  <td colspan="13"><b><p ALIGN="center">Total de Registros Encontrados: '.$nroProductos.'</p></b>
+	  <td colspan="19"><b><p ALIGN="center">Total de Registros Encontrados: '.$nroProductos.'</p></b>
    </tr>';		
 }        
 

@@ -56,19 +56,19 @@ $result = $mysqli->query($registro) or die($mysqli->error);
 
 $tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
 			<tr>
-			<th width="2.69%">No.</th>
-			<th width="8.69%">Fecha</th>
-			<th width="8.69%">Peso HAB</th>
-			<th width="8.69%">Peso P25 Conslta</th>
-			<th width="8.69%">Brazo</th>				
-			<th width="8.69%">Muñeca</th>		
-			<th width="8.69%">MSJ</th>
-			<th width="8.69%">Cintura</th>
-			<th width="7.69%">Cadera</th>				
-			<th width="7.69%">Indice CC</th>
+			<th width="7.69%">No.</th>
+			<th width="7.69%">Fecha</th>
+			<th width="7.69%">Peso HAB</th>
+			<th width="7.69%">Peso</th>
 			<th width="7.69%">Estatura/th>
-			<th width="7.69%">IMC</th>
-			<th width="7.69%">Talla</th>				
+			<th width="7.69%">Cintura</th>
+			<th width="7.69%">Cadera</th>	
+			<th width="7.69%">Indice CC</th>
+			<th width="7.69%">Brazo</th>
+			<th width="7.69%">IMC</th>			
+			<th width="7.69%">MSJ</th>			
+			<th width="7.69%">PA</th>
+			<th width="7.69%">Alimentación</th>				
 			</tr>';
 $i = 1;				
 while($registro2 = $result->fetch_assoc()){  
@@ -76,16 +76,16 @@ while($registro2 = $result->fetch_assoc()){
 			<td>'.$i.'</td> 		         		
 			<td>'.$registro2['fecha'].'</td>
 			<td>'.$registro2['peso_hab'].'</td>
-			<td>'.$registro2['peso_p25'].'</td>
-			<td>'.$registro2['brazo'].'</td>
-			<td>'.$registro2['muneca'].'</td>
-			<td>'.$registro2['msj'].'</td>
+			<td>'.$registro2['peso'].'</td>
+			<td>'.$registro2['estatura'].'</td>
 			<td>'.$registro2['cintura'].'</td>
 			<td>'.$registro2['cadera'].'</td>
-			<td>'.$registro2['indice_cc'].'</td>			
-			<td>'.$registro2['estatura'].'</td>
-			<td>'.$registro2['imc'].'</td>
-			<td>'.$registro2['talla'].'</td>			
+			<td>'.$registro2['indice_cc'].'</td>
+			<td>'.$registro2['brazo'].'</td>
+			<td>'.$registro2['imc'].'</td>			
+			<td>'.$registro2['msj'].'</td>
+			<td>'.$registro2['pa'].'</td>
+			<td>'.$registro2['alimentacion'].'</td>			
 			</tr>';	
 			$i++;				
 }

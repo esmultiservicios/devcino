@@ -5669,6 +5669,14 @@ $('#ediPacientes').on('click', function(e){
 	$("#formulario_pacientes_atenciones").submit();
 });
 
+
+$('#ediPacientesNutricion').on('click', function(e){
+	e.preventDefault();
+	$('#formulario_pacientes_atenciones').attr({ 'data-form': 'update' });
+	$('#formulario_pacientes_atenciones').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/editarPacientes.php' });
+	$("#formulario_pacientes_atenciones").submit();
+});
+
 function getProfesionAtencionCirugiaPacientes(){
     var url = '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/getProfesion.php';		
 		
@@ -6053,6 +6061,7 @@ function viewExpediente(pacientes_id){
 			$('#formulario_atenciones #peso').val(datos[48]);	
 			$('#formulario_atenciones #peso_kg').val(datos[61]);
 			$('#formulario_atenciones #imc').val(datos[50]);
+			$('#formulario_buscarAtencion #imc').val(datos[50]);
 			$('#formulario_atenciones #peso_ideal').val(datos[47]);	
 			$('#formulario_atenciones #peso_ideal_kg').val(datos[60]);	
 			$('#formulario_atenciones #exceso_peso').val(datos[49]);	
@@ -7906,6 +7915,30 @@ function caracteresIndicaciones(){
 		return false;
 	}
 }
+
+$('#formulario_antecedentes #alimentos').keyup(function() {
+	    var max_chars = 1000;
+        var chars = $(this).val().length;
+        var diff = max_chars - chars;
+		
+		$('#formulario_antecedentes #charNum_alimentos').html(diff + ' Caracteres'); 
+		
+		if(diff == 0){
+			return false;
+		}
+});
+
+function caracteresAlimentos(){
+	var max_chars = 1000;
+	var chars = $('#formulario_antecedentes #alimentos').val().length;
+	var diff = max_chars - chars;
+	
+	$('#formulario_antecedentes #charNum_alimentos').html(diff + ' Caracteres'); 
+	
+	if(diff == 0){
+		return false;
+	}
+}
 //FIN FORMULARIO ANTECEDENTES
 
 $(document).ready(function() {
@@ -8304,6 +8337,41 @@ $(document).ready(function() {
 		$('#formulario_antecedentes #search_indicaciones_start').show();
 		$('#formulario_antecedentes #search_indicaciones_stop').hide();
 		recognition.stop();
+	});			
+	$('#formulario_antecedentes #search_alimentos_stop').hide();
+	
+    var recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.lang = "es";
+	
+    $('#formulario_antecedentes #search_alimentos_start').on('click',function(event){
+		$('#formulario_antecedentes #search_alimentos_start').hide();
+		$('#formulario_antecedentes #search_alimentos_stop').show();
+		recognition.start();
+		
+		recognition.onresult = function (event) {
+			finalResult = '';
+			var valor_anterior  = $('#formulario_antecedentes #alimentos').val();
+			for (var i = event.resultIndex; i < event.results.length; ++i) {
+				if (event.results[i].isFinal) {
+					finalResult = event.results[i][0].transcript;
+					if(valor_anterior != ""){
+						$('#formulario_antecedentes #alimentos').val(valor_anterior + ' ' + finalResult);
+						caracteresAlimentos();
+					}else{
+						$('#formulario_antecedentes #alimentos').val(finalResult);
+						caracteresAlimentos();
+					}				
+				}
+			}
+		};		
+		return false;
+    });	
+	
+	$('#formulario_antecedentes #search_alimentos_stop').on("click", function(event){
+		$('#formulario_antecedentes #search_alimentos_start').show();
+		$('#formulario_antecedentes #search_alimentos_stop').hide();
+		recognition.stop();
 	});											
 	//FIN FORMULARIO ANTECEDENTES
 });	
@@ -8336,14 +8404,14 @@ function setAtencionNutricion(pacientes_id, colaborador_id, servicio_id, agenda_
 			   data:'pacientes_id='+pacientes_id,
 			   success: function(valores){
 					var datos = eval(valores);
-					$('#regPacientes').hide();
-					$('#ediPacientes').show();	
+					$('#regPacientesNutricion').hide();
+					$('#ediPacientesNutricion').show();	
+					$('#grupo_pacientes').hide();
 
 					$('#formulario_pacientes_atenciones #pro').val('Edición');
 					$('#formulario_pacientes_atenciones #grupo_expediente').show();
 					$('#formulario_pacientes_atenciones #pacientes_id').val(pacientes_id);
-					$('#formulario_pacientes_atenciones #pacientes_id').val(pacientes_id);
-					$('#formulario_pacientes_atenciones #pacientes_id').val(pacientes_id);
+					$('#formulario_alimentos #paciente_alimentos_id').val(pacientes_id);
 					$('#formulario_pacientes_atenciones #fecha_cita').val(getFechaCita(agenda_id));
 					$('#formulario_seguimiento #fecha_cita').val(getFechaCita(agenda_id));										
 					$('#formulario_pacientes_atenciones #agenda_id').val(agenda_id);					
@@ -8358,7 +8426,7 @@ function setAtencionNutricion(pacientes_id, colaborador_id, servicio_id, agenda_
 					$('#formulario_pacientes_atenciones #direccion').val(datos[8]);					
 					$('#formulario_pacientes_atenciones #fecha_nac').val(datos[9]);
 					$('#formulario_pacientes_atenciones #departamento_id').val(datos[10]);
-					getMunicipioEditar(datos[10], datos[11]);
+					getMunicipioAtencionEditar(datos[10], datos[11]);
 					$('#formulario_pacientes_atenciones #pais_id').val(datos[12]);
 					$('#formulario_pacientes_atenciones #responsable').val(datos[13]);
 					$('#formulario_pacientes_atenciones #responsable_id').val(datos[14]);
@@ -8370,6 +8438,7 @@ function setAtencionNutricion(pacientes_id, colaborador_id, servicio_id, agenda_
 					$('#formulario_antecedentes #edad_consulta').val(datos[6]);
 					$('#formulario_antecedentes #edad_consulta').attr('readonly', true);
 					$('#formulario_antecedentes #atenciones_servicio_id').val(datos[19]);
+					$('#formulario_pacientes_atenciones #edad_paciente').val(datos[20]);
 
 					//DATOS DE LA HISTORIA CLINICA DEL PACIENTE
 					$('#formulario_antecedentes #motivo_consulta').val(datos[19]);
@@ -8615,4 +8684,146 @@ function getFechaActualNutricion(){
 	return fecha_actual;	
 }
 //FIN NUTRICION
+
+
+function calcularIMC(){
+	let peso = $('#formulario_antecedentes #peso').val();
+	let estatura = $('#formulario_antecedentes #estatura').val();
+	let imc = 0;
+
+	if(estatura != 0 || estatura != ""){
+		imc = peso / estatura;
+	}
+
+
+}
+
+//INICIO CALCULO ICC
+$("#primera_consulta_nutricion #cintura").on("keyup", function(e){
+	calcularICC();
+});
+
+$("#primera_consulta_nutricion #cadera").on("keyup", function(e){
+	calcularICC();
+});
+
+function calcularICC(){
+	let icc = 0;
+	let cintura = 0;
+	let cadera = 0;
+
+	if($("#primera_consulta_nutricion #cintura").val() != ""){
+		cintura = $("#primera_consulta_nutricion #cintura").val();
+	}
+
+	if($("#primera_consulta_nutricion #cadera").val() != ""){
+		cadera = $("#primera_consulta_nutricion #cadera").val();
+	}
+
+	if(cadera != 0){
+		icc = parseFloat(cintura) / parseFloat(cadera);	
+	}
+
+	$("#primera_consulta_nutricion #indice_cc").val(icc.toFixed(2));
+}
+
+//FIN CALCULO ICC
+
+//INICIO CALCULO IMC
+$("#primera_consulta_nutricion #peso").on("keyup", function(e){
+	caclularIMC_MSJ();
+});
+
+$("#primera_consulta_nutricion #estatura").on("keyup", function(e){
+	caclularIMC_MSJ();	
+});
+
+function caclularIMC_MSJ(){
+	let imc = 0;
+	let peso = 0;
+	let estatura = 0;
+	let msj = 0;
+	let genero = $("#formulario_pacientes_atenciones #sexo").val();
+	let edad = $("#formulario_pacientes_atenciones #edad_paciente").val();
+	let sedentario = 0;
+	let act_moderada = 0;
+	let act_vigorosa = 0;
+
+	if($("#primera_consulta_nutricion #peso").val() != ""){
+		peso = parseFloat($("#primera_consulta_nutricion #peso").val())/2.2;
+	}
+
+	if($("#primera_consulta_nutricion #estatura").val() != ""){
+		estatura = (parseFloat($("#primera_consulta_nutricion #estatura").val()))/100;
+	}
+
+	if(estatura != 0){
+		imc = parseFloat(peso) / (parseFloat(estatura) * parseFloat(estatura));	
+	}
+
+	$("#primera_consulta_nutricion #imc").val(imc.toFixed(2));
+
+	//calculo MSJ
+	if(genero == "H"){
+		msj = ((10*peso) + (6.25 * (estatura * 100))-(5*edad) + 5);
+ 	}else{
+		msj = ((10*peso) + (6.25 * (estatura * 100))-(5*edad) - 161);
+	}
+
+	$("#primera_consulta_nutricion #msj").val(msj.toFixed(2));
+
+	sedentario = msj*1.4;
+	act_moderada = msj*1.7;
+	act_vigorosa = msj*2;	
+
+	$("#primera_consulta_nutricion #sedentario").val(sedentario.toFixed(2));
+	$("#primera_consulta_nutricion #act_moderada").val(act_moderada.toFixed(2));
+	$("#primera_consulta_nutricion #act_vigorosa").val(act_vigorosa.toFixed(2));
+}
+//FIN CALCULO IMC
+
+//INICIO ENVIAR ENLACE PARA FORMULARIO DE ALIMENTOS
+$("#enviar_enlace_alimentacion").on("click", function (e) {
+	e.preventDefault();
+	var url = '<?php echo SERVERURL; ?>php/mail/enviarEnlaceAlimentos.php';
+
+	$.ajax({
+	   type:'POST',
+	   url:url,
+	   data:'pacientes_id='+$('#formulario_pacientes_atenciones #pacientes_id').val(),
+	   success: function(valores){
+			if(valores == 1){
+				swal({
+					title: "Success", 
+					text: "El enlace fue enviado correctamente",
+					type: "success",
+					timer: 3000, //timeOut for auto-clos
+				});	
+			}else if(valores == 2){
+				swal({
+					title: "Error", 
+					text: "No fue posible enviar el correo electrónico",
+					type: "error", 
+					confirmButtonClass: 'btn-danger'
+				});					
+			}else{
+				swal({
+					title: "Error", 
+					text: "Lo sentimos, el paciente no tiene registrado un correo electrónico, debe ir a la ficha del paciente y actualizar los datos antes de proceder",
+					type: "error", 
+					confirmButtonClass: 'btn-danger'
+				});					
+			}
+			return false;
+		}	
+	});	
+});
+//FIN ENVIAR ENLACE PARA FORMULARIO DE ALIMENTOS
+
+$('#enviar_formulario_alimentacion').on('click', function(e){
+	e.preventDefault();
+	$('#formulario_alimentos').attr({ 'data-form': 'save' });
+	$('#formulario_alimentos').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/addAlimentos.php' });
+	$("#formulario_alimentos").submit();
+});
 </script>

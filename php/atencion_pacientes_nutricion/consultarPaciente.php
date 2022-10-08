@@ -12,7 +12,7 @@ $usuario = $_SESSION['colaborador_id'];
 
 $consulta_expediente = "SELECT p.pacientes_id,  p.nombre, p.apellido, p.identidad, p.telefono1, p.telefono2, p.fecha_nacimiento, p.fecha, p.email, p.genero, p.localidad,
 (CASE WHEN p.estado = '1' THEN 'Activo' ELSE 'Inactivo' END) AS 'estado',
-(CASE WHEN p.expediente = '0' THEN 'TEMP' ELSE p.expediente END) AS 'expediente', p.departamento_id, p.municipio_id, p.pais_id, p.responsable, p.responsable_id, p.profesion_id, p.referidopor AS 'referido', a.servicio_id AS 'servicio_id'
+(CASE WHEN p.expediente = '0' THEN 'TEMP' ELSE p.expediente END) AS 'expediente', p.departamento_id, p.municipio_id, p.pais_id, p.responsable, p.responsable_id, p.profesion_id, p.referidopor AS 'referido', a.servicio_id AS 'servicio_id', p.genero AS 'genero'
 	FROM pacientes AS p
     LEFT JOIN atenciones_nutricion AS a
     ON p.pacientes_id = a.pacientes_id
@@ -39,6 +39,7 @@ $identidad = "";
 $nombre_completo = "";
 $referido = "";
 $servicio_id = "";
+$genero = "";
 	
 if($result->num_rows>0){
 	$consulta_expediente1 = $result->fetch_assoc();
@@ -61,7 +62,8 @@ if($result->num_rows>0){
 	$identidad = $consulta_expediente1['identidad'];
 	$nombre_completo = strtoupper($nombre.' '.$apellido);
 	$referido = $consulta_expediente1['referido'];
-	$servicio_id = $consulta_expediente1['servicio_id'];	
+	$servicio_id = $consulta_expediente1['servicio_id'];
+	$genero = $consulta_expediente1['genero'];
 }
 
 //OBTENER LA EDAD DEL USUARIO 
@@ -109,7 +111,8 @@ $datos = array(
 	16 => $identidad,
 	17 => $nombre_completo,
 	18 => $referido,
-	19 => $servicio_id	
+	19 => $servicio_id,
+	20 => $anos	
 );
 echo json_encode($datos);
 ?>

@@ -10,23 +10,24 @@ $colaborador_id = $_SESSION['colaborador_id'];
 $servicio_id = $_POST['atenciones_servicio_id'];
 $atenciones_nutricion_id = $_POST['atenciones_nutricion_id'];
 $fecha_otros = $_POST['fecha_otros'];
+
 $peso_hab = cleanString($_POST['peso_hab']);
-$peso_p25 = cleanString($_POST['peso_p25']);
-$brazo = cleanString($_POST['brazo']);
-$muneca = cleanString($_POST['muneca']);
-$msj = cleanString($_POST['msj']);
+$peso = cleanString($_POST['peso']);
+$estatura = cleanString($_POST['estatura']);
 $cintura = cleanString($_POST['cintura']);
 $cadera = cleanString($_POST['cadera']);
 $indice_cc = cleanString($_POST['indice_cc']);
-$estatura = cleanString($_POST['estatura']);
+$brazo = cleanString($_POST['brazo']);
 $imc = cleanString($_POST['imc']);
-$talla = cleanString($_POST['talla']);
-$peso_activo = cleanString($_POST['peso_activo']);
-$riesgo_vascular = cleanString($_POST['riesgo_vascular']);
-$porcentaje_grasa = cleanString($_POST['porcentaje_grasa']);
-$tipo_dieta = cleanString($_POST['tipo_dieta']);
+$msj = cleanString($_POST['msj']);
 $pa = cleanString($_POST['pa']);
-$abdomen = cleanString($_POST['abdomen']);
+$sedentario = cleanString($_POST['sedentario']);
+$act_moderada = cleanString($_POST['act_moderada']);
+$act_vigorosa = cleanString($_POST['act_vigorosa']);
+$impedancia_g = cleanString($_POST['impedancia_g']);
+$impedancia_m = cleanString($_POST['impedancia_m']);
+$impedancia_gv = cleanString($_POST['impedancia_gv']);
+$alimentos = cleanString($_POST['alimentos']);
 
 $colaborador_id = $_SESSION['colaborador_id'];
 $fecha_registro = date("Y-m-d H:i:s");
@@ -125,7 +126,7 @@ $result = $mysqli->query($query) or die($mysqli->error);
 
 if($result->num_rows==0){
 	$atenciones_nutricion_detalles_id  = correlativo('atenciones_nutricion_detalles_id', 'atenciones_nutricion_detalles');
-	$insert = "INSERT INTO atenciones_nutricion_detalles VALUES('$atenciones_nutricion_detalles_id','$agenda_id','$pacientes_id','$colaborador_id','$servicio_id','$fecha_otros','$peso_hab','$peso_p25','$brazo','$muneca','$msj','$cintura','$cadera','$indice_cc','$estatura','$imc','$talla','$peso_activo','$riesgo_vascular','$porcentaje_grasa','$tipo_dieta','$pa','$abdomen', '$colaborador_id','$fecha_registro')";	
+	$insert = "INSERT INTO atenciones_nutricion_detalles VALUES('$atenciones_nutricion_detalles_id','$agenda_id','$pacientes_id','$colaborador_id','$servicio_id','$fecha_otros','$peso_hab','$peso','$estatura','$cintura','$cadera','$indice_cc','$brazo','$imc','$msj','$pa','$impedancia_g','$impedancia_m','$impedancia_gv','$sedentario','$act_moderada','$act_vigorosa','$alimentos', '$colaborador_id','$fecha_registro')";	
 
 	$query = $mysqli->query($insert) or die($mysqli->error);
 

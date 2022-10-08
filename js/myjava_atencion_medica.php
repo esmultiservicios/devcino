@@ -6006,6 +6006,7 @@ function viewExpediente(pacientes_id){
 			$('#formulario_atenciones #peso').val(datos[48]);	
 			$('#formulario_atenciones #peso_kg').val(datos[61]);
 			$('#formulario_atenciones #imc').val(datos[50]);
+			$('#formulario_buscarAtencion #imc').val(datos[50]);
 			$('#formulario_atenciones #peso_ideal').val(datos[47]);	
 			$('#formulario_atenciones #peso_ideal_kg').val(datos[60]);	
 			$('#formulario_atenciones #exceso_peso').val(datos[49]);	
