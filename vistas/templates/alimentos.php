@@ -14,7 +14,7 @@
 						</select>
 						<div class="input-group-append" id="buscar_pacientes_alimentos">				
 						<a data-toggle="modal" href="#" class="btn btn-outline-success"><div class="sb-nav-link-icon"></div><i class="fas fa-search fa-lg"></i></a>
-						</div>
+						</div>	
 					</div>
 				</div>							
 			</div>				

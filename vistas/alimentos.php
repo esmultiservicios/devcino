@@ -92,9 +92,7 @@ $mysqli->close();//CERRAR CONEXIÓN
 	<?php 
 		include "script.php"; 
 		
-		include "../js/myjava_alimentos.php"; 		
-		include "../js/select.php"; 	
-		include "../js/functions.php"; 		
+		include "../js/myjava_alimentos.php";
 	?>
 			 
 </body>
