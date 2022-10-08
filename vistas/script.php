@@ -1,7 +1,6 @@
 <script src="<?php echo SERVERURL; ?>js/query/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script src="<?php echo SERVERURL; ?>bootstrap/js/popper.min.js" crossorigin="anonymous"></script>
 <script src="<?php echo SERVERURL; ?>bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
-<script src="<?php echo SERVERURL; ?>js/main.js" crossorigin="anonymous"></script>
 <script src="<?php echo SERVERURL; ?>bootstrap/js/jquery.mCustomScrollbar.concat.min.js"></script>	
 <script src="<?php echo SERVERURL; ?>sweetalert/sweetalert.min.js" crossorigin="anonymous"></script>
 
