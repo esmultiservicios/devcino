@@ -14,7 +14,7 @@ $result = $mysqli->query($consultar_datos);
 $consultar_datos1 = $result->fetch_assoc();
 $paciente = $consultar_datos1['paciente'];
 $para = $consultar_datos1['email'];
-$from = "Formumuario Alimentos";
+$from = "Formulario Alimentos";
 
 if($paciente != ""){ 
       //OBTENEMOS LOS DATOS DEL USUARIO Y DE LA EMPRESA
@@ -69,7 +69,7 @@ if($paciente != ""){
         $smtp_secure = $consulta_correo['smtp_secure'];	
       }
 
-      $asunto = "Formulario Aliemtos\n";
+      $asunto = "Formulario Alimentos\n";
       $CharSet = "UTF-8";
       $mensaje = "";
       $url_logo = SERVERURL."img/logo.png";

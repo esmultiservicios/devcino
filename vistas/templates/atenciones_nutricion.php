@@ -425,7 +425,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-success ml-2" form="formulario_antecedentes" type="submit" id="exportReport"><div class="sb-nav-link-icon"></div><i class="fas fa-download fa-lg"></i> Exportar</button>
-		</div>			
+			</div>			
 		</div> 
 
 	</div>
@@ -598,6 +598,15 @@
 		</div>			
 		<div class="modal-body">
 			<?php include("templates/alimentos.php"); ?>
+
+				<div class="form-group">
+				<div class="col-sm-12">
+					<div class="registros overflow-auto" id="agrega_registros_historia_alimentos"></div>
+				</div>		   
+				</div>
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-center" id="pagination_historia_alimentos"></ul>
+				</nav>			
 		</div>
 	</div>
 	<!-- FIN TAB HOME HISTORIA CLINICA-->	

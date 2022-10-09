@@ -108,7 +108,7 @@ $mysqli->close();//CERRAR CONEXIÓN
       </div>
     </div>
 </div>	
-<!-- FIN MODAL BUSCAR ATENCIONES
+<!-- FIN MODAL BUSCAR ATENCIONES-->
 
   <?php include("modals/modals.php");?>	
 <!--FIN MODAL-->

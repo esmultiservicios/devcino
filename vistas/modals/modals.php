@@ -1668,3 +1668,26 @@
     </div>
 </div>
 <!--FIN MODAL PARA FORMULARIO DESCENTOS EN FACTURACION-->
+
+<!--INICIO MODAL HISTORIAL COMIDA-->
+<div class="modal fade" id="mostrarHistorialAlimentos">
+	<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Registro Comida</h4>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+        </div>
+        <div class="modal-body">		
+			<form class="FormularioAjax" id="formularioHistorialAlimentos" data-async data-target="#rating-modal" action="" method="POST" data-form="" autocomplete="off" enctype="multipart/form-data">			
+				<span id="registros"></span>	
+			</form>
+        </div>		
+		<div class="modal-footer">
+			<button class="btn btn-success ml-2" type="submit" id="okay" data-dismiss="modal"><div class="sb-nav-link-icon"></div><i class="fas fa-thumbs-up fa-lg"></i> Okay</button>	
+		</div>			
+      </div>
+    </div>
+</div>	
+<!--FIN MODAL HISTORIAL COMIDA-->

@@ -8475,6 +8475,7 @@ function setAtencionNutricion(pacientes_id, colaborador_id, servicio_id, agenda_
 
 					getHistoriaClincia(pacientes_id);
 					paginationSeguimiento(1, pacientes_id, getColaborador_idNutricion());
+					paginationHistorialAlimentos(1);
 
 					getDetallesAtencion(pacientes_id);
 
@@ -8578,6 +8579,24 @@ function paginationSeguimiento(partida, pacientes_id, colaborador_id){
 			var array = eval(data);
 			$('#agrega_registros_historia_clinica').html(array[0]);
 			$('#pagination_historia_clinica').html(array[1]);	
+		}
+	});
+	return false;
+}
+
+function paginationHistorialAlimentos(partida){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/paginarHistorialAlimentos.php';
+	let pacientes_id = $('#formulario_pacientes_atenciones #pacientes_id').val();
+	
+	$.ajax({
+		type:'POST',
+		url:url,
+		async: true,
+		data:'partida='+partida+'&pacientes_id='+pacientes_id,
+		success:function(data){
+			var array = eval(data);
+			$('#agrega_registros_historia_alimentos').html(array[0]);
+			$('#pagination_historia_alimentos').html(array[1]);
 		}
 	});
 	return false;
@@ -8825,5 +8844,50 @@ $('#enviar_formulario_alimentacion').on('click', function(e){
 	$('#formulario_alimentos').attr({ 'data-form': 'save' });
 	$('#formulario_alimentos').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/addAlimentos.php' });
 	$("#formulario_alimentos").submit();
+});
+
+function modalHistorialComida(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/getHistorialComidaDetalles.php';
+
+	$('#mostrarHistorialAlimentos').modal({
+		show:true,
+		keyboard: false,
+		backdrop:'static'
+	});
+
+	$.ajax({
+	   type:'POST',
+	   url:url,
+	   data:'pacientes_id='+pacientes_id,
+	   success: function(valores){
+			$("#formularioHistorialAlimentos #registros").html(valores);
+			return false;
+		}	
+	});	
+}
+
+function reportePDFHistorialComida(pacientes_id){
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/generarReporteHistorialcomida.php?pacientes_id='+pacientes_id;
+    window.open(url);
+}
+
+$('#exportReport').on('click', function(e){
+	e.preventDefault();
+	swal({
+		title: "Matenimiento", 
+		text: "Esta opción se encuentra en desarrollo",
+		type: "warning", 
+		confirmButtonClass: 'btn-warning'
+	});		
+});
+
+$('#report_prieravez_nutricion').on('click', function(e){
+	e.preventDefault();
+	swal({
+		title: "Matenimiento", 
+		text: "Esta opción se encuentra en desarrollo",
+		type: "warning", 
+		confirmButtonClass: 'btn-warning'
+	});		
 });
 </script>
