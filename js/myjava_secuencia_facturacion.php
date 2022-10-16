@@ -21,7 +21,7 @@ $(document).ready(function() {
 	funciones();	
 	
 	//INICIO ABRIR VENTANA MODAL PARA EL REGISTRO DE DESCUENTOS
-	$('#form_main_secuencia #nuevo_registro').on('click',function(e){
+	$('#nuevo_registro').on('click',function(e){
 		e.preventDefault();
 		funciones();
 		if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 3 || getUsuarioSistema() == 4 || getUsuarioSistema() == 5){	
@@ -185,9 +185,10 @@ function editarRegistro(secuencia_facturacion_id){
 				//DESHABILITAR OBJETOS
 				$("#formularioSecuenciaFacturacion #secuencia_profesional").attr('disabled', true);
 				$('#formularioSecuenciaFacturacion #group_comentario').hide();
-								
+							
 				$('#secuenciaFacturacion').modal({
 					show:true,
+					keyboard: false,
 					backdrop:'static'
 				});
 				return false;

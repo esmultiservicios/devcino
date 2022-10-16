@@ -11,10 +11,10 @@ $contador = 0;
 $empresa_id = $_SESSION['empresa_id'];
 $colaborador_id = $_SESSION['colaborador_id'];
 
-$queryNumero = "SELECT number AS 'numero'
-	FROM facturas
-	WHERE empresa_id = '$empresa_id'
-	ORDER BY number DESC LIMIT 1";
+$queryNumero = "SELECT siguiente AS 'numero'
+	FROM secuencia_facturacion
+	WHERE activo = 1 AND colaborador_id = '$colaborador_id'
+	ORDER BY siguiente DESC LIMIT 1";
 $resultNumero = $mysqli->query($queryNumero) or die($mysqli->error);
 
 if($resultNumero->num_rows>0){

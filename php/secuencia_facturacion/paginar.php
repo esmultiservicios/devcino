@@ -17,8 +17,8 @@ if($profesional == 0){
 	$where = "WHERE sf.colaborador_id = '$profesional' AND sf.activo = '$estado' AND (e.nombre LIKE '%$dato%' OR sf.siguiente LIKE '$dato%')";	
 }
 $query = "SELECT sf.secuencia_facturacion_id AS 'secuencia_facturacion_id', e.nombre AS 'empresa', sf.cai AS 'cai', e.rtn AS 'rtn', sf.prefijo AS 'prefijo', sf.siguiente AS 'siguiente', CONCAT(sf.prefijo, '', sf.rango_inicial) AS 'rango_inicial', CONCAT(sf.prefijo, '', sf.rango_final) AS 'rango_final', sf.fecha_limite AS 'fecha_limite', sf.fecha_activacion AS 'fecha_activacion',
-(CASE WHEN sf.activo = '1' THEN 'Sí' ELSE 'No' END) AS 'activo',
-CAST(sf.fecha_registro AS DATE) AS 'fecha_registro', sf.relleno AS 'relleno'
+(CASE WHEN sf.activo = '1' THEN 'Sí' ELSE 'No' END) AS 'activo', 
+CAST(sf.fecha_registro AS DATE) AS 'fecha_registro', sf.relleno AS 'relleno', CONCAT(c.nombre, ' ', c.apellido) AS 'profesional'
 	FROM secuencia_facturacion AS sf
 	INNER JOIN colaboradores AS c
 	ON sf.colaborador_id = c.colaborador_id
@@ -58,7 +58,7 @@ if($paginaActual <= 1){
 
 $registro = "SELECT sf.secuencia_facturacion_id AS 'secuencia_facturacion_id', e.nombre AS 'empresa', sf.cai AS 'cai', e.rtn AS 'rtn', sf.prefijo AS 'prefijo', sf.siguiente AS 'siguiente', CONCAT(sf.prefijo, '', sf.rango_inicial) AS 'rango_inicial', CONCAT(sf.prefijo, '', sf.rango_final) AS 'rango_final', sf.fecha_limite AS 'fecha_limite', sf.fecha_activacion AS 'fecha_activacion',
 (CASE WHEN sf.activo = '1' THEN 'Sí' ELSE 'No' END) AS 'activo',
-CAST(sf.fecha_registro AS DATE) AS 'fecha_registro', sf.relleno AS 'relleno'
+CAST(sf.fecha_registro AS DATE) AS 'fecha_registro', sf.relleno AS 'relleno', CONCAT(c.nombre, ' ', c.apellido) AS 'profesional'
 	FROM secuencia_facturacion AS sf
 	INNER JOIN colaboradores AS c
 	ON sf.colaborador_id = c.colaborador_id
@@ -73,7 +73,7 @@ $result = $mysqli->query($registro);
 $tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
 			<tr>
 			<th width="2.09%">No.</th>
-			<th width="11.09%">Empresa</th>				
+			<th width="11.09%">Profesional</th>				
 			<th width="23.09%">CAI</th>
 			<th width="6.09%">RTN</th>
 			<th width="11.09%">Número Siguiente</th>
@@ -93,7 +93,7 @@ while($registro2 = $result->fetch_assoc()){
 	
 	$tabla = $tabla.'<tr>
 			<td>'.$i.'</td> 
-			<td>'.$registro2['empresa'].'</td>	
+			<td>'.$registro2['profesional'].'</td>	
 			<td>'.$registro2['cai'].'</td>	
 			<td>'.$registro2['rtn'].'</td>	
 			<td>'.$numero.'</td>	
