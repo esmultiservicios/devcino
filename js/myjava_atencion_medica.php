@@ -5703,6 +5703,7 @@ $('#formularioAtencionesNotaOperatoria #btn_actualizar').on('click', function(e)
 	e.preventDefault();	
 	mostrarArchivosNotaOperatoria(($('#formularioAtencionesNotaOperatoria #pacientes_id').val()));	
 });
+
 //FINALIZAR ATENCION
 $('#end_atencion').on('click', function(e){
 	e.preventDefault();	
