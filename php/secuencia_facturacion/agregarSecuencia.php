@@ -1,12 +1,12 @@
 <?php
-if(!isset($_SESSION)){ 
+if(!isset($_SESSION)){
 	session_start();
 }
 
 include "../funtions.php";
-   
+
 //CONEXION A DB
-$mysqli = connect_mysqli(); 
+$mysqli = connect_mysqli();
 
 $fecha_registro = date("Y-m-d H:i:s");
 $fecha = date("Y-m-d");
@@ -59,52 +59,53 @@ if($result->num_rows==0){
 
 	if($rango_final != ""){
 		$rango_final =  str_pad($rango_final, $relleno, "0", STR_PAD_LEFT);
-	}	
-	
-	$insert = "INSERT INTO secuencia_facturacion 
-		VALUES('$correlativo','$colaborador_id','$cai','$prefijo','$relleno','$incremento','$siguiente','$rango_inicial','$rango_final','$fecha_activacion','$fecha_limite','$comentario','$estado','$usuario','$fecha_registro')";
+	}
+
+	$documento_id = "1";//FACTURA ELECTRONICA
+	$insert = "INSERT INTO secuencia_facturacion
+		VALUES('$correlativo','$colaborador_id','$cai','$prefijo','$relleno','$incremento','$siguiente','$rango_inicial','$rango_final','$fecha_activacion','$fecha_limite','$comentario','$estado','$usuario','$fecha_registro','$documento_id')";
 	$query = $mysqli->query($insert) or die($mysqli->error);
-	
+
     if($query){
 		$datos = array(
-			0 => "Almacenado", 
-			1 => "Registro Almacenado Correctamente", 
+			0 => "Almacenado",
+			1 => "Registro Almacenado Correctamente",
 			2 => "success",
 			3 => "btn-primary",
 			4 => "formularioSecuenciaFacturacion",
 			5 => "Registro",
-			6 => "Almacen",//FUNCION DE LA TABLA QUE LLAMAREMOS PARA QUE ACTUALICE (DATATABLE BOOSTRAP)
+			6 => "SecuenciaFacturacion",//FUNCION DE LA TABLA QUE LLAMAREMOS PARA QUE ACTUALICE (DATATABLE BOOSTRAP)
 			7 => "", //Modals Para Cierre Automatico
 		);
-		
+
 		/*********************************************************************************************************************************************************************/
 		//INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL
 		$historial_numero = historial();
 		$estado_historial = "Agregar";
 		$observacion_historial = "Se ha agregado una nueva secuencia de facturación con el prefijo: $prefijo y rangos desde $rango_inicial a $rango_final";
 		$modulo = "Secuencia Facturación";
-		$insert = "INSERT INTO historial 
-		   VALUES('$historial_numero','0','0','$modulo','$correlativo','0','0','$fecha','$estado_historial','$observacion_historial','$usuario','$fecha_registro')";	 
+		$insert = "INSERT INTO historial
+		   VALUES('$historial_numero','0','0','$modulo','$correlativo','0','0','$fecha','$estado_historial','$observacion_historial','$usuario','$fecha_registro')";
 		$mysqli->query($insert) or die($mysqli->error);
 		/*******************************************************************************************************************************************************************/
 	}else{
 		$datos = array(
-			0 => "Error", 
-			1 => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir", 
+			0 => "Error",
+			1 => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir",
 			2 => "error",
 			3 => "btn-danger",
 			4 => "",
-			5 => "",			
+			5 => "",
 		);
-	}	
+	}
 }else{
 	$datos = array(
-		0 => "Error", 
-		1 => "Lo sentimos este registro ya existe no se puede almacenar", 
+		0 => "Error",
+		1 => "Lo sentimos este registro ya existe no se puede almacenar",
 		2 => "error",
 		3 => "btn-danger",
 		4 => "",
-		5 => "",		
+		5 => "",
 	);
 }
 

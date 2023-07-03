@@ -83,9 +83,9 @@ if($query){
 		1 => "Registro Editado Correctamente", 
 		2 => "success",
 		3 => "btn-primary",
-		4 => "formularioSecuenciaFacturacion",
+		4 => "",
 		5 => "Editar",
-		6 => "Almacen",//FUNCION DE LA TABLA QUE LLAMAREMOS PARA QUE ACTUALICE (DATATABLE BOOSTRAP)
+		6 => "SecuenciaFacturacionEditar",//FUNCION DE LA TABLA QUE LLAMAREMOS PARA QUE ACTUALICE (DATATABLE BOOSTRAP)
 		7 => "", //Modals Para Cierre Automatico
 	);	
 	
