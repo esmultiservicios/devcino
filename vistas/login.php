@@ -140,7 +140,15 @@
 			  </p>
 		   </center>
         </div>
-        <!-- Copyright -->      
+        <!-- Copyright --> 
+
+        <?php
+          if (SISTEMA_PRUEBA=="SI"){ //CAJA
+        ?>
+            <span class="prueba-sistema">SISTEMA DE PRUEBA</span>
+        <?php
+          }
+        ?>     
     </div>
     
 	<p style="text-align:center">

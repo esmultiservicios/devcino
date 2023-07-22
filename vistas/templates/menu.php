@@ -170,3 +170,12 @@
     </form>
   </div>
 </nav>
+<br/>
+
+<?php
+  if (SISTEMA_PRUEBA=="SI"){ //CAJA
+?>
+    <span class="container-fluid prueba-sistema">SISTEMA DE PRUEBA</span>
+<?php
+  }
+?>
