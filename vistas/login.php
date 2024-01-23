@@ -24,7 +24,7 @@
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Iniciar Sesión</h1>
 
             <p>
-                <center><img src="<?php echo SERVERURL; ?>img/logo.png" width="50%" height="20%"></center>
+                <center><img src="<?php echo SERVERURL; ?>img/cami.svg" width="90%" height="90%"></center>
             </p>
 
             <div class="input-group mb-3">
@@ -71,7 +71,7 @@
         <form class="form-reset" id="forgot_form">
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Restablecer Contraseña</h1>
             <p>
-                <center><img src="<?php echo SERVERURL; ?>img/logo.png" width="50%" height="20%"></center>
+                <center><img src="<?php echo SERVERURL; ?>img/cami.svg" width="90%" height="90%"></center>
             </p>
 
             <div class="input-group mb-3">
@@ -155,7 +155,7 @@
         </form>
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">
-            <center><img src="<?php echo SERVERURL; ?>img/cami.svg" width="90%" height="90%"></center>© 2017 -
+            © 2017 -
             <?php echo date("Y");?> Copyright:
             <center>
                 <p class="navbar-text"> Todos los derechos reservados
