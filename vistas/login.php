@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="<?php echo SERVERURL; ?>img/logo_icono.png">
+    <link rel="shortcut icon" href="<?php echo SERVERURL; ?>img/cami.png">
     <link rel="stylesheet" href="<?php echo SERVERURL; ?>login/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo SERVERURL; ?>fontawesome/css/all.min.css">
     <!--//USO DE ICONOS font awesome-->
