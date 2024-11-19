@@ -5707,8 +5707,8 @@ $('#formularioAtencionesNotaOperatoria #btn_actualizar').on('click', function(e)
 //FINALIZAR ATENCION
 $('#end_atencion').on('click', function(e){
 	e.preventDefault();	
-	var nombre_usuario = consultarNombre(pacientes_id);
-	var expediente_usuario = consultarExpediente(pacientes_id);
+	var nombre_usuario = consultarNombre($('#formulario_atenciones #pacientes_id').val());
+	var expediente_usuario = consultarExpediente($('#formulario_atenciones #pacientes_id').val());
 	var dato;
 
 	if(expediente_usuario == 0){
@@ -6664,7 +6664,7 @@ function llenarPreOperatorio(count){
 	
 		htmlRows += '<div class="col-md-2 mb-3">';                    	
 			htmlRows += '<label for="expediente_pre_fecha_cirugia">Fecha Cirugía</label>';
-			htmlRows += '<input type="date" required id="expediente_pre_fecha_cirugia_'+count+'" name="expediente_pre_fecha_cirugia[]" class="form-control" readonly value="<?php echo date ("Y-m-d");?>" />';	
+			htmlRows += '<input type="date" required id="expediente_pre_fecha_cirugia_'+count+'" name="expediente_pre_fecha_cirugia[]" class="form-control" readonly value="<?php echo date('Y-m-d'); ?>" />';	
 		htmlRows += '</div>';	
 	htmlRows += '</div>';	
 	// FIN PRIMER FILA
