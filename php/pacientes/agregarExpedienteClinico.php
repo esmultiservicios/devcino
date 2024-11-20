@@ -447,13 +447,12 @@ $query_tipo_paciente = "SELECT a.agenda_id
 	ON a.colaborador_id = c.colaborador_id
 	WHERE a.pacientes_id = '$pacientes_id' AND c.puesto_id = '$puesto_colaborador' AND a.servicio_id = '$servicio_id' AND a.status = 1";
 $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->error);
-$consultar_tipo_paciente = $result_tipo_paciente->fetch_assoc(); 
 
-if ($consultar_tipo_paciente['agenda_id']== ""){
-	$paciente = 'N';
-	$color = '#008000'; //VERDE;
-}else{ 
-	$paciente = 'S';
+$tipo_paciente = 'N';
+$color = '#008000'; //VERDE;
+
+if($result->num_rows>0) {
+	$tipo_paciente = 'S';
 	$color = '#0071c5'; //AZUL;
 }	
 
@@ -465,7 +464,7 @@ $result = $mysqli->query($consultar_expediente);
 $expediente = "";
 $nombre = "";
 
-if($result->num_rows>=0){
+if($result->num_rows>0){
 	$consultar_expediente1 = $result->fetch_assoc();
 	$expediente = $consultar_expediente1['expediente'];
 	$nombre = $consultar_expediente1['nombre'];		
@@ -486,7 +485,7 @@ $agenda_id = "";
 if($result_agenda->num_rows==0){
 	$agenda_id = correlativo('agenda_id', 'agenda');
 	$insert = "INSERT INTO agenda 
-	VALUES('$agenda_id', '$pacientes_id', '$expediente', '$colaborador_id', '$hora', '$fecha_cita', '$fecha_cita', '$fecha_registro', '0', '$color', '$observacion','$usuario','$servicio_id','','1','0','2','$paciente','0')";
+	VALUES('$agenda_id', '$pacientes_id', '$expediente', '$colaborador_id', '$hora', '$fecha_cita', '$fecha_cita', '$fecha_registro', '0', '$color', '$observacion','$usuario','$servicio_id','','1','0','2','$tipo_paciente','0')";
 
 	$mysqli->query($insert);
 }else{
@@ -520,22 +519,18 @@ $result = $mysqli->query($query) or die($mysqli->error);
 if($result->num_rows==0){
 	$clinico_id  = correlativo('clinico_id', 'clinico');
 	$insert = "INSERT INTO clinico 
-		VALUES('$clinico_id','$agenda_id','$pacientes_id','$colaborador_id','$servicio_id','$fecha','$edad','$inicio_obesidad','$habito_alimenticio','$tipo_obesidad','$intentos_perdida_peso','$peso_maximo_alcanzado','$peso_maximo_alcanzado_kg','$sedentarismo','$ejercicio','$ejercicio_respuesta','$alergias','$respuesta_alergias','$erge','$respuesta_erge','$hta','$respuesta_hta','$dislipidemia','$respuesta_dislipidemia','$higado_graso','$respuesta_higado_graso','$saos','$respuesta_saos','$hipotiroidismo','$respuesta_hipotiroidismo','$articulares','$respuesta_articulares','$ovarios_poliquisticos','$respuesta_ovarios_poliquisticos','$varices','$respuesta_varices','$tabaquismo','$respuesta_tabaquismo','$alcohol','$respuesta_alcohol','$drogas','$respuesta_drogas','$ant_fami_diabetes','$respuesta_ant_fami_diabetes','$ant_fami_obesidad','$respuesta_ant_fami_obesidad','$ant_fami_cancer_gastrico','$respuesta_ant_fami_cancer_gastrico','$ant_fami_psiquiatricas','$respuesta_respuesta_ant_fami_psiquiatricas','$ant_dm','$respuesta_ant_dm','$otros', '$cirugia_abdominal_expediente', '$talla','$peso_ideal','$peso_ideal_kg','$peso','$peso_kg','$exceso_peso','$exceso_peso_kg','$imc','$diagnostico','$estudios_imagenes','$referencia_a','$recomendaciones','$presupuesto','$expe_observaciones','$paciente','$estado','$fecha_registro')";
+		VALUES('$clinico_id','$agenda_id','$pacientes_id','$colaborador_id','$servicio_id','$fecha','$edad','$inicio_obesidad','$habito_alimenticio','$tipo_obesidad','$intentos_perdida_peso','$peso_maximo_alcanzado','$peso_maximo_alcanzado_kg','$sedentarismo','$ejercicio','$ejercicio_respuesta','$alergias','$respuesta_alergias','$erge','$respuesta_erge','$hta','$respuesta_hta','$dislipidemia','$respuesta_dislipidemia','$higado_graso','$respuesta_higado_graso','$saos','$respuesta_saos','$hipotiroidismo','$respuesta_hipotiroidismo','$articulares','$respuesta_articulares','$ovarios_poliquisticos','$respuesta_ovarios_poliquisticos','$varices','$respuesta_varices','$tabaquismo','$respuesta_tabaquismo','$alcohol','$respuesta_alcohol','$drogas','$respuesta_drogas','$ant_fami_diabetes','$respuesta_ant_fami_diabetes','$ant_fami_obesidad','$respuesta_ant_fami_obesidad','$ant_fami_cancer_gastrico','$respuesta_ant_fami_cancer_gastrico','$ant_fami_psiquiatricas','$respuesta_respuesta_ant_fami_psiquiatricas','$ant_dm','$respuesta_ant_dm','$otros', '$cirugia_abdominal_expediente', '$talla','$peso_ideal','$peso_ideal_kg','$peso','$peso_kg','$exceso_peso','$exceso_peso_kg','$imc','$diagnostico','$estudios_imagenes','$referencia_a','$recomendaciones','$presupuesto','$expe_observaciones','$tipo_paciente','$estado','$fecha_registro')";
 	$query = $mysqli->query($insert) or die($mysqli->error);
 
     if($query){					
-		$datos = array(
-			0 => "Almacenado", 
-			1 => "Registro Almacenado Correctamente", 
-			2 => "success",
-			3 => "btn-primary",
-			4 => "",
-			5 => "Registro",
-			6 => "AtencionMedica",
-			7 => "modal_registro_atenciones", //Modals Para Cierre Automatico
-			8 => $clinico_id,
-			9 => "Guardar",			
-		);
+		$datos = [
+			"status" => "success",
+			"title" => "Success",
+			"message" => "Registro Almacenado Correctamente",
+			"type" => "success",
+			"buttonClass" => "btn-primary",
+			"preoperacion_id" => $clinico_id
+		];		
 		
 		/*********************************************************************************************************************************************************************/
 		//AGREGAMOS LOS ARCHIVOS CARGADOS EN LA ENTIDAD CLINICO_DETALLES	
@@ -569,24 +564,22 @@ if($result->num_rows==0){
 		$mysqli->query($insert) or die($mysqli->error);
 		/*********************************************************************************************************************************************************************/		
 	}else{
-		$datos = array(
-			0 => "Error", 
-			1 => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir", 
-			2 => "error",
-			3 => "btn-danger",
-			4 => "",
-			5 => "",			
-		);
+		$datos = [
+			"status" => "error",
+			"title" => "error",
+			"message" => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir", 
+			"type" => "error",
+			"buttonClass" => "btn-danger"
+		];
 	}
 }else{
-	$datos = array(
-		0 => "Error", 
-		1 => "Lo sentimos este registro ya existe no se puede almacenar", 
-		2 => "error",
-		3 => "btn-danger",
-		4 => "",
-		5 => "",		
-	);
+	$datos = [
+		"status" => "error",
+		"title" => "error",
+		"message" => "Lo sentimos este registro ya existe no se puede almacenar",  
+		"type" => "error",
+		"buttonClass" => "btn-danger"
+	];	
 }
 
 echo json_encode($datos);

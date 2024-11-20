@@ -542,19 +542,15 @@ if($result->num_rows==1){
 	$query = $mysqli->query($update) or die($mysqli->error);
 
     if($update){					
-		$datos = array(
-			0 => "Modificado", 
-			1 => "Registro Modificado Correctamente", 
-			2 => "success",
-			3 => "btn-primary",
-			4 => "",
-			5 => "Registro",
-			6 => "AtencionMedica",
-			7 => "modal_registro_atenciones", //Modals Para Cierre Automatico
-			8 => $clinico_id,
-			9 => "Guardar",			
-		);
-		
+		$datos = [
+			"status" => "success",
+			"title" => "Success",
+			"message" => "Registro Modificado Correctamente", 
+			"type" => "success",
+			"buttonClass" => "btn-primary",
+			"clinico_id" => $clinico_id
+		];
+
 		/*********************************************************************************************************************************************************************/
 		//AGREGAMOS LOS ARCHIVOS CARGADOS EN LA ENTIDAD CLINICO_DETALLES
 		// Count total uploaded files
@@ -586,25 +582,22 @@ if($result->num_rows==1){
 		$mysqli->query($insert) or die($mysqli->error);
 		/*********************************************************************************************************************************************************************/		
 	}else{
-		$datos = array(
-			0 => "Error", 
-			1 => "No se puede modoficar este registro, los datos son incorrectos por favor corregir", 
-			2 => "error",
-			3 => "btn-danger",
-			4 => "",
-			5 => "",			
-		);
+		$datos = [
+			"status" => "error",
+			"title" => "error",
+			"message" => "No se puedo modificar este registro, los datos son incorrectos por favor corregir", 
+			"type" => "error",
+			"buttonClass" => "btn-danger"
+		];		
 	}
 }else{
-	$datos = array(
-		0 => "Error", 
-		1 => "Lo sentimos este registro no existe no se puede modificar", 
-		2 => "error",
-		3 => "btn-danger",
-		4 => "",
-		5 => "",		
-	);
+	$datos = [
+		"status" => "error",
+		"title" => "error",
+		"message" => "Lo sentimos este registro no existe no se puede modificar", 
+		"type" => "error",
+		"buttonClass" => "btn-danger"
+	];
 }
 
 echo json_encode($datos);
-?>

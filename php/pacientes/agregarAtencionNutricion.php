@@ -60,10 +60,10 @@ $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->err
 $consultar_tipo_paciente = $result_tipo_paciente->fetch_assoc(); 
 
 if ($consultar_tipo_paciente['agenda_id']== ""){
-	$paciente = 'N';
+	$tipo_paciente = 'N';
 	$color = '#008000'; //VERDE;
 }else{ 
-	$paciente = 'S';
+	$tipo_paciente = 'S';
 	$color = '#0071c5'; //AZUL;
 }	
 
@@ -96,7 +96,7 @@ $agenda_id = "";
 if($result_agenda->num_rows==0){
 	$agenda_id = correlativo('agenda_id', 'agenda');
 	$insert = "INSERT INTO agenda 
-	VALUES('$agenda_id', '$pacientes_id', '$expediente', '$colaborador_id', '$hora', '$fecha_cita', '$fecha_cita', '$fecha_registro', '0', '$color', '$observacion','$usuario','$servicio_id','','1','0','2','$paciente','0')";
+	VALUES('$agenda_id', '$pacientes_id', '$expediente', '$colaborador_id', '$hora', '$fecha_cita', '$fecha_cita', '$fecha_registro', '0', '$color', '$observacion','$usuario','$servicio_id','','1','0','2','$tipo_paciente','0')";
 
 	$mysqli->query($insert);
 }else{

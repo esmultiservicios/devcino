@@ -15,57 +15,13 @@ $correo = strtolower(cleanString($_POST['correo']));
 $fecha = date("Y-m-d");
 $identidad = $_POST['identidad'];
 
-if(isset($_POST['departamento_id'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['departamento_id'] == ""){
-		$departamento_id = 0;
-	}else{
-		$departamento_id = $_POST['departamento_id'];
-	}
-}else{
-	$departamento_id = 0;
-}
-
-if(isset($_POST['municipio_id'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['municipio_id'] == ""){
-		$departamento_id = 0;
-	}else{
-		$municipio_id = $_POST['municipio_id'];
-	}
-}else{
-	$municipio_id = 0;
-}
-
-if(isset($_POST['pais_id'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['pais_id'] == ""){
-		$pais_id = 0;
-	}else{
-		$pais_id = $_POST['pais_id'];
-	}
-}else{
-	$pais_id = 0;
-}
-
-if(isset($_POST['profesion_pacientes'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['profesion_pacientes'] == ""){
-		$profesion_pacientes = 0;
-	}else{
-		$profesion_pacientes = $_POST['profesion_pacientes'];
-	}
-}else{
-	$profesion_pacientes = 0;
-}
+$departamento_id = isset($_POST['departamento_id']) && $_POST['departamento_id'] !== '' ? $_POST['departamento_id'] : 0;
+$municipio_id = isset($_POST['municipio_id']) && $_POST['municipio_id'] !== '' ? $_POST['municipio_id'] : 0;
+$pais_id = isset($_POST['pais_id']) && $_POST['pais_id'] !== '' ? $_POST['pais_id'] : 0;
+$profesion_pacientes = isset($_POST['profesion_pacientes']) && $_POST['profesion_pacientes'] !== '' ? $_POST['profesion_pacientes'] : 0;
+$responsable_id = isset($_POST['responsable_id']) && $_POST['responsable_id'] !== '' ? $_POST['responsable_id'] : 0;
 
 $responsable = $_POST['responsable'];
-
-if(isset($_POST['responsable_id'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['responsable_id'] == ""){
-		$responsable_id = 0;
-	}else{
-		$responsable_id = $_POST['responsable_id'];
-	}
-}else{
-	$responsable_id = 0;
-}
 
 $referido = cleanStringStrtolower($_POST['referido']);
 $localidad = cleanStringStrtolower($_POST['direccion']);

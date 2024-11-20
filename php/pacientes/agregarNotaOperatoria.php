@@ -104,15 +104,14 @@ $query_tipo_paciente = "SELECT a.agenda_id
 	ON a.colaborador_id = c.colaborador_id
 	WHERE a.pacientes_id = '$pacientes_id' AND c.puesto_id = '$puesto_colaborador' AND a.servicio_id = '$servicio_id' AND a.status = 1";
 $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->error);
-$consultar_tipo_paciente = $result_tipo_paciente->fetch_assoc(); 
 
-if ($consultar_tipo_paciente['agenda_id']== ""){
-	$paciente = 'N';
-	$color = '#008000'; //VERDE;
-}else{ 
-	$paciente = 'S';
-	$color = '#0071c5'; //AZUL;
-}	
+$tipo_paciente  = 'N';
+$color = '#008000'; //VERDE;
+
+if($result->num_rows>0) {
+	$tipo_paciente  = 'S';
+	$color = '#0071c5'; //AZUL;	
+}
 
 $consultar_expediente= "SELECT expediente, CONCAT(nombre,' ',apellido) AS nombre 
 	FROM pacientes 
@@ -143,7 +142,7 @@ $agenda_id = "";
 if($result_agenda->num_rows==0){
 	$agenda_id = correlativo('agenda_id', 'agenda');
 	$insert = "INSERT INTO agenda 
-	VALUES('$agenda_id', '$pacientes_id', '$expediente', '$colaborador_id', '$hora', '$fecha_cita', '$fecha_cita', '$fecha_registro', '0', '$color', '$observacion','$usuario','$servicio_id','','1','0','2','$paciente','0')";
+	VALUES('$agenda_id', '$pacientes_id', '$expediente', '$colaborador_id', '$hora', '$fecha_cita', '$fecha_cita', '$fecha_registro', '0', '$color', '$observacion','$usuario','$servicio_id','','1','0','2','$tipo_paciente','0')";
 
 	$mysqli->query($insert);
 }else{
@@ -177,24 +176,18 @@ $result = $mysqli->query($query) or die($mysqli->error);
 if($result->num_rows==0){
 	$notaoperacion_id  = correlativo('notaoperacion_id', 'notaoperacion');
 	$insert = "INSERT INTO notaoperacion 
-		VALUES('$notaoperacion_id','$agenda_id','$pacientes_id','$colaborador_id','$servicio_id','$fecha','$edad','$talla','$peso_actual','$peso_actual_kg','$nota_peso_perdido','$imc_actual','$nota_tecnica','$cirujano','$asistente','$camara','$anestesia','$anestesiologo','$nota_otros','$nota_hallazgos_operativos','$nota_descripcion_operatoria','$indicaciones','$nota_recomendaciones','$prueba','$blake','$extraccion','$evacuo','$cierro','$comentarios','$paciente','$estado','$fecha_registro')";
+		VALUES('$notaoperacion_id','$agenda_id','$pacientes_id','$colaborador_id','$servicio_id','$fecha','$edad','$talla','$peso_actual','$peso_actual_kg','$nota_peso_perdido','$imc_actual','$nota_tecnica','$cirujano','$asistente','$camara','$anestesia','$anestesiologo','$nota_otros','$nota_hallazgos_operativos','$nota_descripcion_operatoria','$indicaciones','$nota_recomendaciones','$prueba','$blake','$extraccion','$evacuo','$cierro','$comentarios','$tipo_paciente','$estado','$fecha_registro')";
 	$query = $mysqli->query($insert) or die($mysqli->error);
 
     if($query){
-					
-		$datos = array(
-			0 => "Almacenado", 
-			1 => "Registro Almacenado Correctamente", 
-			2 => "success",
-			3 => "btn-primary",
-			4 => "",
-			5 => "Registro",
-			6 => "AtencionMedicaNotaOperatoria",//FUNCION DE LA TABLA QUE LLAMAREMOS PARA QUE ACTUALICE (DATATABLE BOOSTRAP)
-			7 => "modalRegistroPacientesNotatPeratorio", //Modals Para Cierre Automatico
-			8 => $notaoperacion_id,
-			9 => "Guardar",			
-		);
-		
+		$datos = [
+			"status" => "success",
+			"title" => "Success",
+			"message" => "Registro Almacenado Correctamente",
+			"type" => "success",
+			"buttonClass" => "btn-primary",
+			"notaoperacion_id" => $notaoperacion_id
+		];	
 		/*********************************************************************************************************************************************************************/
 		//AGREGAMOS LOS ARCHIVOS CARGADOS EN LA ENTIDAD CLINICO_DETALLES	
 		// Count total uploaded files
@@ -228,24 +221,23 @@ if($result->num_rows==0){
 		$mysqli->query($insert) or die($mysqli->error);
 		/*********************************************************************************************************************************************************************/		
 	}else{
-		$datos = array(
-			0 => "Error", 
-			1 => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir", 
-			2 => "error",
-			3 => "btn-danger",
-			4 => "",
-			5 => "",			
-		);
+		$datos = [
+			"status" => "error",
+			"title" => "error",
+			"message" => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir",  
+			"type" => "error",
+			"buttonClass" => "btn-danger"
+		];
+
 	}
 }else{
-	$datos = array(
-		0 => "Error", 
-		1 => "Lo sentimos este registro ya existe no se puede almacenar", 
-		2 => "error",
-		3 => "btn-danger",
-		4 => "",
-		5 => "",		
-	);
+	$datos = [
+		"status" => "error",
+		"title" => "error",
+		"message" => "Lo sentimos este registro ya existe no se puede almacenar",  
+		"type" => "error",
+		"buttonClass" => "btn-danger"
+	];	
 }
 
 echo json_encode($datos);

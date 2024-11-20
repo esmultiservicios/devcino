@@ -7,8 +7,8 @@ $mysqli = connect_mysqli();
 
 $agenda_id = $_POST['agenda_id'];
 $pacientes_id = $_POST['pacientes_id'];
-$colaborador_id = $_POST['colaborador_id'];
-$servicio_id = $_POST['servicio_id'];
+$colaborador_id = $_SESSION['colaborador_id'];
+$servicio_id = $_POST['servicio_notaOperatoria_id'];
 $fecha = $_POST['nota_fecha'];
 $edad = $_POST['nota_edad_consulta'];
 $talla = cleanStringStrtolower($_POST['nota_talla']);
@@ -88,12 +88,15 @@ $query_tipo_paciente = "SELECT paciente
 	FROM agenda
 	WHERE agenda_id = '$agenda_id'";
 $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->error);
-$consultar_tipo_paciente = $result_tipo_paciente->fetch_assoc(); 
 
-$tipo_paciente = "";
+$tipo_paciente = ""; // Valor predeterminado
 
-if($result_tipo_paciente->num_rows>=0){
-	$tipo_paciente = $consultar_tipo_paciente['paciente'];
+if ($result_tipo_paciente->num_rows > 0) {
+    $consultar_tipo_paciente = $result_tipo_paciente->fetch_assoc();
+    $tipo_paciente = $consultar_tipo_paciente['paciente'];
+} else {
+    // Si no se encuentra el registro, puedes asignar un valor por defecto o manejar el error aquí
+    $tipo_paciente = ""; 
 }
 
 //CONSULTA DATOS DEL PACIENTE
@@ -117,6 +120,7 @@ if($result->num_rows>0){
 $query = "SELECT notaoperacion_id
 	FROM notaoperacion
 	WHERE pacientes_id = '$pacientes_id' AND colaborador_id = '$colaborador_id' AND servicio_id = '$servicio_id'";
+
 $result = $mysqli->query($query) or die($mysqli->error);
 
 if($result->num_rows==1){
@@ -160,20 +164,15 @@ if($result->num_rows==1){
 		WHERE notaoperacion_id = '$notaoperacion_id'";
 	$query = $mysqli->query($udpate) or die($mysqli->error);
 
-    if($query){
-					
-		$datos = array(
-			0 => "Modificado", 
-			1 => "Registro Modificado Correctamente", 
-			2 => "success",
-			3 => "btn-primary",
-			4 => "",
-			5 => "Registro",
-			6 => "AtencionMedica",
-			7 => "modalRegistroPacientesNotatPeratorio", //Modals Para Cierre Automatico
-			8 => $notaoperacion_id,
-			9 => "Guardar",			
-		);
+    if($query){				
+		$datos = [
+			"status" => "success",
+			"title" => "Success",
+			"message" => "Registro Modificado Correctamente", 
+			"type" => "success",
+			"buttonClass" => "btn-primary",
+			"preoperacion_id" => $notaoperacion_id
+		];
 		
 		/*********************************************************************************************************************************************************************/
 		//AGREGAMOS LOS ARCHIVOS CARGADOS EN LA ENTIDAD CLINICO_DETALLES	
@@ -208,25 +207,22 @@ if($result->num_rows==1){
 		$mysqli->query($insert) or die($mysqli->error);
 		/*********************************************************************************************************************************************************************/		
 	}else{
-		$datos = array(
-			0 => "Error", 
-			1 => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir", 
-			2 => "error",
-			3 => "btn-danger",
-			4 => "",
-			5 => "",			
-		);
+		$datos = [
+			"status" => "error",
+			"title" => "error",
+			"message" => "No se puedo modificar este registro, los datos son incorrectos por favor corregir", 
+			"type" => "error",
+			"buttonClass" => "btn-danger"
+		];
 	}
 }else{
-	$datos = array(
-		0 => "Error", 
-		1 => "Lo sentimos este registro no existe no se puede modificar", 
-		2 => "error",
-		3 => "btn-danger",
-		4 => "",
-		5 => "",	
-	);
+	$datos = [
+		"status" => "error",
+		"title" => "error",
+		"message" => "Lo sentimos este registro no existe no se puede modificar", 
+		"type" => "error",
+		"buttonClass" => "btn-danger"
+	];
 }
 
 echo json_encode($datos);
-?>

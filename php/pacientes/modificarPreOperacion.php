@@ -69,11 +69,11 @@ $query_tipo_paciente = "SELECT paciente
 	FROM agenda
 	WHERE agenda_id = '$agenda_id'";
 $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->error);
-$consultar_tipo_paciente = $result_tipo_paciente->fetch_assoc(); 
 
 $tipo_paciente = "";
 
-if($result_tipo_paciente->num_rows>=0){
+if($result_tipo_paciente->num_rows>0){
+	$consultar_tipo_paciente = $result_tipo_paciente->fetch_assoc(); 
 	$tipo_paciente = $consultar_tipo_paciente['paciente'];
 }
 
@@ -134,18 +134,14 @@ if($result->num_rows==1){
 	$query = $mysqli->query($update) or die($mysqli->error);
 
     if($query){		
-		$datos = array(
-			0 => "Modificado", 
-			1 => "Registro Modificado Correctamente", 
-			2 => "success",
-			3 => "btn-primary",
-			4 => "",
-			5 => "Registro",
-			6 => "",//FUNCION DE LA TABLA QUE LLAMAREMOS PARA QUE ACTUALICE (DATATABLE BOOSTRAP)
-			7 => "modalRegistroPacientesPreoPeratorio", //Modals Para Cierre Automatico
-			8 => $preoperacion_id,
-			9 => "Guardar",			
-		);
+		$datos = [
+			"status" => "success",
+			"title" => "Success",
+			"message" => "Registro AlModificado Correctamente",
+			"type" => "success",
+			"buttonClass" => "btn-primary",
+			"preoperacion_id" => $preoperacion_id
+		];
 		
 		/*********************************************************************************************************************************************************************/
 		/*********************************************************************************************************************************************************************/
@@ -159,25 +155,22 @@ if($result->num_rows==1){
 		$mysqli->query($insert) or die($mysqli->error);
 		/*********************************************************************************************************************************************************************/		
 	}else{
-		$datos = array(
-			0 => "Error", 
-			1 => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir", 
-			2 => "error",
-			3 => "btn-danger",
-			4 => "",
-			5 => "",			
-		);
+		$datos = [
+			"status" => "error",
+			"title" => "error",
+			"message" => "No se puedo almacenar este registro, los datos son incorrectos por favor corregir", 
+			"type" => "error",
+			"buttonClass" => "btn-danger"
+		];
 	}
 }else{
-	$datos = array(
-		0 => "Error", 
-		1 => "Lo sentimos este registro no a existe no se puede modificar", 
-		2 => "error",
-		3 => "btn-danger",
-		4 => "",
-		5 => "",		
-	);
+	$datos = [
+        "status" => "error",
+		"title" => "error",
+        "message" => "Lo sentimos este registro ya existe no se puede almacenar", 
+        "type" => "error",
+        "buttonClass" => "btn-danger"
+    ];
 }
 
 echo json_encode($datos);
-?>

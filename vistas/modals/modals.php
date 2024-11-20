@@ -1419,7 +1419,7 @@
 					  </select>
 					</div>					
 					<div class="col-md-3 mb-3">
-					  <label for="expedoente">Profesión <span class="priority">*<span/></label>
+					  <label for="expedoente">Profesión</label>
 					  <div class="input-group mb-3">
 						  <select id="profesion_pacientes" name="profesion_pacientes" class="form-control" data-toggle="tooltip" data-placement="top" title="Profesión">
 							<option value="">Seleccione</option>
@@ -1444,7 +1444,7 @@
 					   </div>						  
 					</div>				
 					<div class="col-md-4 mb-3">
-					  <label for="expedoente">Departamentos <span class="priority">*<span/></label>
+					  <label for="expedoente">Departamentos</label>
 					  <div class="input-group mb-3">
 						  <select id="departamento_id" name="departamento_id" class="form-control" data-toggle="tooltip" data-placement="top" title="Departamentos">
 							<option value="">Seleccione</option>
@@ -1455,7 +1455,7 @@
 					   </div>						  
 					</div>
 					<div class="col-md-4 mb-3">
-					  <label for="expedoente">Municipios <span class="priority">*<span/></label>
+					  <label for="expedoente">Municipios</label>
 					  <div class="input-group mb-3">
 						  <select id="municipio_id" name="municipio_id" class="form-control" data-toggle="tooltip" data-placement="top" title="Municipios">
 							<option value="">Seleccione</option>

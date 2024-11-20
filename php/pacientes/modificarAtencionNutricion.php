@@ -83,18 +83,14 @@ if($result_atencion->num_rows>0){//NO EXISTE LA ATENCION PROCEDEMOS A GUARDARLA
 	$query = $mysqli->query($update);
 
 	if($query){
-		$datos = array(
-			0 => "Modificado", 
-			1 => "Registro Modificado Correctamente", 
-			2 => "success",
-			3 => "btn-primary",
-			4 => "",
-			5 => "Registro",
-			6 => "ModificarAtencionMedica",//FUNCION DE LA TABLA QUE LLAMAREMOS PARA QUE ACTUALICE (DATATABLE BOOSTRAP)
-			7 => "", //Modals Para Cierre Automatico
-			8 => $atenciones_nutricion_id,
-			9 => "",
-		);
+		$datos = [
+			"status" => "success",
+			"title" => "Success",
+			"message" => "Registro Modificado Correctamente", 
+			"type" => "success",
+			"buttonClass" => "btn-primary",
+			"atenciones_nutricion_id" => $atenciones_nutricion_id
+		];		
 
 		//INGRESAR REGISTROS EN LA ENTIDAD HISTORIAL
 		$historial_numero = historial();
@@ -106,24 +102,22 @@ if($result_atencion->num_rows>0){//NO EXISTE LA ATENCION PROCEDEMOS A GUARDARLA
 		$mysqli->query($insert) or die($mysqli->error);
 		/********************************************/			
 	}else{
-		$datos = array(
-			0 => "Error", 
-			1 => "No se puedo modificar este registro, los datos son incorrectos por favor corregir", 
-			2 => "error",
-			3 => "btn-danger",
-			4 => "",
-			5 => "",			
-		);
+		$datos = [
+			"status" => "error",
+			"title" => "error",
+			"message" => "No se puedo modificar este registro, los datos son incorrectos por favor corregir", 
+			"type" => "error",
+			"buttonClass" => "btn-danger"
+		];	
 	}
 }else{//YA EXISTE UNA ATENCION NO SE PUEDE GUARDAR
-	$datos = array(
-		0 => "Error", 
-		1 => "Lo sentimos este registro no existe no se puede almacenar", 
-		2 => "error",
-		3 => "btn-danger",
-		4 => "",
-		5 => "",		
-	);
+	$datos = [
+		"status" => "error",
+		"title" => "error",
+		"message" => "Lo sentimos este registro no existe no se puede modificar", 
+		"type" => "error",
+		"buttonClass" => "btn-danger"
+	];
 }
 
 echo json_encode($datos);

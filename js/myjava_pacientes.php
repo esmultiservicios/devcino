@@ -5694,55 +5694,390 @@ function getProfesionAtencionCirugiaPacientes(){
 //INICIO DATOS DEL PACIENTE
 
 //GUARDA REGISTROS
-$('#reg_atencion').on('click', function(e){
+/*$('#reg_atencion').on('click', function(e){
 	e.preventDefault();	
 	$('#formulario_atenciones').attr({ 'data-form': 'save' }); 
 	$('#formulario_atenciones').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/agregarExpedienteClinico.php' });
 	$("#formulario_atenciones").submit();
-});
+});*/
 
-$('#reg_pre').on('click', function(e){
+/*$('#reg_pre').on('click', function(e){
 	e.preventDefault();	
 	$('#formularioAtencionesPreoperatorio').attr({ 'data-form': 'save' }); 
 	$('#formularioAtencionesPreoperatorio').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/agregarPreOperacion.php' });
 	$("#formularioAtencionesPreoperatorio").submit();
+});*/
+
+$('#reg_atencion').on('click', (e) => {
+    e.preventDefault();
+
+    // Obtener los valores de los campos
+    let servicio_id = $('#atenciones_servicio_id').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    // Si todas las validaciones pasan, enviar el formulario por AJAX
+    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarExpedienteClinico.php';
+    let formData = new FormData($('#formulario_atenciones')[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false, // Evitar que jQuery procese los datos
+        contentType: false, // Evitar que jQuery establezca el tipo de contenido
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
 });
 
-$('#reg_nota').on('click', function(e){
+$('#edi_atencion').on('click', (e) => {
+    e.preventDefault();
+
+    // Obtener los valores de los campos
+    let servicio_id = $('#atenciones_servicio_id').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    // Si todas las validaciones pasan, enviar el formulario por AJAX
+    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarExpedienteClinico.php';
+    let formData = new FormData($('#formulario_atenciones')[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false, // Evitar que jQuery procese los datos
+        contentType: false, // Evitar que jQuery establezca el tipo de contenido
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
+});
+
+$('#reg_pre').on('click', (e) => {
+    e.preventDefault();
+
+    // Obtener los valores de los campos
+    let servicio_id = $('#servicio_preoperatorio_id').val();
+    let pre_fecha_cirugia = $('#pre_fecha_cirugia').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    // Validar que pre_fecha_cirugia no esté vacío
+    if (!pre_fecha_cirugia) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, ingresa la fecha de la cirugía.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si pre_fecha_cirugia está vacío
+    }
+
+    // Si todas las validaciones pasan, enviar el formulario por AJAX
+    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarPreOperacion.php';
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: $('#formularioAtencionesPreoperatorio').serialize(),
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
+});
+
+
+$('#edi_pre').on('click', (e) => {
+    e.preventDefault();
+
+    // Obtener los valores de los campos
+    let servicio_id = $('#servicio_preoperatorio_id').val();
+    let pre_fecha_cirugia = $('#pre_fecha_cirugia').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    // Validar que pre_fecha_cirugia no esté vacío
+    if (!pre_fecha_cirugia) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, ingresa la fecha de la cirugía.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si pre_fecha_cirugia está vacío
+    }	
+    
+    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarPreOperacion.php';
+    let formData = new FormData($('#formularioAtencionesPreoperatorio')[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
+});
+
+$('#reg_nota').on('click', (e) => {
+    e.preventDefault();
+    
+    // Obtener los valores de los campos
+    let servicio_id = $('#servicio_notaOperatoria_id').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarNotaOperatoria.php';
+    let formData = new FormData($('#formularioAtencionesNotaOperatoria')[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
+});
+
+$('#edi_nota').on('click', (e) => {
+    e.preventDefault();
+    
+    // Obtener los valores de los campos
+    let servicio_id = $('#servicio_notaOperatoria_id').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarNotaOperatoria.php';
+    let formData = new FormData($('#formularioAtencionesNotaOperatoria')[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
+});
+
+$('#reg_post').on('click', (e) => {
+    e.preventDefault();
+    
+	let servicio_id = $('#servicio_PostOperatorio_id').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarPostOperatorio.php';
+    let formData = new FormData($('#formularioAtencionesPostOperatoria')[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
+});
+
+$('#edi_nota').on('click', (e) => {
+    e.preventDefault();
+    
+	let servicio_id = $('#buscar_servicios_notaOperatoria_id').val();
+
+    // Validar que servicio_id no esté vacío
+    if (!servicio_id) {
+        swal({
+            title: 'Error',
+            text: 'Por favor, selecciona un servicio.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger'
+        });
+        return; // Detener el proceso si servicio_id está vacío
+    }
+
+    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarNotaOperatoria.php';
+    let formData = new FormData($('#formularioAtencionesNotaOperatoria')[0]);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: (respuesta) => {
+            respuesta = JSON.parse(respuesta);
+
+            swal({
+                title: respuesta.title, 
+                text: respuesta.message,
+                type: respuesta.type, 
+                confirmButtonClass: respuesta.buttonClass
+            });
+        }
+    });
+});
+
+/*$('#reg_nota').on('click', function(e){
 	e.preventDefault();	
 	$('#formularioAtencionesNotaOperatoria').attr({ 'data-form': 'save' }); 
 	$('#formularioAtencionesNotaOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/agregarNotaOperatoria.php' });
 	$("#formularioAtencionesNotaOperatoria").submit();
-});
+});*/
 
-$('#reg_post').on('click', function(e){
+/*$('#reg_post').on('click', function(e){
 	e.preventDefault();	
 	$('#formularioAtencionesPostOperatoria').attr({ 'data-form': 'save' }); 
 	$('#formularioAtencionesPostOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/agregarPostOperatorio.php' });
 	$("#formularioAtencionesPostOperatoria").submit();
-});
+});*/
 
 //EDITAR REGISTROS
-$('#edi_atencion').on('click', function(e){
+/*$('#edi_atencion').on('click', function(e){
 	e.preventDefault();	
 	$('#formulario_atenciones').attr({ 'data-form': 'update' }); 
 	$('#formulario_atenciones').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/modificarExpedienteClinico.php' });
 	$("#formulario_atenciones").submit();
-});
+});*/
 
-$('#edi_pre').on('click', function(e){
+/*$('#edi_pre').on('click', function(e){
 	e.preventDefault();	
 	$('#formularioAtencionesPreoperatorio').attr({ 'data-form': 'update' }); 
-	$('#formularioAtencionesPreoperatorio').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/modificarPreOperacion.php' });
+	$('#formularioAtencionesPreoperatorio').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/.php' });
 	$("#formularioAtencionesPreoperatorio").submit();
-});
+});*/
 
+/*
 $('#edi_nota').on('click', function(e){
 	e.preventDefault();	
 	$('#formularioAtencionesNotaOperatoria').attr({ 'data-form': 'update' }); 
 	$('#formularioAtencionesNotaOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/modificarNotaOperatoria.php' });
 	$("#formularioAtencionesNotaOperatoria").submit();
-});
+});*/
 
 $('#edi_post').on('click', function(e){
 	e.preventDefault();	
