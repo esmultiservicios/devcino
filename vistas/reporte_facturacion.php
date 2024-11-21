@@ -242,7 +242,6 @@ echo $fecha_inicial;
                   <th>ISV</th>
                   <th>Descuento</th>
                   <th>Neto</th>
-                  <th>Servicio</th>
                   <th>Profesional</th>                  
                   <th>Acciones</th>
                 </tr>
