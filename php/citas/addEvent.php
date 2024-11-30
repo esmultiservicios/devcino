@@ -131,11 +131,10 @@ if ($pacientes_id != 0 || $usuario != 0) {
 \t\t ON a.colaborador_id = c.colaborador_id
 \t\t WHERE a.pacientes_id = '$pacientes_id' AND c.puesto_id = '$puesto_colaborador' AND a.servicio_id = '$servicio' AND a.status = 1";
             $result = $mysqli->query($consultar_expediente);
-            $consultar_expediente1 = $result->fetch_assoc();
 
-            if ($consultar_expediente1['agenda_id'] == '') {
-                $paciente = 'N';
-            } else {
+            $paciente = 'N';
+
+            if ($result && $result->num_rows > 0) {
                 $paciente = 'S';
             }
 
