@@ -67,7 +67,7 @@
 								</div>
 								<div class="col-md-3 mb-3">
 									<label>Fecha de Registro <span class="priority">*<span/></label>
-									<input type="date" id="fecha" name="fecha" value="<?php echo date ("Y-m-d");?>" class="form-control"/>
+									<input type="date" id="fecha" name="fecha" value="<?php echo date('Y-m-d'); ?>" class="form-control"/>
 								</div>	
 								<div class="col-md-3 mb-3">
 									<label>Edad</label>
@@ -638,7 +638,7 @@
 								</div>
 								<div class="col-md-3 mb-3">
 									<label>Fecha de Registro <span class="priority">*<span/></label>
-									<input type="date" id="pre_fecha" name="pre_fecha" value="<?php echo date ("Y-m-d");?>" class="form-control"/>
+									<input type="date" id="pre_fecha" name="pre_fecha" value="<?php echo date('Y-m-d'); ?>" class="form-control"/>
 								</div>	
 								<div class="col-md-3 mb-3">
 									<label>Edad</label>
@@ -784,7 +784,7 @@
 							<div class="form-row">
 								<div class="col-md-4">		
 								<label>Cirugía Fecha <span class="priority">*<span/></label>
-								<input type="date" id="pre_fecha_cirugia" name="pre_fecha_cirugia" value="<?php echo date ("Y-m-d");?>" class="form-control" required/>			
+								<input type="date" id="pre_fecha_cirugia" name="pre_fecha_cirugia" value="<?php echo date('Y-m-d'); ?>" class="form-control" required/>			
 								</div>
 								<div class="col-md-8">		
 								<label>Tipo Cirugía</label>
@@ -854,7 +854,7 @@
 								</div>
 								<div class="col-md-3 mb-3">
 									<label>Fecha de Registro <span class="priority">*<span/></label>
-									<input type="date" id="nota_fecha" name="nota_fecha" value="<?php echo date ("Y-m-d");?>" class="form-control"/>
+									<input type="date" id="nota_fecha" name="nota_fecha" value="<?php echo date('Y-m-d'); ?>" class="form-control"/>
 								</div>	
 								<div class="col-md-3 mb-3">
 									<label>Edad</label>
@@ -1269,7 +1269,7 @@
 								</div>
 								<div class="col-md-3 mb-3">
 								<label>Fecha de Registro <span class="priority">*<span/></label>
-								<input type="date" id="post_fecha" name="post_fecha" value="<?php echo date ("Y-m-d");?>" class="form-control"/>
+								<input type="date" id="post_fecha" name="post_fecha" value="<?php echo date('Y-m-d'); ?>" class="form-control"/>
 								</div>	
 								<div class="col-md-3 mb-3">
 								<label>Edad</label>
@@ -1534,7 +1534,7 @@
 					</div>
 					<div class="col-md-3 mb-3">
 						<label for="fecha_nac">Fecha de Nacimiento <span class="priority">*<span/></label>
-						<input type="date" id="fecha_nac" name="fecha_nac" value="<?php echo date ("Y-m-d");?>" class="form-control"/>
+						<input type="date" id="fecha_nac" name="fecha_nac" value="<?php echo date('Y-m-d'); ?>" class="form-control"/>
 					</div>							
 				</div>	
 				<div class="form-row">	
@@ -1669,7 +1669,7 @@
 							</div>								
 							<div class="col-md-2 mb-3">
 								<label for="expediente_fecha_nacimiento">Fecha Nacimiento</label>
-								<input type="date"  id="expediente_fecha_nacimiento" name="expediente_fecha_nacimiento" class="form-control" value="<?php echo date ("Y-m-d");?>" readonly/>
+								<input type="date"  id="expediente_fecha_nacimiento" name="expediente_fecha_nacimiento" class="form-control" value="<?php echo date('Y-m-d'); ?>" readonly/>
 							</div>						
 							<div class="col-md-3 mb-3">
 								<label for="expediente_edad">Edad</label>

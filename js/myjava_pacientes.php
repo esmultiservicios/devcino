@@ -6098,8 +6098,8 @@ $('#formularioAtencionesNotaOperatoria #btn_actualizar').on('click', function(e)
 //FINALIZAR ATENCION
 $('#end_atencion').on('click', function(e){
 	e.preventDefault();	
-	var nombre_usuario = consultarNombre(pacientes_id);
-	var expediente_usuario = consultarExpediente(pacientes_id);
+	var nombre_usuario = consultarNombre($('#formulario_atenciones #pacientes_id').val());
+	var expediente_usuario = consultarExpediente($('#formulario_atenciones #pacientes_id').val());
 	var dato;
 
 	if(expediente_usuario == 0){
