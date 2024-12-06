@@ -4718,50 +4718,38 @@ $(document).ready(function() {
 	});
 
 	//SeguimientoNota Operatoria
-	function notaOperatoriaCalculo(){
-		var lb = 0.00;
-		var talla = 0.00;
+	function postOperatorioCalculo() {
+		// Obtener valores del formulario
+		let lb = parseFloat($("#formularioAtencionesPostOperatoria #post_peso_actual").val()) || 0.00;
+		let talla = parseFloat($("#formularioAtencionesPostOperatoria #post_talla").val()) || 0.00;
 
-		if($("#formularioAtencionesNotaOperatoria #nota_peso_actual").val() == "" || $("#formularioAtencionesNotaOperatoria #nota_peso_actual").val() == null){
-			lb = 0.00;			
-		}else{
-			lb = parseFloat($("#formularioAtencionesNotaOperatoria #nota_peso_actual").val());
-		}
+		// Convertir libras a kilogramos
+		let kg = lb > 0 ? (lb / 2.205).toFixed(2) : "0.00";
 
-		if($("#formularioAtencionesNotaOperatoria #nota_talla").val() == "" || $("#formularioAtencionesNotaOperatoria #nota_talla").val() == null){
-			talla = 0.00;			
-		}else{
-			talla = parseFloat($("#formularioAtencionesNotaOperatoria #nota_talla").val());
-		}
+		// Calcular IMC
+		let imc = talla > 0 ? (kg / (talla * talla)).toFixed(2) : "0.00";
 
-		var kg = 0.00;
-		var imc = 0.00;
+		// Actualizar campos de peso en kg e IMC
+		$("#formularioAtencionesPostOperatoria #post_peso_actual_kg").val(kg);
+		$("#formularioAtencionesPostOperatoria #post_imc_actual").val(imc);
 
-		var kg = lb/2.205;
-		kg = parseFloat(kg).toFixed(2);
+		// Obtener valores iniciales y calcular peso perdido
+		let pesoInicial = parseFloat($('#formulario_atenciones #peso').val()) || 0.00; // Peso inicial
+		let pesoActual = parseFloat($("#formularioAtencionesPostOperatoria #post_peso_actual").val()) || 0.00; // Peso actual
+		let pesoIdeal = parseFloat($('#formulario_atenciones #peso_ideal').val()) || 0.00; // Peso ideal
 
-		if(talla == 0){
-			imc = 0;
-		}else{
-			imc = kg / (talla * talla);
-			imc = parseFloat(imc).toFixed(2);
-		}
+		let pesoPerdido = pesoInicial > pesoActual ? (pesoInicial - pesoActual).toFixed(2) : "0.00";
+		$("#formularioAtencionesPostOperatoria #post_peso_perdido").val(pesoPerdido);
 
-		if(kg == null || kg == ""){
-			kg = 0.0;
-		}
-
-		if(imc == null || imc == ""){
-			imc = 0.0;
-		}			
-
-		$("#formularioAtencionesNotaOperatoria #nota_peso_actual_kg").val(kg);
-		$("#formularioAtencionesNotaOperatoria #nota_imc_actual").val(imc);
-
-		var peso_anterior = $('#formulario_atenciones #peso').val();
-		var peso_actual = $('#formularioAtencionesNotaOperatoria #nota_peso_actual').val();
-		$('#formularioAtencionesNotaOperatoria #nota_peso_perdido').val(peso_anterior - peso_actual);
+		// Calcular EWL (Excess Weight Loss)
+		let excesoPesoInicial = pesoInicial > pesoIdeal ? (pesoInicial - pesoIdeal) : 0.00; // Validar exceso de peso inicial
+		let ewl = excesoPesoInicial > 0
+			? ((pesoInicial - pesoActual) / excesoPesoInicial * 100).toFixed(2)
+			: "0.00";
+		
+		$("#formularioAtencionesPostOperatoria #post_ewl").val(ewl);
 	}
+
 	$("#formularioAtencionesNotaOperatoria #nota_talla").on("keyup", function(e){
 		notaOperatoriaCalculo();
 	});	
@@ -4771,53 +4759,32 @@ $(document).ready(function() {
 	});	
 
 	//Seguimiento Post-Operatorio
-	function postOperatorioCalculo(){
-		var lb = 0.00;
-		var talla = 0.00;
+	function postOperatorioCalculo() {
+		let lb = parseFloat($("#formularioAtencionesPostOperatoria #post_peso_actual").val()) || 0.00;
+		let talla = parseFloat($("#formularioAtencionesPostOperatoria #post_talla").val()) || 0.00;
 
-		if($("#formularioAtencionesPostOperatoria #post_peso_actual").val() == "" || $("#formularioAtencionesPostOperatoria #post_peso_actual").val() == null){
-			lb = 0.00;			
-		}else{
-			lb = parseFloat($("#formularioAtencionesPostOperatoria #post_peso_actual").val());
-		}
+		// Convertir libras a kilogramos
+		let kg = lb > 0 ? (lb / 2.205).toFixed(2) : "0.00";
 
-		if($("#formularioAtencionesPostOperatoria #post_talla").val() == "" || $("#formularioAtencionesPostOperatoria #post_talla").val() == null){
-			talla = 0.00;			
-		}else{
-			talla = parseFloat($("#formularioAtencionesPostOperatoria #post_talla").val());
-		}
+		// Calcular IMC
+		let imc = talla > 0 ? (kg / (talla * talla)).toFixed(2) : "0.00";
 
-		var kg = 0.00;
-		var imc = 0.00;
-
-		var kg = lb/2.205;
-		kg = parseFloat(kg).toFixed(2);
-
-		if(talla == 0){
-			imc = 0;
-		}else{
-			imc = kg / (talla * talla);
-			imc = parseFloat(imc).toFixed(2);
-		}
-
-		if(kg == null || kg == ""){
-			kg = 0.0;
-		}
-
-		if(imc == null || imc == ""){
-			imc = 0.0;
-		}			
-
+		// Actualizar campos de peso en kg e IMC
 		$("#formularioAtencionesPostOperatoria #post_peso_actual_kg").val(kg);
-		$("#formularioAtencionesPostOperatoria #post_imc_actual").val(imc);	
-		
-		var peso_inicial = $('#formulario_atenciones #peso').val();//este es el peso inicial
-		var peso_actual = $('#formularioAtencionesPostOperatoria #post_peso_actual').val();
-		var peso_ideal = $('#formulario_atenciones #peso_ideal').val();
-		$('#formularioAtencionesPostOperatoria #post_peso_perdido').val(peso_inicial - peso_actual);	
-		//CALUCLO %EWL
-		var ewl = ((peso_inicial - peso_actual) /  (peso_inicial - peso_ideal)) * 100;
-		$('#formularioAtencionesPostOperatoria #post_ewl').val(ewl.toFixed(2));	
+		$("#formularioAtencionesPostOperatoria #post_imc_actual").val(imc);
+
+		// Calcular peso perdido
+		let pesoInicial = parseFloat($('#formulario_atenciones #peso').val()) || 0.00;
+		let pesoActual = parseFloat($("#formularioAtencionesPostOperatoria #post_peso_actual").val()) || 0.00; //Peso Actual
+		let pesoIdeal = parseFloat($('#formulario_atenciones #peso_ideal').val()) || 0.00;
+		let pesoPerdido = (pesoInicial - pesoActual).toFixed(2);
+		$("#formularioAtencionesPostOperatoria #post_peso_perdido").val(pesoPerdido);
+
+		// Calcular %EWL (Excess Weight Loss)
+		let ewl = (pesoIdeal < pesoInicial && pesoInicial > pesoActual)
+			? (((pesoInicial - pesoActual) / (pesoInicial - pesoIdeal)) * 100).toFixed(2)
+			: "0.00";
+		$("#formularioAtencionesPostOperatoria #post_ewl").val(ewl);
 	}
 
 	$("#formularioAtencionesPostOperatoria #post_talla").on("keyup", function(e){
@@ -4935,7 +4902,7 @@ $(document).ready(function(e) {
 	});
 });
 
-function setAtencion(pacientes_id){
+function setAtencion(pacientes_id, colaborador_id){
 	$('#main_facturacion').hide();
 	$('#main_atencion').show();
 
@@ -4997,9 +4964,11 @@ function setAtencion(pacientes_id){
 
 					//EXPEDIENTE CLINICO
 					$('#formulario_atenciones #agenda_id').val(agenda_id);
+
 					$('#formulario_atenciones #pacientes_id').val(pacientes_id);
 					$('#formulario_atenciones #colaborador_id').val(colaborador_id);
 					$('#formulario_atenciones #servicio_id').val(servicio_id);
+
 					$('#formulario_atenciones #paciente_consulta').val(datos[17]);
 					$('#formulario_atenciones #edad').val(datos[6]);
 					$('#formulario_atenciones #edad_consulta').val(datos[19]);
@@ -5011,7 +4980,7 @@ function setAtencion(pacientes_id){
 					$('#formularioAtencionesPreoperatorio #agenda_id').val(agenda_id);
 					$('#formularioAtencionesPreoperatorio #pacientes_id').val(pacientes_id);
 					$('#formularioAtencionesPreoperatorio #colaborador_id').val(colaborador_id);
-					$('#formularioAtencionesPreoperatorio #servicio_id').val(servicio_id);
+					$('#formularioAtencionesPreoperatorio #servicio_id').val($('#servicio_preoperatorio_id').val());
 					$('#formularioAtencionesPreoperatorio #pre_paciente_consulta').val(datos[17]);
 					$('#formularioAtencionesPreoperatorio #pre_edad').val(datos[6]);
 					$('#formularioAtencionesPreoperatorio #pre_edad_consulta').val(datos[19]);

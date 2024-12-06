@@ -12,6 +12,7 @@ $estado = $_POST['estado'];
 $paciente = $_POST['paciente'];
 $dato = $_POST['dato'];
 $type = $_SESSION['type'];
+$colaborador_id = $_SESSION['colaborador_id'];
 
 $query_row = "SELECT pacientes_id, CONCAT(nombre,' ',apellido) AS 'paciente', identidad, telefono1, telefono2, fecha_nacimiento, expediente AS 'expediente_', localidad,
 (CASE WHEN estado = '1' THEN 'Activo' ELSE 'Inactivo' END) AS 'estado',
@@ -79,13 +80,18 @@ $tabla = $tabla.'<table class="table table-striped table-condensed table-hover">
 $i=1;						
 while($registro2 = $result->fetch_assoc()){
  
-	if($type == 3){
-		$atencion = '<a class="btn btn btn-secondary ml-2" href="javascript:setAtencion('.$registro2['pacientes_id'].');void(0);"><div class="sb-nav-link-icon"></div><i class="fas fa-book-medical fa-lg"></i> Atención</a>';
-	}else if($type == 4){
-		$atencion = '<a class="btn btn btn-secondary ml-2" href="javascript:setAtencionNutricion('.$registro2['pacientes_id'].');void(0);"><div class="sb-nav-link-icon"></div><i class="fas fa-book-medical fa-lg"></i> Atención</a>';
-	}else{
+	if ($type == 3) {
+		$atencion = '<a class="btn btn btn-secondary ml-2" href="javascript:setAtencion(' . $registro2['pacientes_id'] . ', ' . $colaborador_id . '); void(0);">
+						<div class="sb-nav-link-icon"></div><i class="fas fa-book-medical fa-lg"></i> Atención
+					 </a>';
+	} else if ($type == 4) {
+		$atencion = '<a class="btn btn btn-secondary ml-2" href="javascript:setAtencionNutricion(' . $registro2['pacientes_id'] . ', ' . $colaborador_id . '); void(0);">
+						<div class="sb-nav-link-icon"></div><i class="fas fa-book-medical fa-lg"></i> Atención
+					 </a>';
+	} else {
 		$atencion = '';
 	}
+	
 
 	$tabla = $tabla.'<tr>
 	   <td>'.$i.'</td>

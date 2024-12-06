@@ -19,15 +19,8 @@ $peso_maximo_alcanzado_kg = cleanStringStrtolower($_POST['peso_maximo_alcanzado_
 $sedentarismo = cleanStringStrtolower($_POST['sedentarismo']);
 $usuario = $_SESSION['colaborador_id'];
 
-if(isset($_POST['ejercicio_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['ejercicio_activo'] == ""){
-		$ejercicio = 2;
-	}else{
-		$ejercicio = $_POST['ejercicio_activo'];
-	}
-}else{
-	$ejercicio = 2;
-}
+$ejercicio = isset($_POST['ejercicio_activo']) && $_POST['ejercicio_activo'] !== '' ? $_POST['ejercicio_activo'] : 2;
+
 
 if(isset($_POST['ejercicio_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['ejercicio_respuesta'] == ""){
@@ -40,15 +33,7 @@ if(isset($_POST['ejercicio_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINID
 }
 
 //INICIO PRIMERA FILA
-if(isset($_POST['erge_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['erge_activo'] == ""){
-		$erge = 2;
-	}else{
-		$erge = $_POST['erge_activo'];
-	}
-}else{
-	$erge = 2;
-}
+$erge = isset($_POST['erge_activo']) && $_POST['erge_activo'] !== '' ? $_POST['erge_activo'] : 2;
 
 if(isset($_POST['erge_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['erge_respuesta'] == ""){
@@ -60,15 +45,8 @@ if(isset($_POST['erge_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	$respuesta_erge = "";
 }
 
-if(isset($_POST['hta_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['hta_activo'] == ""){
-		$hta = 2;
-	}else{
-		$hta = $_POST['hta_activo'];
-	}
-}else{
-	$hta = 2;
-}
+$hta = isset($_POST['hta_activo']) && $_POST['hta_activo'] !== '' ? $_POST['hta_activo'] : 2;
+
 
 if(isset($_POST['hta_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['hta_respuesta'] == ""){
@@ -80,15 +58,7 @@ if(isset($_POST['hta_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	$respuesta_hta = "";
 }
 
-if(isset($_POST['higado_graso_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
-	if($_POST['higado_graso_activo'] == ""){
-		$higado_graso = 2;
-	}else{
-		$higado_graso = $_POST['higado_graso_activo'];
-	}
-}else{
-	$higado_graso = 2;
-}
+$higado_graso = isset($_POST['higado_graso_activo']) && $_POST['higado_graso_activo'] !== '' ? $_POST['higado_graso_activo'] : 2;
 
 if(isset($_POST['higado_graso_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['higado_graso_respuesta'] == ""){
