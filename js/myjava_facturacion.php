@@ -11,27 +11,27 @@ $(document).ready(function() {
 	funciones();
 
     //INICIO PAGINATION (PARA LAS BUSQUEDAS SEGUN SELECCIONES)
-	$('#form_main #bs_regis').on('keyup',function(){
+	$('#form_main_facturacion #bs_regis').on('keyup',function(){
 	  pagination(1);
 	});
 
-	$('#form_main #fecha_b').on('change',function(){
+	$('#form_main_facturacion #fecha_b').on('change',function(){
 	  pagination(1);
 	});
 
-	$('#form_main #fecha_f').on('change',function(){
+	$('#form_main_facturacion #fecha_f').on('change',function(){
 	  pagination(1);
 	});
 
-	$('#form_main #clientes').on('change',function(){
+	$('#form_main_facturacion #clientes').on('change',function(){
 	  pagination(1);
 	});
 
-	$('#form_main #profesional').on('change',function(){
+	$('#form_main_facturacion #profesional').on('change',function(){
 	  pagination(1);
 	});
 
-	$('#form_main #estado').on('change',function(){
+	$('#form_main_facturacion #estado').on('change',function(){
 	  pagination(1);
 	});
 	//FIN PAGINATION (PARA LAS BUSQUEDAS SEGUN SELECCIONES)
@@ -173,17 +173,17 @@ function funciones(){
 function pagination(partida){
 	var url = '<?php echo SERVERURL; ?>php/facturacion/paginar.php';
 
-	var fechai = $('#form_main #fecha_b').val();
-  var fechaf = $('#form_main #fecha_f').val();
-  var dato =  $('#form_main #bs_regis').val()
-  var clientes = $('#form_main #clientes').val();
-  var profesional = $('#form_main #profesional').val();
-  var estado = '';
+	var fechai = $('#form_main_facturacion #fecha_b').val();
+	var fechaf = $('#form_main_facturacion #fecha_f').val();
+	var dato =  $('#form_main_facturacion #bs_regis').val()
+	var clientes = $('#form_main_facturacion #clientes').val();
+	var profesional = $('#form_main_facturacion #profesional').val();
+	var estado = '';
 
-  if($('#form_main #estado').val() == ""){
+  if($('#form_main_facturacion #estado').val() == ""){
     estado = 1;
   }else{
-    estado = $('#form_main #estado').val();
+    estado = $('#form_main_facturacion #estado').val();
   }
 
 	$.ajax({
@@ -242,9 +242,9 @@ function getEstado(){
 			url: url,
 	    async: true,
 	        success: function(data){
-			    $('#form_main #estado').html("");
-				  $('#form_main #estado').html(data);
-				  $('#form_main #estado').selectpicker('refresh');
+			    $('#form_main_facturacion #estado').html("");
+				  $('#form_main_facturacion #estado').html(data);
+				  $('#form_main_facturacion #estado').selectpicker('refresh');
         }
      });
 }
@@ -394,7 +394,7 @@ $('#acciones_atras').on('click', function(e){
 	 }
 });
 
-$('#form_main #factura').on('click', function(e){
+$('#form_main_facturacion #factura').on('click', function(e){
 	e.preventDefault();
 	formFactura();
 });
@@ -719,7 +719,7 @@ function cierreCaja(){
 	$('#formularioCierreCaja').attr({ 'action': '<?php echo SERVERURL; ?>php/facturacion/addPago.php' });
 }
 
-$('#form_main #cierre').on('click', function(e){
+$('#form_main_facturacion #cierre').on('click', function(e){
 	e.preventDefault();
 	cierreCaja();
 });
@@ -925,9 +925,9 @@ function getClientes(){
 				type: "POST",
 				url: url,
 				success: function(data){
-					$('#form_main #clientes').html("");
-					$('#form_main #clientes').html(data);
-					$('#form_main #clientes').selectpicker('refresh');
+					$('#form_main_facturacion #clientes').html("");
+					$('#form_main_facturacion #clientes').html(data);
+					$('#form_main_facturacion #clientes').selectpicker('refresh');
 				}
      });
 }
@@ -939,9 +939,9 @@ function getProfesionales(){
 				type: "POST",
 				url: url,
 				success: function(data){
-					$('#form_main #profesional').html("");
-					$('#form_main #profesional').html(data);
-					$('#form_main #profesional').selectpicker('refresh');
+					$('#form_main_facturacion #profesional').html("");
+					$('#form_main_facturacion #profesional').html(data);
+					$('#form_main_facturacion #profesional').selectpicker('refresh');
 				}
      });
 }
@@ -950,16 +950,16 @@ var listar_facturas = function(){
 	var estado = "";
     var paciente = "";
 
-    if ($('#form_main #estado').val() == "" || $('#form_main #estado').val() == null) {
+    if ($('#form_main_facturacion #estado').val() == "" || $('#form_main_facturacion #estado').val() == null) {
         estado = 1;
     } else {
-        estado = $('#form_main #estado').val();
+        estado = $('#form_main_facturacion #estado').val();
     }
 
-    if ($('#form_main #tipo').val() == "" || $('#form_main #tipo').val() == null) {
+    if ($('#form_main_facturacion #tipo').val() == "" || $('#form_main_facturacion #tipo').val() == null) {
         paciente = 1;
     } else {
-        paciente = $('#form_main #tipo').val();
+        paciente = $('#form_main_facturacion #tipo').val();
     }
 	
 	var table_pacientes  = $("#dataTablePacientesMain").DataTable({

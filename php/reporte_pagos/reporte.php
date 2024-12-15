@@ -42,18 +42,18 @@ if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRADOR, ADMINISTRADOR 
 
 //EJECUTAMOS LA CONSULTA DE BUSQUEDA
 
-$registro = "SELECT p.pagos_id AS 'pagos_id', p.fecha AS 'fecha_pago', p.importe AS 'importe', sc.prefijo AS 'prefijo', f.number AS 'numero', CONCAT(pac.nombre,' ',pac.apellido) AS 'paciente', pac.identidad AS 'identidad', sc.relleno AS 'relleno', tp.nombre AS 'tipo_pago', p.efectivo AS 'efectivo', p.tarjeta AS 'tarjeta'
-	FROM pagos AS p
-	INNER JOIN facturas AS f
-	ON p.facturas_id = f.facturas_id
-	INNER JOIN secuencia_facturacion AS sc
-	ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
-	INNER JOIN pacientes AS pac
-	ON f.pacientes_id = pac.pacientes_id
-	INNER JOIN pagos_detalles AS pd
-	ON p.pagos_id = pd.pagos_id
-	INNER JOIN tipo_pago AS tp
-	ON pd.tipo_pago_id = tp.tipo_pago_id
+$registro = "SELECT p.facturas_id AS 'facturas_id', p.pagos_id AS 'pagos_id', p.fecha AS 'fecha_pago', p.importe AS 'importe', sc.prefijo AS 'prefijo', f.number AS 'numero', CONCAT(pac.nombre,' ',pac.apellido) AS 'paciente', pac.identidad AS 'identidad', sc.relleno AS 'relleno', tp.nombre AS 'tipo_pago', p.efectivo AS 'efectivo', p.tarjeta AS 'tarjeta', tp.tipo_pago_id AS 'tipo_pago_id'
+  FROM pagos AS p
+  INNER JOIN facturas AS f
+  ON p.facturas_id = f.facturas_id
+  INNER JOIN secuencia_facturacion AS sc
+  ON f.secuencia_facturacion_id = sc.secuencia_facturacion_id
+  INNER JOIN pacientes AS pac
+  ON f.pacientes_id = pac.pacientes_id
+  INNER JOIN pagos_detalles AS pd
+  ON p.pagos_id = pd.pagos_id
+  INNER JOIN tipo_pago AS tp
+  ON pd.tipo_pago_id = tp.tipo_pago_id
 	".$where."
 	ORDER BY p.fecha DESC";	
 $result = $mysqli->query($registro) or die($mysqli->error);
@@ -253,11 +253,11 @@ $objPHPExcel->getActiveSheet()->SetCellValue("D$fila", 'Identidad');
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
 $objPHPExcel->getActiveSheet()->SetCellValue("E$fila", 'Factura');
 $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
-$objPHPExcel->getActiveSheet()->SetCellValue("F$fila", 'Pago');
+$objPHPExcel->getActiveSheet()->SetCellValue("F$fila", 'Pago Recibido');
 $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
 $objPHPExcel->getActiveSheet()->SetCellValue("G$fila", 'Efectivo');
 $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-$objPHPExcel->getActiveSheet()->SetCellValue("H$fila", 'Tarjeta');
+$objPHPExcel->getActiveSheet()->SetCellValue("H$fila", 'Recibido');
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
 $objPHPExcel->getActiveSheet()->SetCellValue("I$fila", 'Tipo Pago');
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(25);
@@ -268,10 +268,11 @@ $objPHPExcel->getActiveSheet()->getStyle("A$fila:I$fila")->getFont()->setBold(tr
 //rellenar con contenido
 $valor = 1;
 $total_neto = 0;
+$total_efectivo = 0;
+$total_tarjeta = 0;
 
 if($result->num_rows>0){
 	while($registro2 = $result->fetch_assoc()){
-
 		$fila+=1;
 		$numero = $registro2['prefijo'].''.rellenarDigitos($registro2['numero'], $registro2['relleno']);
 		
@@ -292,6 +293,8 @@ if($result->num_rows>0){
 		$objPHPExcel->getActiveSheet()->SetCellValue("I$fila", $registro2['tipo_pago']);
 
 		$total_neto += $registro2['importe'];
+    $total_efectivo += $registro2['efectivo'];
+    $total_tarjeta += $registro2['tarjeta'];
 
 		//Establecer estilo
 		$objPHPExcel->getActiveSheet()->setSharedStyle($bordes, "A$fila:I$fila");	
@@ -302,8 +305,10 @@ if($result->num_rows>0){
 $fila+=1;
 $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "TOTAL");
 $objPHPExcel->getActiveSheet()->SetCellValue("F$fila", $total_neto);
+$objPHPExcel->getActiveSheet()->SetCellValue("G$fila", $total_efectivo);
+$objPHPExcel->getActiveSheet()->SetCellValue("H$fila", $total_tarjeta);
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:E$fila"); //unir celdas 
-$objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:I$fila");
+$objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:H$fila");
 
 //DETALLE DE PAGOS
 
@@ -326,7 +331,7 @@ if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRADOR, ADMINISTRADOR 
 }
 
 //CONSULTAR EL TIPO DE PAGO Y AGRUPARLO
-$query_pago = "SELECT tp.nombre AS 'tipo_pago', b.nombre AS 'banco', SUM(pd.efectivo) AS 'neto'
+$query_pago = "SELECT tp.nombre AS 'tipo_pago', b.nombre AS 'banco', SUM(p.importe) AS 'neto', SUM(p.efectivo) AS 'efectivo', SUM(p.tarjeta) AS 'tarjeta', tp.tipo_pago_id AS 'tipo_pago_id'
 	FROM pagos AS p
 	INNER JOIN facturas AS f
 	ON p.facturas_id = f.facturas_id
@@ -353,26 +358,38 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
 $objPHPExcel->getActiveSheet()->mergeCells("B$fila:C$fila"); //unir celdas
 $objPHPExcel->getActiveSheet()->SetCellValue("D$fila", 'Banco');
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(50);
-$objPHPExcel->getActiveSheet()->SetCellValue("E$fila", 'Neto');
+$objPHPExcel->getActiveSheet()->SetCellValue("E$fila", 'Pago Recibido');
 $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+$objPHPExcel->getActiveSheet()->SetCellValue("F$fila", 'Efectivo');
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+$objPHPExcel->getActiveSheet()->SetCellValue("G$fila", 'Recibido');
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
 
-$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "A$fila:E$fila"); //establecer estilo
-$objPHPExcel->getActiveSheet()->getStyle("A$fila:E$fila")->getFont()->setBold(true); //negrita
+$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "A$fila:G$fila"); //establecer estilo
+$objPHPExcel->getActiveSheet()->getStyle("A$fila:G$fila")->getFont()->setBold(true); //negrita
 
 $valor = 1;
 $total = 0;
+$total_efectivo = 0;
+$total_tarjeta = 0;
+
 if($result_pago->num_rows>0){
-	while($registro2 = $result_pago->fetch_assoc()){ 
-	   $fila+=1;
-	   $total += $registro2['neto'];
-	   $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", $valor);	
+	while($registro2 = $result_pago->fetch_assoc()){            
+       $fila+=1;
+	     $total += $registro2['neto'];
+       $total_efectivo += $registro2['efectivo'];
+       $total_tarjeta += $registro2['tarjeta'];
+
+	     $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", $valor);	
        $objPHPExcel->getActiveSheet()->SetCellValue("B$fila", $registro2['tipo_pago']);	
        $objPHPExcel->getActiveSheet()->mergeCells("B$fila:C$fila"); //unir celdas		  
-	   $objPHPExcel->getActiveSheet()->SetCellValue("D$fila", $registro2['banco']);  
-	   $objPHPExcel->getActiveSheet()->SetCellValue("E$fila", $registro2['neto']);  	   
+	     $objPHPExcel->getActiveSheet()->SetCellValue("D$fila", $registro2['banco']);  
+	     $objPHPExcel->getActiveSheet()->SetCellValue("E$fila", $registro2['neto']);  
+	     $objPHPExcel->getActiveSheet()->SetCellValue("F$fila", $registro2['efectivo']);  
+	     $objPHPExcel->getActiveSheet()->SetCellValue("G$fila", $registro2['tarjeta']);         	   
 	   
        //Establecer estilo
-       $objPHPExcel->getActiveSheet()->setSharedStyle($bordes, "A$fila:E$fila");	
+       $objPHPExcel->getActiveSheet()->setSharedStyle($bordes, "A$fila:G$fila");	
 	   $valor++;
    }	
 }
@@ -380,8 +397,11 @@ $fila+=1;
 $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "TOTAL");
 $objPHPExcel->getActiveSheet()->SetCellValue("E$fila", $total);
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:D$fila"); //unir celdas 
+$objPHPExcel->getActiveSheet()->SetCellValue("F$fila", $total_efectivo);
+$objPHPExcel->getActiveSheet()->SetCellValue("G$fila", $total_tarjeta);
+
 //Establecer estilo
-$objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:E$fila");
+$objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:G$fila");
 //*************Guardar como excel 2003*********************************
 $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel); //Escribir archivo
 $objPHPExcel->getActiveSheet()->getHeaderFooter()->setDifferentOddEven(false);

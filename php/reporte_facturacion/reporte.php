@@ -11,22 +11,25 @@ include "../../PHPExcel/Classes/PHPExcel.php";
 $desde = $_GET['desde'];
 $hasta = $_GET['hasta'];
 $profesional = $_GET['colaborador'];
-$usuario = $_SESSION['colaborador_id'];
-$type = $_SESSION['type'];	
 $estado = $_GET['estado'];
+$usuario = $_SESSION['colaborador_id'];
+$type = $_SESSION['type'];
+
+if($estado == 1){
+   $in = "IN(2,4)";
+}else if($estado == 4){
+	$in = "IN(4)";
+ }else{
+	$in = "IN(3)";
+}
 
 $mes=nombremes(date("m", strtotime($desde)));
 $mes1=nombremes(date("m", strtotime($hasta)));
 $año=date("Y", strtotime($desde));
 $año2=date("Y", strtotime($hasta));
+$type = $_SESSION['type'];
 
-if($estado == 1){
-   $in = "IN(2,4)";
-}else{
-	$in = "IN(3)";
-}
-
-if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRAOD, ADMINISTRADOR Y CONTADOR GENERAL
+if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRADOR, ADMINISTRADOR Y CONTADOR GENERAL
 	if($profesional == ""){
 		$where = "WHERE f.fecha BETWEEN '$desde' AND '$hasta' AND f.estado ".$in;	
 	}else{
@@ -280,7 +283,7 @@ $valor = 1;
 $total_precio_neto = 0; 
 $total_isv_neto = 0;
 $total_descuento_neto = 0;
-$totoa_total_neto = 0;
+$total_total_neto = 0;
 
 if($result->num_rows>0){
 	while($registro2 = $result->fetch_assoc()){
@@ -340,7 +343,7 @@ if($result->num_rows>0){
 		$total_precio_neto += $precio; 
 		$total_isv_neto += $isv_neto;
 		$total_descuento_neto += $descuento;
-		$totoa_total_neto += $total;	
+		$total_total_neto += $total;	
 		
 		//CONSULTAR LOS PRODUCTOS ENTREGADOS AL PACIENTE
 		$atencion = "";
@@ -372,15 +375,15 @@ $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "TOTAL");
 $objPHPExcel->getActiveSheet()->SetCellValue("G$fila", $total_precio_neto);
 $objPHPExcel->getActiveSheet()->SetCellValue("H$fila", $total_isv_neto);
 $objPHPExcel->getActiveSheet()->SetCellValue("I$fila", $total_descuento_neto);
-$objPHPExcel->getActiveSheet()->SetCellValue("J$fila", $totoa_total_neto);
+$objPHPExcel->getActiveSheet()->SetCellValue("J$fila", $total_total_neto);
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:F$fila"); //unir celdas 
 $objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:J$fila");
 
-if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRAOD, ADMINISTRADOR Y CONTADOR GENERAL
+if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRADOR, ADMINISTRADOR Y CONTADOR GENERAL
 	if($profesional == ""){
-		$where = "WHERE p.fecha BETWEEN '$desde' AND '$hasta' AND p.estado = 1";
+		$where = "WHERE p.fecha BETWEEN '$desde' AND '$hasta' AND p.estado = '$estado'";
 	}else{
-		$where = "WHERE f.colaborador_id = '$profesional' AND p.fecha BETWEEN '$desde' AND '$hasta' AND p.estado = 1";
+		$where = "WHERE f.colaborador_id = '$profesional' AND p.fecha BETWEEN '$desde' AND '$hasta' AND p.estado = '$estado'";
 	}
 }else{
 	if($profesional == ""){
@@ -441,8 +444,6 @@ $fila+=1;
 $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "TOTAL");
 $objPHPExcel->getActiveSheet()->SetCellValue("D$fila", $total);
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:C$fila"); //unir celdas 
-//Establecer estilo
-$objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:D$fila");
 
 //CREDITO
 if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRAOD, ADMINISTRADOR Y CONTADOR GENERAL
@@ -544,7 +545,7 @@ if($result_credito->num_rows>0){
 		$total_precio_neto += $precio; 
 		$total_isv_neto += $isv_neto;
 		$total_descuento_neto += $descuento;
-		$totoa_total_neto += $total;	
+		$total_total_neto += $total;	
 		
 		//CONSULTAR LOS PRODUCTOS ENTREGADOS AL PACIENTE
 		$atencion = "";
@@ -579,7 +580,6 @@ if($result_credito->num_rows>0){
 	$objPHPExcel->getActiveSheet()->mergeCells("A$fila:F$fila"); //unir celdas 
 	$objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:J$fila");    
 }
-
 
 //ANULADAS
 if($type == 1 || $type == 2 || $type == 4){//SUPER ADMINISTRAOD, ADMINISTRADOR Y CONTADOR GENERAL
@@ -618,6 +618,11 @@ if($result_anuladas->num_rows>0){
 	$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "A$fila:O$fila");
 	
 	$valor = 1;
+	
+	$total_precio_neto = 0; 
+	$total_isv_neto = 0;
+	$total_descuento_neto = 0;
+	$total_total_neto = 0;	
 	
 	while($registro2 = $result_anuladas->fetch_assoc()){
 		$facturas_id = $registro2['facturas_id'];
@@ -676,7 +681,7 @@ if($result_anuladas->num_rows>0){
 		$total_precio_neto += $precio; 
 		$total_isv_neto += $isv_neto;
 		$total_descuento_neto += $descuento;
-		$totoa_total_neto += $total;	
+		$total_total_neto += $total;	
 		
 		//CONSULTAR LOS PRODUCTOS ENTREGADOS AL PACIENTE
 		$atencion = "";
@@ -700,8 +705,8 @@ if($result_anuladas->num_rows>0){
 		//Establecer estilo
 		$objPHPExcel->getActiveSheet()->setSharedStyle($bordes, "A$fila:O$fila");	
 		$valor++;
-   }
-
+   }	
+   
 	$fila+=1;
 	$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "TOTAL");
 	$objPHPExcel->getActiveSheet()->SetCellValue("G$fila", $total_precio_neto);
@@ -711,6 +716,7 @@ if($result_anuladas->num_rows>0){
 	$objPHPExcel->getActiveSheet()->mergeCells("A$fila:F$fila"); //unir celdas 
 	$objPHPExcel->getActiveSheet()->setSharedStyle($totales, "A$fila:J$fila");    
 }
+//Establecer estilo
 //*************Guardar como excel 2003*********************************
 $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel); //Escribir archivo
 $objPHPExcel->getActiveSheet()->getHeaderFooter()->setDifferentOddEven(false);
