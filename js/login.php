@@ -63,8 +63,8 @@ $(document).ready(function(){
 					swal({
 						title: 'Error', 
 						text: 'Usuario y/o contraseña son incorrectos',
-						type: 'error', 
-						confirmButtonClass: 'btn-danger'
+						icon: 'error', 
+						dangerMode: true
 					});	
 					$("#loginform #acceso").hide();
 					$("#loginform #acceso").html("");
@@ -73,8 +73,8 @@ $(document).ready(function(){
 					swal({
 						title: 'Error', 
 						text: 'Su usuario no se encuentra activo',
-						type: 'error', 
-						confirmButtonClass: 'btn-danger'
+						icon: 'error', 
+						dangerMode: true
 					});	
 					$("#loginform #acceso").hide();
 					$("#loginform #acceso").html("");
@@ -86,8 +86,8 @@ $(document).ready(function(){
 				swal({
 					title: 'Error', 
 					text: 'No se enviaron los datos, favor corregir',
-					type: 'error', 
-					confirmButtonClass: 'btn-danger'
+					icon: 'error', 
+					dangerMode: true
 				});	
 				$("#loginform #acceso").hide();
 				$("#loginform #acceso").html("");
@@ -117,22 +117,22 @@ $(document).ready(function(){
 					swal({
 						title: "Error", 
 						text: "Error al resetear la contraseña",
-						type: "error", 
-						confirmButtonClass: 'btn-danger'
+						icon: "error", 
+						dangerMode: true
 					});	
 				}else if (resp == 3){ 
 					swal({
 						title: "Error", 
 						text: "El usuario ingresado no existe",
-						type: "error", 
-						confirmButtonClass: 'btn-danger'
+						icon: "error", 
+						dangerMode: true
 					});	
 				}else{
 					swal({
 						title: "Error", 
 						text: "Error al completar los datos",
-						type: "error", 
-						confirmButtonClass: 'btn-danger'
+						icon: "error", 
+						dangerMode: true
 					});	
 				}
 										
@@ -141,8 +141,8 @@ $(document).ready(function(){
 				swal({
 					title: "Error", 
 					text: "Error al procesar su solicitud de inicio de sesión",
-					type: "error", 
-					confirmButtonClass: 'btn-danger'
+					icon: "error", 
+					dangerMode: true
 				});				
 			}
 	});

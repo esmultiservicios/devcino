@@ -33,8 +33,8 @@ $(document).ready(function() {
 			swal({
 				title: "Acceso Denegado", 
 				text: "No tiene permisos para ejecutar esta acción",
-				type: "error", 
-				confirmButtonClass: 'btn-danger'
+				icon: "error", 
+				dangerMode: true
 			});							 
        }	
 	});	
@@ -73,8 +73,8 @@ if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() 
 		swal({
 			title: "Error", 
 			text: "El comentario no puede quedar en blanco",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error", 
+			dangerMode: true
 		});	
 		return false;
 	}
@@ -82,8 +82,8 @@ if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() 
 	swal({
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
-		type: "error", 
-		confirmButtonClass: 'btn-danger'
+		icon: "error", 
+		dangerMode: true
 	});					 
 }	 
 });
@@ -131,8 +131,8 @@ $(document).ready(function(e) {
 					swal({
 						title: "Error", 
 						text: "Registro no encontrado",
-						type: "error", 
-						confirmButtonClass: 'btn-danger'
+						icon: "error", 
+						dangerMode: true
 					});	
 				  $("#reg_preclinica").attr('disabled', true);
 				 return false;
@@ -140,8 +140,8 @@ $(document).ready(function(e) {
 					swal({
 						title: "Error", 
 						text: "Este es un usuario temporal, no se puede agregar la preclínica, o simplemente el usuario no existe",
-						type: "error", 
-						confirmButtonClass: 'btn-danger'
+						icon: "error", 
+						dangerMode: true
 					});	
 
 				  $("#reg_preclinica").attr('disabled', true)				  
@@ -150,8 +150,8 @@ $(document).ready(function(e) {
 					swal({
 						title: "Error", 
 						text: "Este usuario es un familiar, solo se permite buscar usuarios, por favor verificar con el departamento de Admisión, para más detalles",
-						type: "error", 
-						confirmButtonClass: 'btn-danger'
+						icon: "error", 
+						dangerMode: true
 					});	
 
 				  $("#reg_preclinica").attr('disabled', true);				  
@@ -383,16 +383,16 @@ function editarRegistro(agenda_id, expediente){
 	swal({
 		title: "Error", 
 		text: "Este es un expediente temporal, no se puede almacenar",
-		type: "error", 
-		confirmButtonClass: 'btn-danger'
+		icon: "error", 
+		dangerMode: true
 	});		 
   }
  }else{
 	swal({
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
-		type: "error", 
-		confirmButtonClass: 'btn-danger'
+		icon: "error", 
+		dangerMode: true
 	});							 
    }
 }
@@ -416,29 +416,36 @@ function nosePresntoRegistro(id, pacientes_id){
 		}
 	
 		swal({
-		  title: "¿Esta seguro?",
-		  text: "¿Desea remover este usuario: " + dato + " que no se presento a su cita?",
-		  type: "input",
-		  showCancelButton: true,
-		  closeOnConfirm: false,
-		  inputPlaceholder: "Comentario",
-		  cancelButtonText: "Cancelar",
-		  confirmButtonText: "¡Sí, remover el usuario!",
-		  confirmButtonClass: "btn-warning"
-		}, function (inputValue) {
-		  if (inputValue === false) return false;
-		  if (inputValue === "") {
-			swal.showInputError("¡Necesita escribir algo!");
-			return false
-		  }
-			eliminarRegistro(id, inputValue);
-		});	
+			title: "¿Esta seguro?",
+			text: "¿Desea remover este usuario: " + dato + " que no se presento a su cita?",
+			content: {
+				element: "input",
+				attributes: {
+					placeholder: "Comentario",
+					type: "text",
+				},
+			},
+			icon: "warning",
+			buttons: {
+				cancel: "Cancelar",
+				confirm: {
+					text: "¡Sí, remover el usuario!",
+					closeModal: false,
+				},
+			},
+		}).then((value) => {
+			if (value === null || value.trim() === "") {
+				swal("¡Necesita escribir algo!", { icon: "error" });
+				return false;
+			}
+			eliminarRegistro(id, value);
+		});
    }else{
 		swal({
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error", 
+			dangerMode: true
 		});						 
    }
 }
@@ -454,8 +461,8 @@ function eliminarRegistro(id, comentario){
 		swal({
 			title: "Acceso Denegado", 
 			text: "No se puede agregar/modificar registros fuera de este periodo",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error", 
+			dangerMode: true
 		});			
 	   return false;			   
 	}else{
@@ -469,7 +476,7 @@ function eliminarRegistro(id, comentario){
 				swal({
 					title: "Success", 
 					text: "Registro removido correctamente",
-					type: "success",
+					icon: "success",
 					timer: 3000, //timeOut for auto-close
 				});	
                 pagination(1);				
@@ -477,24 +484,24 @@ function eliminarRegistro(id, comentario){
 				swal({
 					title: "Error", 
 					text: "Este registro ya tiene almacenada una ausencia",
-					type: "error", 
-					confirmButtonClass: 'btn-danger'
+					icon: "error", 
+					dangerMode: true
 				});				  
 		
 			  }else if(registro == 4){	
 				swal({
 					title: "Error", 
 					text: "Este usuario ya ha sido precliniado, no puede marcarle una ausencia",
-					type: "error", 
-					confirmButtonClass: 'btn-danger'
+					icon: "error", 
+					dangerMode: true
 				});				  
 			    return false; 
 			  }else{
 				swal({
 					title: "Error", 
 					text: "Error al mover el registro",
-					type: "error", 
-					confirmButtonClass: 'btn-danger'
+					icon: "error", 
+					dangerMode: true
 				});				  
 			  }
   		  }
@@ -504,8 +511,8 @@ function eliminarRegistro(id, comentario){
 		swal({
 			title: "Error", 
 			text: "No se puede ejecutar esta acción fuera de esta fecha",
-			type: "error", 
-			confirmButtonClass: 'btn-danger'
+			icon: "error", 
+			dangerMode: true
 		});
 	}
   }
@@ -563,7 +570,7 @@ function evaluarRegistrosPendientes(){
 			  swal({
 					title: 'Advertencia', 
 					text: "Se le recuerda que tiene " + datos[0] + " " + string + " de hacer su Preclínica en este mes de " + datos[1] + ". Debe revisar sus registros pendientes para todos los servicios.", 
-					type: 'warning', 
+					icon: 'warning', 
 					confirmButtonClass: 'btn-warning'
 			  });				  
 		   }

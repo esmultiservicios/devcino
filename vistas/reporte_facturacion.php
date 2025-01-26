@@ -256,15 +256,6 @@ echo $fecha_inicial;
                                 <th id="footer-neto"></th>
                                 <th colspan="3"></th>
                             </tr>
-                            <tr>
-                              <th colspan="2">Detalles de pago</th>    
-                              <th colspan="10"></th>
-                            </tr>
-                            <tr>
-                              <th id="tipo_pago"></th>
-                              <th id="total_pago"></th>
-                              <th colspan="10"></th>
-                            </tr>
                         </tfoot>
                     </table>
                 </div>

@@ -39,146 +39,148 @@ $('.FormularioAjax').submit(function (e) {
         classButtom = "btn-warning";
     }
 
-    swal({
-        title: "¿Estas seguro?",
-        text: textoAlerta,
-        type: type,
-        showCancelButton: true,
-        confirmButtonClass: classButtom,
-        confirmButtonText: "Aceptar",
-        cancelButtonText: "Cancelar",
-        closeOnConfirm: false,
-        allowEscapeKey: false,
-        allowOutsideClick: false
-    },
-        function (isConfirm) {
-            // Dentro de la función del swal, deshabilita el botón "Aceptar" del swal
-            swal.disableButtons();
+	swal({
+		title: "¿Estás seguro?",
+		text: textoAlerta,
+		icon: type,
+		buttons: {
+			cancel: {
+				text: "Cancelar",
+				visible: true,
+				closeModal: true
+			},
+			confirm: {
+				text: "Aceptar",
+				className: classButtom,
+				closeModal: false
+			}
+		},
+		dangerMode: false
+	}).then(function(isConfirm) {
+		if (isConfirm) {
+			$.ajax({
+				type: method,
+				url: action,
+				data: formdata ? formdata : form.serialize(),
+				cache: false,
+				contentType: false,
+				processData: false,
+				xhr: function () {
+					var xhr = new window.XMLHttpRequest();
+					xhr.upload.addEventListener("progress", function (evt) {
+						if (evt.lengthComputable) {
+							var percentComplete = evt.loaded / evt.total;
+							percentComplete = parseInt(percentComplete * 100);
+							if (percentComplete < 100) {
+								respuesta.html('<p class="text-center">Procesado... (' + percentComplete + '%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: ' + percentComplete + '%;"></div></div>');
+							} else {
+								respuesta.html('<p class="text-center"></p>');
+							}
+						}
+					}, false);
+					return xhr;
+				},
+				success: function (data) {
+					var datos = eval(data);
 
-            if (isConfirm) {
-                $.ajax({
-                    type: method,
-                    url: action,
-                    data: formdata ? formdata : form.serialize(),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    xhr: function () {
-                        var xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener("progress", function (evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                percentComplete = parseInt(percentComplete * 100);
-                                if (percentComplete < 100) {
-                                    respuesta.html('<p class="text-center">Procesado... (' + percentComplete + '%)</p><div class="progress progress-striped active"><div class="progress-bar progress-bar-info" style="width: ' + percentComplete + '%;"></div></div>');
-                                } else {
-                                    respuesta.html('<p class="text-center"></p>');
-                                }
-                            }
-                        }, false);
-                        return xhr;
-                    },
-                    success: function (data) {
-                        var datos = eval(data);
+					if (datos[0] == "Error") {
+						swal({
+							title: datos[0],
+							text: datos[1],
+							icon: datos[2],
+							confirmButtonClass: datos[3]
+						});
+					} else if (datos[0] == "Guardar") {
+						swal({
+							title: datos[0],
+							text: datos[1],
+							icon: datos[2],
+							confirmButtonClass: datos[3]
+						});
+					} else {
+						swal({
+							title: datos[0],
+							text: datos[1],
+							icon: datos[2],
+							timer: 3000,
+							confirmButtonClass: datos[3]
+						});
+					}
 
-                        if (datos[0] == "Error") {
-                            swal({
-                                title: datos[0],
-                                text: datos[1],
-                                type: datos[2],
-                                confirmButtonClass: datos[3]
-                            });
-                        } else if (datos[0] == "Guardar") {
-                            swal({
-                                title: datos[0],
-                                text: datos[1],
-                                type: datos[2],
-                                confirmButtonClass: datos[3]
-                            });
-                        } else {
-                            swal({
-                                title: datos[0],
-                                text: datos[1],
-                                type: datos[2],
-                                timer: 3000,
-                                confirmButtonClass: datos[3]
-                            });
-                        }
+					if (datos[7] != "") {
+						$('#' + datos[7]).modal('hide');
+					}
 
-                        if (datos[7] != "") {
-                            $('#' + datos[7]).modal('hide');
-                        }
+					if (datos[4] != "") {
+						$('#' + datos[4])[0].reset();
+						$('#' + datos[4] + ' #pro').val(datos[5]);
+					}
 
-                        if (datos[4] != "") {
-                            $('#' + datos[4])[0].reset();
-                            $('#' + datos[4] + ' #pro').val(datos[5]);
-                        }
+					llenarTabla(datos[6]);
 
-                        llenarTabla(datos[6]);
+					if (datos[6] == "AgregarrAtencionMedicaDetalles") {
+						showFacturaNutricion(datos[8]);
+					}
 
-                        if (datos[6] == "AgregarrAtencionMedicaDetalles") {
-                            showFacturaNutricion(datos[8]);//LLAMAMOS LA FACTURA .-Función se encuentra en myjava_atencion_medica.js
-                        }
+					if (datos[6] == "AtencionMedica") {
+						mostrarArchivos(getPacientes_idExpedienteClinico(datos[8]));
+						viewExpediente(getPacientes_idExpedienteClinico(datos[8]));
+					}
 
-                        if (datos[6] == "AtencionMedica") {
-                            mostrarArchivos(getPacientes_idExpedienteClinico(datos[8]));
-                            viewExpediente(getPacientes_idExpedienteClinico(datos[8]));
-                        }
+					if (datos[6] == "AtencionMedicaPreOperatorio") {
+						viewPreoOperatorio(getPacientes_idPreoperatorio(datos[8]));
+					}
 
-                        if (datos[6] == "AtencionMedicaPreOperatorio") {
-                            viewPreoOperatorio(getPacientes_idPreoperatorio(datos[8]));
-                        }
+					if (datos[6] == "AtencionMedicaNotaOperatoria") {
+						mostrarArchivosNotaOperatoria(getPacientes_idNotaOperatoria(datos[8]));
+						viewNotaOperatoria(getPacientes_idNotaOperatoria(datos[8]));
+					}
 
-                        if (datos[6] == "AtencionMedicaNotaOperatoria") {
-                            mostrarArchivosNotaOperatoria(getPacientes_idNotaOperatoria(datos[8]));
-                            viewNotaOperatoria(getPacientes_idNotaOperatoria(datos[8]));
-                        }
+					if (datos[6] == "AtencionMedicaPostOperatorio") {
+						viewPostOperatorio(getPacientes_idPostOPeratorio(datos[8]));
+						viewPostOperatorio(getPacientes_idPostOPeratorio(datos[8]));
+					}
 
-                        if (datos[6] == "AtencionMedicaPostOperatorio") {
-                            viewPostOperatorio(getPacientes_idPostOPeratorio(datos[8]));
-                            viewPostOperatorio(getPacientes_idPostOPeratorio(datos[8]));
-                        }
+					if (datos[6] == "Facturacion") {
+						pago(datos[8]);
+						pagination(1);
+					}
 
-                        if (datos[6] == "Facturacion") {
-                            pago(datos[8]); //LLAMAMOS LA FUNCION PARA REALIZAR EL PAGO .-Función se encuentra en myjava_facturacion.js
-                            pagination(1);
-                        }
+					if (datos[6] == "Facturacion1") {
+						pagination(1);
+					}
 
-                        if (datos[6] == "Facturacion1") {
-                            pagination(1);
-                        }
+					if (datos[6] == "GuardarFactura") {
+						pagination(1);
+					}
 
-                        if (datos[6] == "GuardarFactura") {
-                            pagination(1);
-                        }
+					if (datos[6] == "Pagos") {
+						printBill(datos[8]);
+						limpiarTabla();
+						pagination(1);
+						volver();
+						setTimeout(sendMail(datos[8]), 5000);
+					}
 
-                        if (datos[6] == "Pagos") {
-                            printBill(datos[8]); //LLAMAMOS LA FUNCION PARA IMPRIMIR LA FACTURA .-Función se encuentra en myjava_facturacion.js            
-                            limpiarTabla();
-                            pagination(1);
-                            volver();
-                            setTimeout(sendMail(datos[8]), 5000);
-                        }
+					if (datos[6] == "formCita") {
+						reportePDF(datos[8]);
+						sendEmailReprogramación(datos[8]);
+					}
 
-                        if (datos[6] == "formCita") {
-                            reportePDF(datos[8]);
-                            sendEmailReprogramación(datos[8]);
-                        }
+					// Habilitar el botón después de completar la transacción
+					form.find('button[type="submit"]').prop('disabled', false);
 
-                        // Habilitar el botón después de completar la transacción
-                        form.find('button[type="submit"]').prop('disabled', false);
-
-                        return false;
-                    },
-                    error: function () {
-                        respuesta.html(msjError);
-                    }
-                });
-            } else {
-                // Si el usuario hizo clic en "Cancelar", habilita el botón del formulario
-                form.find('button[type="submit"]').prop('disabled', false);
-            }
-        });
+					return false;
+				},
+				error: function () {
+					respuesta.html(msjError);
+				}
+			});
+		} else {
+			// Si el usuario hizo clic en "Cancelar", habilita el botón del formulario
+			form.find('button[type="submit"]').prop('disabled', false);
+		}
+	});
 });
 
 
