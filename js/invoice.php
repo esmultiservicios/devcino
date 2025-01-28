@@ -82,7 +82,9 @@ $(document).ready(function(){
 				title: "Error", 
 				text: "Lo sentimos no puede agregar más filas, debe seleccionar un usuario antes de poder continuar",
 				icon: "error", 
-				confirmButtonClass: "btn-danger"
+				dangerMode: true,
+				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 			});				
 		}
 	}); 
@@ -102,7 +104,9 @@ $(document).ready(function(){
 				title: "Error", 
 				text: "Lo sentimos debe seleccionar un fila antes de intentar eliminarla",
 				icon: "error", 
-				confirmButtonClass: "btn-danger"
+				dangerMode: true,
+				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 			});				
 		}
 	});		
@@ -249,7 +253,9 @@ $(document).ready(function(){
 				title: "Error",
 				text: "Debe seleccionar un paciente y seleciconar un producto antes de continuar",
 				icon: "error",
-				confirmButtonClass: "btn-danger"
+				dangerMode: true,
+				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 			});				
 		  }
 	});
@@ -329,7 +335,9 @@ $("#reg_DescuentoFacturacion").on("click", function(e){
 			title: "warning",
 			text: "El valor del descuento es mayor al precio total del artículo, por favor corregir",
 			icon: "warning",
-			confirmButtonClass: "btn-warning"
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera			
 		});		
 	}
 });

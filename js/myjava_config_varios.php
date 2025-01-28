@@ -26,7 +26,9 @@ $(document).ready(pagination(1));getConsulta();
 					title: "Acceso Denegado", 
 					text: "No tiene permisos para ejecutar esta acción",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});					 
            }
 	   });
@@ -104,6 +106,8 @@ function agregar(){
 					text: "Registro almacenado correctamente",
 					icon: "success",
 					timer: 3000, //timeOut for auto-close
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera					
 				});	
 				$('#registrar').modal('hide');
 				getConsulta();
@@ -115,7 +119,9 @@ function agregar(){
 					title: "Error", 
 					text: "Error al guardar el registro",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});				
 			}else if (registro == 3){
 			   $('#formulario_registros #mensaje').html('');				
@@ -123,7 +129,9 @@ function agregar(){
 					title: "Error", 
 					text: "Este registro ya existe",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});			   
 			}else{
 			   $('#formulario_registros #mensaje').html('');				
@@ -131,7 +139,9 @@ function agregar(){
 					title: "Error", 
 					text: "Error al procesar su solicitud",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});			
 			}
 		}
@@ -154,6 +164,9 @@ function modificar(){
 					text: "Registro modificado correctamente",
 					icon: "success",
 					timer: 3000, //timeOut for auto-close
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera					
 				});	
 				$('#registrar').modal('hide');
 				pagination(1);
@@ -164,7 +177,9 @@ function modificar(){
 					title: "Error", 
 					text: "Error al modificar el registro",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});				
 			}else{
 			   $('#formulario_registros #mensaje').html('');				
@@ -172,7 +187,9 @@ function modificar(){
 					title: "Error", 
 					text: "Error al procesar su solicitud",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});			
 			}
 		}
@@ -226,7 +243,9 @@ function modal_eliminar(id,entidad){
 					text: "¡Sí, Eliminar el usuario!",
 				}
 			},
-			closeOnClickOutside: false
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		}).then((willConfirm) => {
 			if (willConfirm === true) {
 				eliminarRegistro(id, entidad);
@@ -237,7 +256,9 @@ function modal_eliminar(id,entidad){
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});				 
 	}	
 }
@@ -256,6 +277,8 @@ function eliminarRegistro(id, entidad){
 					text: "Registro almacenado correctamente",
 					icon: "success",
 					timer: 3000, //timeOut for auto-close
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera					
 				});			       				
 			   pagination(1);
 			   return false;
@@ -264,7 +287,9 @@ function eliminarRegistro(id, entidad){
 					title: "Error", 
 					text: "Error al intentar eliminar el registro, por favor intente de nuevo",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});
 				return false;			
 			}else if (registro == 3){
@@ -272,15 +297,19 @@ function eliminarRegistro(id, entidad){
 					title: "Error", 
 					text: "Error al intentar eliminar el registro, cuenta con información almacenada",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});
 				return false;			
 			}else{
 				swal({
 					title: "Error", 
 					text: "Error procesar su solicitud",
-					type: "error", 
-					icon: 'btn-danger'
+					icon: "error", 
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});	
 				return false;				
 			}
@@ -308,7 +337,9 @@ $('#formulario_registros #reg').on('click', function(e){ // add event submit We 
 			title: "Error", 
 			text: "No se pueden enviar los datos, los campos estan vacíos",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});	
 	   return false;	   
 	 }  
@@ -325,12 +356,13 @@ $('#formulario_registros #edi').on('click', function(e){ // add event submit We 
 			title: "Error", 
 			text: "No se pueden enviar los datos, los campos estan vacíos",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});			
 		return false;	   
 	 }  
 });
-
 
 function consultarNombre(id){	
     var url = '<?php echo SERVERURL; ?>php/config_varios/getNombre.php';

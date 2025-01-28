@@ -144,7 +144,9 @@ function pay(facturas_id){
 			title: "Acceso Denegado",
 			text: "No tiene permisos para ejecutar esta acción",
 			icon: "error",
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});
 	}
 
@@ -284,7 +286,9 @@ function mailBill(facturas_id){
 				text: "¡Sí, enviar la factura!",
 			}
 		},
-		closeOnClickOutside: false
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	}).then((willConfirm) => {
 		if (willConfirm === true) {
 			sendMail(facturas_id);
@@ -316,6 +320,8 @@ function sendMail(facturas_id){
 					title: "Success",
 					text: "La factura ha sido enviada por correo satisfactoriamente",
 					icon: "success",
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera					
 				});
 		  }
 	  }
@@ -382,7 +388,9 @@ $('#acciones_atras').on('click', function(e){
 					text: "¡Si, deseo volver!",
 				}
 			},
-			closeOnClickOutside: false
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		}).then((willConfirm) => {
 			if (willConfirm === true) {
 				$('#main_facturacion').show();
@@ -660,7 +668,9 @@ function deleteBill(facturas_id){
 					text: "¡Sí, Eliminarla!",
 				}
 			},
-			closeOnClickOutside: false
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		}).then((willConfirm) => {
 			if (willConfirm === true) {
 				eliminarFacturaBorrador(facturas_id);
@@ -671,7 +681,9 @@ function deleteBill(facturas_id){
 			title: "Acceso Denegado",
 			text: "No tiene permisos para ejecutar esta acción",
 			icon: "error",
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 		});
 	}
 }
@@ -689,6 +701,8 @@ function eliminarFacturaBorrador(facturas_id){
 					text: "Registro eliminado correctamente",
 					icon: "success",
 					timer: 3000,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera					
 				});
 				pagination(1);
 			   return false;
@@ -697,7 +711,9 @@ function eliminarFacturaBorrador(facturas_id){
 					title: "Error al eliminar el registro, por favor intentelo de nuevo o verifique que no tenga información almacenada",
 					text: "No tiene permisos para ejecutar esta acción",
 					icon: "error",
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});
 			    return false;
 			}else{
@@ -705,7 +721,9 @@ function eliminarFacturaBorrador(facturas_id){
 					title: "No se puede procesar su solicitud, por favor intentelo de nuevo mas tarde",
 					text: "No tiene permisos para ejecutar esta acción",
 					icon: "error",
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});
 			    return false;
 			}

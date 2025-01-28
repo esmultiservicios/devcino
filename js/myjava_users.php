@@ -24,7 +24,9 @@ $(document).ready(pagination(1));
 				title: "Acceso Denegado", 
 				text: "No tiene permisos para ejecutar esta acción",
 				icon: "error", 
-				dangerMode: true
+				dangerMode: true,
+				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
 			});			 
          }
 	   });
@@ -71,7 +73,9 @@ function modificarContra(id){
 					text: "¡Sí, modificar la contraseña!",
 				}
 			},
-			closeOnClickOutside: false
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
 		}).then((willConfirm) => {
 			if (willConfirm === true) {
 				resetearContra(id);
@@ -82,7 +86,9 @@ function modificarContra(id){
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
 		});					 
 	}	
 }
@@ -102,7 +108,9 @@ function resetearContra(id){
 					title: "Success", 
 					text: "Contraseña cambiada correctamente",
 					icon: "success",
-					timer: 3000, //timeOut for auto-close					
+					timer: 3000, //timeOut for auto-close	
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera										
 				});		
 			    return false;					
 			}else{
@@ -112,7 +120,9 @@ function resetearContra(id){
 					title: "Error", 
 					text: "Error al resetear la contraseña",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
 				});				   
 			   return false;				
 			}						
@@ -210,7 +220,9 @@ function modal_eliminar(colaborador_id, id){
 					text: "¡Sí, Eliminar el usuario!",
 				}
 			},
-			closeOnClickOutside: false
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
 		}).then((willConfirm) => {
 			if (willConfirm === true) {
 				eliminarRegistro(colaborador_id);
@@ -221,7 +233,9 @@ function modal_eliminar(colaborador_id, id){
 			title: "Acceso Denegado", 
 			text: "No tiene permisos para ejecutar esta acción",
 			icon: "error", 
-			dangerMode: true
+			dangerMode: true,
+			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
 		});				 
 	}		
 }
@@ -242,6 +256,8 @@ function eliminarRegistro(colaborador_id){
 					text: "Registro eliminado correctamente",
 					icon: "success",
 					timer: 3000, //timeOut for auto-close
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera						
 				});			 			
 				return false;			   
 		   }else if(registro == 2){
@@ -249,7 +265,9 @@ function eliminarRegistro(colaborador_id){
 					title: "Error", 
 					text: "Error al eliminar este usuario",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});	
 			 return false;			   
 		   }else if(registro == 3){	
@@ -257,7 +275,9 @@ function eliminarRegistro(colaborador_id){
 					title: "Error", 
 					text: "No se puede realizar esta operación con su propio usuario",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});		
 			 return false;			   
 		   }else if(registro == 4){	
@@ -265,7 +285,9 @@ function eliminarRegistro(colaborador_id){
 					title: "Error", 
 					text: "Este registro cuenta con información almacenada no se puede eliminar",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				});		
 			 return false;			   
 		   }else{
@@ -274,7 +296,9 @@ function eliminarRegistro(colaborador_id){
 					title: "Error", 
 					text: "No se puede eliminar el registro",
 					icon: "error", 
-					dangerMode: true
+					dangerMode: true,
+					closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+					closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 				}); 			 
 			 return false;			   
 		   }
@@ -322,7 +346,9 @@ if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() 
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
 		icon: "error", 
-		dangerMode: true
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});					 
 }	
 }
@@ -345,7 +371,9 @@ function reporteEXCEL(){
 		title: "Acceso Denegado", 
 		text: "No tiene permisos para ejecutar esta acción",
 		icon: "error", 
-		dangerMode: true
+		dangerMode: true,
+		closeOnEsc: false, // Desactiva el cierre con la tecla Esc
+		closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
 	});					 
    }	
 }
