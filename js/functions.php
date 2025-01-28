@@ -27,7 +27,6 @@ $('#salir_sistema').on('click', function () {
                 closeModal: true
             }
         },
-        dangerMode: true,
         closeOnEsc: false, // Desactiva el cierre con la tecla Esc
         closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
     }).then((willExit) => {
