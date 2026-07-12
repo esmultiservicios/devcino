@@ -1106,101 +1106,239 @@ function eliminar(){
 }
 	
 $(document).ready(function(e) {
-    $('#form-addevent #expediente').on('blur', function(){
+	$('#form-addevent #expediente').on('blur', function(){
 		var url = '<?php echo SERVERURL; ?>php/citas/buscar_expediente.php';
-        var expediente = $('#expediente').val();
-        var colaborador_id = $('#medico_general').val();		
-		var start = $('#fecha_cita').val();
-		var end = $('#fecha_cita_end').val();
-		var servicio_id = $('#serv').val();
 
-	    if($('#expediente').val() != ""){
-	         $.ajax({
-		        type:'POST',
-		        url:url,
-		        async: true,
-		        data:'expediente='+expediente+'&colaborador_id='+colaborador_id+'&start='+start+'&end='+end+'&servicio_id='+servicio_id+'&unidad='+unidad,
-		        success:function(data){			   
-			       if (data == 1){
-						swal({
-							title: "Error", 
-							text: "El Profesional ya tiene esa hora ocupada",
-							icon: "error", 
-							dangerMode: true,
-							closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-							closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
-						});
-						$("#ModalAdd_enviar").attr('disabled', true);				  
-						return false;				  
-			       }else if (data == 2){
-						swal({
-							title: "Error", 
-							text: "El paciente ya tiene esa hora ocupada",
-							icon: "error", 
-							dangerMode: true,
-							closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-							closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
-						});				  			  
-						$("#ModalAdd_enviar").attr('disabled', true);
-						return false;				  
-			       }else{
-				         var array = eval(data);
-				         if (array[3] == 'NulaSError'){
-							swal({
-								title: "Error", 
-								text: "No se puede agendar este usuario en esta hora",
-								icon: "error", 
-								dangerMode: true,
-								closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-								closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
-							});
-							$("#ModalAdd_enviar").attr('disabled', true);
-							return false;	
-				         }else if (array[3] == 'NuevosExcede'){
-							swal({
-								title: "Error", 
-								text: "No se puede agendar mas usuarios nuevos ya llego al límite",
-								icon: "error", 
-								dangerMode: true,
-								closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-								closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
-							});
-							$("#ModalAdd_enviar").attr('disabled', true);
-							return false;	
-				         }else if (array[3] == 'SubsiguienteExcede'){
-							swal({
-								title: "Error", 
-								text: "No se puede agendar mas usuarios subsiguientes ya llego al límite",
-								icon: "error", 
-								dangerMode: true,
-								closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-								closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-							});
-							return false;	
-				         }else if (array[3] == 'Vacio'){
-							swal({
-								title: "Error", 
-								text: "El profesional no tiene asignada una jornada laboral",
-								icon: "error", 
-								dangerMode: true,
-								closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-								closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-							});
-							$("#ModalAdd_enviar").attr('disabled', true);
-							return false;	
-				        }else{
-			                 $('#form-addevent #paciente_id').val(array[0]);
-			                 $('#form-addevent #nombre').val(array[1]);
-			                 $('#form-addevent #color').val(array[2]);				  
-				             $('#form-addevent #hora').val(array[3]);	
-				             $('#form-addevent #medico').val(array[4]);
-                             $("#form-addevent #ModalAdd_enviar").attr('disabled', false);	
-				       }			  					  
-			       }		  		  		  			  
-		    }
-	  });
-	 }
-	  return false;	 
+		var expediente = $.trim($('#form-addevent #expediente').val());
+		var colaborador_id = $('#botones_citas #medico_general').val();
+		var start = $('#form-addevent #fecha_cita').val();
+		var end = $('#form-addevent #fecha_cita_end').val();
+		var servicio_id = $('#form-addevent #serv').val();
+		var unidad = $('#botones_citas #unidad').val() || $('#form-addevent #unidad').val() || '';
+
+		if(expediente === ''){
+			return false;
+		}
+
+		$("#ModalAdd_enviar").attr('disabled', true);
+
+		$.ajax({
+			type: 'POST',
+			url: url,
+			async: true,
+			dataType: 'json',
+			cache: false,
+			data: {
+				expediente: expediente,
+				colaborador_id: colaborador_id,
+				start: start,
+				end: end,
+				servicio_id: servicio_id,
+				unidad: unidad
+			},
+			success: function(respuesta){
+				if(respuesta === 1 || respuesta === '1'){
+					swal({
+						title: "Error",
+						text: "El profesional ya tiene esa hora ocupada",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(respuesta === 2 || respuesta === '2'){
+					swal({
+						title: "Error",
+						text: "El paciente ya tiene esa hora ocupada",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(!Array.isArray(respuesta)){
+					swal({
+						title: "Error",
+						text: "El servidor devolvió una respuesta no válida",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				var estado = respuesta[3];
+
+				if(estado === 'PacienteNoExiste'){
+					swal({
+						title: "Error",
+						text: "No se encontró un paciente con ese expediente o identidad",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$('#form-addevent #paciente_id').val('');
+					$('#form-addevent #nombre').val('');
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'ProfesionalNoValido'){
+					swal({
+						title: "Error",
+						text: "El profesional seleccionado no es válido",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'ServicioNoValido'){
+					swal({
+						title: "Error",
+						text: "Debe seleccionar un servicio válido",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'FechaNoValida'){
+					swal({
+						title: "Error",
+						text: "La fecha y hora seleccionadas no son válidas",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'ErrorServidor'){
+					swal({
+						title: "Error",
+						text: respuesta[5] || "Ocurrió un error consultando el expediente",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'NulaSError'){
+					swal({
+						title: "Error",
+						text: "No se puede agendar este usuario en esta hora",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'NuevosExcede'){
+					swal({
+						title: "Error",
+						text: "No se pueden agendar más usuarios nuevos; ya se alcanzó el límite",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'SubsiguienteExcede'){
+					swal({
+						title: "Error",
+						text: "No se pueden agendar más usuarios subsiguientes; ya se alcanzó el límite",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				if(estado === 'Vacio'){
+					swal({
+						title: "Error",
+						text: "El profesional no tiene asignada una jornada laboral",
+						icon: "error",
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					$("#ModalAdd_enviar").attr('disabled', true);
+					return false;
+				}
+
+				$('#form-addevent #paciente_id').val(respuesta[0]);
+				$('#form-addevent #nombre').val(respuesta[1]);
+				$('#form-addevent #color').val(respuesta[2]);
+				$('#form-addevent #hora').val(respuesta[3]);
+				$('#form-addevent #medico').val(respuesta[4]);
+
+				$("#ModalAdd_enviar").attr('disabled', false);
+				return false;
+			},
+			error: function(xhr){
+				var mensaje = "No se pudo consultar el expediente";
+
+				if(xhr.responseJSON && Array.isArray(xhr.responseJSON)){
+					mensaje = xhr.responseJSON[5] || mensaje;
+				}
+
+				swal({
+					title: "Error",
+					text: mensaje,
+					icon: "error",
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+
+				$("#ModalAdd_enviar").attr('disabled', true);
+			}
+		});
+
+		return false;
 	});
 });
 

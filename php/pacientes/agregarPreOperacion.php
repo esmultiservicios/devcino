@@ -5,27 +5,69 @@ include "../funtions.php";
 //CONEXION A DB
 $mysqli = connect_mysqli();
 
-$pacientes_id = $_POST['pacientes_id'];
-$colaborador_id = $_SESSION['colaborador_id'];
-$servicio_id = $_POST['servicio_preoperatorio_id'];
+/*
+|--------------------------------------------------------------------------
+| FUNCIONES LOCALES DE ENTRADA
+|--------------------------------------------------------------------------
+| Conservan mayúsculas/minúsculas y protegen valores usados en SQL.
+*/
+function post_text($mysqli, $campo, $predeterminado = "") {
+    $valor = isset($_POST[$campo]) ? trim((string)$_POST[$campo]) : $predeterminado;
+    return $mysqli->real_escape_string($valor);
+}
 
-$fecha = $_POST['pre_fecha'];
-$edad = $_POST['pre_edad_consulta'];
+function post_int($campo, $predeterminado = 0) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
 
-$talla = cleanStringStrtolower($_POST['pre_talla']);
-$peso_actual = cleanStringStrtolower($_POST['pre_peso_actual']);
-$pre_peso_actual_kg = cleanString($_POST['pre_peso_actual_kg']);
-$pre_peso_perdido = cleanString($_POST['pre_peso_perdido']);
-$imc_actual = cleanStringStrtolower($_POST['pre_imc_actual']);
-$resultados = cleanString($_POST['pre_resultados_examenes']);
-$usuario = $_SESSION['colaborador_id'];
+function session_int($campo, $predeterminado = 0) {
+    return isset($_SESSION[$campo]) && $_SESSION[$campo] !== ""
+        ? (int)$_SESSION[$campo]
+        : (int)$predeterminado;
+}
+
+function checkbox_value($campo, $predeterminado = 2) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
+
+if (session_int('colaborador_id') <= 0) {
+    echo json_encode([
+        "status" => "error",
+        "title" => "Error",
+        "message" => "Sesión expirada o usuario no válido",
+        "type" => "error",
+        "buttonClass" => "btn-danger"
+    ], JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
+}
+
+
+$pacientes_id = post_int('pacientes_id');
+$colaborador_id = session_int('colaborador_id');
+$servicio_id = post_int('servicio_preoperatorio_id');
+
+$fecha = post_text($mysqli, 'pre_fecha');
+$edad = post_text($mysqli, 'pre_edad_consulta');
+
+$talla = post_text($mysqli, 'pre_talla');
+$peso_actual = post_text($mysqli, 'pre_peso_actual');
+$pre_peso_actual_kg = post_text($mysqli, 'pre_peso_actual_kg');
+$pre_peso_perdido = post_text($mysqli, 'pre_peso_perdido');
+$imc_actual = post_text($mysqli, 'pre_imc_actual');
+$resultados = post_text($mysqli, 'pre_resultados_examenes');
+$usuario = session_int('colaborador_id');
 $estado = 1;//ACTIVO
 
 if(isset($_POST['psiquiatra_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['psiquiatra_activo'] == ""){
 		$psquiatria = 2;
 	}else{
-		$psquiatria = $_POST['psiquiatra_activo'];
+		$psquiatria = post_text($mysqli, 'psiquiatra_activo');
 	}
 }else{
 	$psquiatria = 2;
@@ -35,7 +77,7 @@ if(isset($_POST['psicologo_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['psicologo_activo'] == ""){
 		$psicologia = 2;
 	}else{
-		$psicologia = $_POST['psicologo_activo'];
+		$psicologia = post_text($mysqli, 'psicologo_activo');
 	}
 }else{
 	$psicologia = 2;
@@ -45,7 +87,7 @@ if(isset($_POST['nutricion_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['nutricion_activo'] == ""){
 		$nutricion = 2;
 	}else{
-		$nutricion = $_POST['nutricion_activo'];
+		$nutricion = post_text($mysqli, 'nutricion_activo');
 	}
 }else{
 	$nutricion = 2;
@@ -55,16 +97,28 @@ if(isset($_POST['medicina_interna_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIF
 	if($_POST['medicina_interna_activo'] == ""){
 		$medicina_interna = 2;
 	}else{
-		$medicina_interna = $_POST['medicina_interna_activo'];
+		$medicina_interna = post_text($mysqli, 'medicina_interna_activo');
 	}
 }else{
 	$medicina_interna = 2;
 }
 
-$recomendaciones = cleanString($_POST['pre_recomendaciones']);
-$fecha_cirugia = $_POST['pre_fecha_cirugia'] ?? date("Y-m-d");
-$tipo_cirugia = $_POST['pre_tipo_cirugia'];
+$recomendaciones = post_text($mysqli, 'pre_recomendaciones');
+$fecha_cirugia = post_text($mysqli, 'pre_fecha_cirugia');
+$tipo_cirugia = post_text($mysqli, 'pre_tipo_cirugia');
 $fecha_registro = date("Y-m-d H:i:s");
+
+if ($pacientes_id <= 0 || $servicio_id <= 0 || $fecha === "" || $fecha_cirugia === "" || $tipo_cirugia === "") {
+    echo json_encode([
+        "status" => "error",
+        "title" => "Error",
+        "message" => "Debe completar paciente, servicio, fecha de atención, fecha de cirugía y tipo de cirugía",
+        "type" => "error",
+        "buttonClass" => "btn-danger"
+    ], JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
+}
 
 //GUARDAMOS EL REGISTRO DEL PACIENTE EN LA AGENDA
 //CONSULTAR PUESTO COLABORADOR
@@ -92,7 +146,7 @@ $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->err
 $paciente_tipo = 'N';
 $color = '#008000'; //VERDE;
 
-if($result->num_rows>0) {
+if($result_tipo_paciente->num_rows > 0){
 	$paciente_tipo = 'S';
 	$color = '#0071c5'; //AZUL;	
 }

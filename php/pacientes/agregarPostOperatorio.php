@@ -5,26 +5,68 @@ include "../funtions.php";
 //CONEXION A DB
 $mysqli = connect_mysqli();
 
-$pacientes_id = $_POST['pacientes_id'];
-$colaborador_id = $_SESSION['colaborador_id'];
-$servicio_id = $_POST['servicio_PostOperatorio_id'];
-$fecha = $_POST['post_fecha'];
-$edad = $_POST['post_edad_consulta'];
-$talla = cleanStringStrtolower($_POST['post_talla']);
-$peso_actual = cleanStringStrtolower($_POST['post_peso_actual']);
-$peso_actual_kg = cleanStringStrtolower($_POST['post_peso_actual_kg']);
-$imc_actual = cleanStringStrtolower($_POST['post_imc_actual']);
-$peso_perdido = cleanStringStrtolower($_POST['post_peso_perdido']);
-$ewl = cleanStringStrtolower($_POST['post_ewl']);
-$otros = cleanString($_POST['post_otros']);
-$mejoria = cleanString($_POST['post_mejoria']);
-$estado_actual = $_POST['post_estado_actual'];
-$medicamentos = cleanString($_POST['post_medicamentos']);
-$hallazgos = cleanString($_POST['post_hallazgos']);
-$comentarios = cleanString($_POST['post_comentarios']);
-$plan = cleanString($_POST['post_plan']);
+/*
+|--------------------------------------------------------------------------
+| FUNCIONES LOCALES DE ENTRADA
+|--------------------------------------------------------------------------
+| Conservan mayúsculas/minúsculas y protegen valores usados en SQL.
+*/
+function post_text($mysqli, $campo, $predeterminado = "") {
+    $valor = isset($_POST[$campo]) ? trim((string)$_POST[$campo]) : $predeterminado;
+    return $mysqli->real_escape_string($valor);
+}
+
+function post_int($campo, $predeterminado = 0) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
+
+function session_int($campo, $predeterminado = 0) {
+    return isset($_SESSION[$campo]) && $_SESSION[$campo] !== ""
+        ? (int)$_SESSION[$campo]
+        : (int)$predeterminado;
+}
+
+function checkbox_value($campo, $predeterminado = 2) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
+
+if (session_int('colaborador_id') <= 0) {
+    echo json_encode([
+        "status" => "error",
+        "title" => "Error",
+        "message" => "Sesión expirada o usuario no válido",
+        "type" => "error",
+        "buttonClass" => "btn-danger"
+    ], JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
+}
+
+
+$pacientes_id = post_int('pacientes_id');
+$colaborador_id = session_int('colaborador_id');
+$servicio_id = post_int('servicio_PostOperatorio_id');
+$fecha = post_text($mysqli, 'post_fecha');
+$edad = post_text($mysqli, 'post_edad_consulta');
+$talla = post_text($mysqli, 'post_talla');
+$peso_actual = post_text($mysqli, 'post_peso_actual');
+$peso_actual_kg = post_text($mysqli, 'post_peso_actual_kg');
+$imc_actual = post_text($mysqli, 'post_imc_actual');
+$peso_perdido = post_text($mysqli, 'post_peso_perdido');
+$ewl = post_text($mysqli, 'post_ewl');
+$otros = post_text($mysqli, 'post_otros');
+$mejoria = post_text($mysqli, 'post_mejoria');
+$estado_actual = post_text($mysqli, 'post_estado_actual');
+$medicamentos = post_text($mysqli, 'post_medicamentos');
+$hallazgos = post_text($mysqli, 'post_hallazgos');
+$comentarios = post_text($mysqli, 'post_comentarios');
+$plan = post_text($mysqli, 'post_plan');
 $fecha_registro = date("Y-m-d H:i:s");
-$usuario = $_SESSION['colaborador_id'];
+$usuario = session_int('colaborador_id');
 $estado = 1;//ACTIVO
 
 //GUARDAMOS EL REGISTRO DEL PACIENTE EN LA AGENDA
@@ -36,7 +78,7 @@ $result = $mysqli->query($consulta_puesto);
 
 $puesto_colaborador = "";
 
-if($result->num_rows>=0){
+if($result->num_rows>0){
 	$consulta_puesto1 = $result->fetch_assoc(); 
 	$puesto_colaborador = $consulta_puesto1['puesto_id'];	
 }
@@ -52,7 +94,7 @@ $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->err
 $tipo_paciente = 'N';
 $color = '#008000'; //VERDE;
 
-if($result->num_rows>0) {
+if($result_tipo_paciente->num_rows > 0){
 	$tipo_paciente = 'S';
 	$color = '#0071c5'; //AZUL;	
 }
@@ -65,7 +107,7 @@ $result = $mysqli->query($consultar_expediente);
 $expediente = "";
 $nombre = "";
 
-if($result->num_rows>=0){
+if($result->num_rows>0){
 	$consultar_expediente1 = $result->fetch_assoc();
 	$expediente = $consultar_expediente1['expediente'];
 	$nombre = $consultar_expediente1['nombre'];		

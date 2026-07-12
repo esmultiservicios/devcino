@@ -5,36 +5,78 @@ include "../funtions.php";
 //CONEXION A DB
 $mysqli = connect_mysqli();
 
-$pacientes_id = $_POST['pacientes_id'];
-$colaborador_id = $_SESSION['colaborador_id'];
-$servicio_id = $_POST['servicio_notaOperatoria_id'];
-$fecha = $_POST['nota_fecha'];
-$edad = $_POST['nota_edad_consulta'];
-$talla = cleanStringStrtolower($_POST['nota_talla']);
-$peso_actual = cleanStringStrtolower($_POST['nota_peso_actual']);
-$peso_actual_kg = cleanStringStrtolower($_POST['nota_peso_actual_kg']);
-$nota_peso_perdido = cleanStringStrtolower($_POST['nota_peso_perdido']);
-$imc_actual = cleanStringStrtolower($_POST['nota_imc_actual']);
-$nota_tecnica = cleanString($_POST['nota_tecnica']);
-$cirujano = cleanStringStrtolower($_POST['nota_cirujano']);
-$asistente = cleanStringStrtolower($_POST['nota_asistente']);
-$camara = cleanString($_POST['nota_camara']);
-$anestesia = $_POST['nota_anestesia'];
-$anestesiologo = cleanString($_POST['nota_anestesiologo']);
-$nota_otros = cleanString($_POST['nota_otros']);
-$nota_hallazgos_operativos = cleanString($_POST['nota_hallazgos_operativos']);
-$nota_descripcion_operatoria = cleanString($_POST['nota_descripcion_operatoria']);
-$indicaciones = cleanString($_POST['nota_indicaciones']);
-$nota_recomendaciones = cleanString($_POST['nota_recomendaciones']);
-$nota_comentarios = cleanString($_POST['nota_comentarios']);
-$usuario = $_SESSION['colaborador_id'];
+/*
+|--------------------------------------------------------------------------
+| FUNCIONES LOCALES DE ENTRADA
+|--------------------------------------------------------------------------
+| Conservan mayúsculas/minúsculas y protegen valores usados en SQL.
+*/
+function post_text($mysqli, $campo, $predeterminado = "") {
+    $valor = isset($_POST[$campo]) ? trim((string)$_POST[$campo]) : $predeterminado;
+    return $mysqli->real_escape_string($valor);
+}
+
+function post_int($campo, $predeterminado = 0) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
+
+function session_int($campo, $predeterminado = 0) {
+    return isset($_SESSION[$campo]) && $_SESSION[$campo] !== ""
+        ? (int)$_SESSION[$campo]
+        : (int)$predeterminado;
+}
+
+function checkbox_value($campo, $predeterminado = 2) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
+
+if (session_int('colaborador_id') <= 0) {
+    echo json_encode([
+        "status" => "error",
+        "title" => "Error",
+        "message" => "Sesión expirada o usuario no válido",
+        "type" => "error",
+        "buttonClass" => "btn-danger"
+    ], JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
+}
+
+
+$pacientes_id = post_int('pacientes_id');
+$colaborador_id = session_int('colaborador_id');
+$servicio_id = post_int('servicio_notaOperatoria_id');
+$fecha = post_text($mysqli, 'nota_fecha');
+$edad = post_text($mysqli, 'nota_edad_consulta');
+$talla = post_text($mysqli, 'nota_talla');
+$peso_actual = post_text($mysqli, 'nota_peso_actual');
+$peso_actual_kg = post_text($mysqli, 'nota_peso_actual_kg');
+$nota_peso_perdido = post_text($mysqli, 'nota_peso_perdido');
+$imc_actual = post_text($mysqli, 'nota_imc_actual');
+$nota_tecnica = post_text($mysqli, 'nota_tecnica');
+$cirujano = post_text($mysqli, 'nota_cirujano');
+$asistente = post_text($mysqli, 'nota_asistente');
+$camara = post_text($mysqli, 'nota_camara');
+$anestesia = post_text($mysqli, 'nota_anestesia');
+$anestesiologo = post_text($mysqli, 'nota_anestesiologo');
+$nota_otros = post_text($mysqli, 'nota_otros');
+$nota_hallazgos_operativos = post_text($mysqli, 'nota_hallazgos_operativos');
+$nota_descripcion_operatoria = post_text($mysqli, 'nota_descripcion_operatoria');
+$indicaciones = post_text($mysqli, 'nota_indicaciones');
+$nota_recomendaciones = post_text($mysqli, 'nota_recomendaciones');
+$nota_comentarios = post_text($mysqli, 'nota_comentarios');
+$usuario = session_int('colaborador_id');
 $estado = 1;//ACTIVO
 
 if(isset($_POST['nota_prueba_metileno_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['nota_prueba_metileno_activo'] == ""){
 		$prueba = 2;
 	}else{
-		$prueba = $_POST['nota_prueba_metileno_activo'];
+		$prueba = post_text($mysqli, 'nota_prueba_metileno_activo');
 	}
 }else{
 	$prueba = 2;
@@ -44,7 +86,7 @@ if(isset($_POST['nota_dreno_blake_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIF
 	if($_POST['nota_dreno_blake_activo'] == ""){
 		$blake = 2;
 	}else{
-		$blake = $_POST['nota_dreno_blake_activo'];
+		$blake = post_text($mysqli, 'nota_dreno_blake_activo');
 	}
 }else{
 	$blake = 2;
@@ -54,7 +96,7 @@ if(isset($_POST['nota_extraccion_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFI
 	if($_POST['nota_extraccion_activo'] == ""){
 		$extraccion = 2;
 	}else{
-		$extraccion = $_POST['nota_extraccion_activo'];
+		$extraccion = post_text($mysqli, 'nota_extraccion_activo');
 	}
 }else{
 	$extraccion = 2;
@@ -64,7 +106,7 @@ if(isset($_POST['nota_evacuo_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['nota_evacuo_activo'] == ""){
 		$evacuo = 2;
 	}else{
-		$evacuo = $_POST['nota_evacuo_activo'];
+		$evacuo = post_text($mysqli, 'nota_evacuo_activo');
 	}
 }else{
 	$evacuo = 2;
@@ -74,13 +116,13 @@ if(isset($_POST['nota_cierro_piel_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIF
 	if($_POST['nota_cierro_piel_activo'] == ""){
 		$cierro = 2;
 	}else{
-		$cierro = $_POST['nota_cierro_piel_activo'];
+		$cierro = post_text($mysqli, 'nota_cierro_piel_activo');
 	}
 }else{
 	$cierro = 2;
 }
 
-$comentarios = cleanString($_POST['nota_comentarios']);
+$comentarios = post_text($mysqli, 'nota_comentarios');
 $fecha_registro = date("Y-m-d H:i:s");
 
 //GUARDAMOS EL REGISTRO DEL PACIENTE EN LA AGENDA
@@ -92,7 +134,7 @@ $result = $mysqli->query($consulta_puesto);
 
 $puesto_colaborador = "";
 
-if($result->num_rows>=0){
+if($result->num_rows>0){
 	$consulta_puesto1 = $result->fetch_assoc(); 
 	$puesto_colaborador = $consulta_puesto1['puesto_id'];	
 }
@@ -108,7 +150,7 @@ $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->err
 $tipo_paciente  = 'N';
 $color = '#008000'; //VERDE;
 
-if($result->num_rows>0) {
+if($result_tipo_paciente->num_rows > 0){
 	$tipo_paciente  = 'S';
 	$color = '#0071c5'; //AZUL;	
 }
@@ -121,7 +163,7 @@ $result = $mysqli->query($consultar_expediente);
 $expediente = "";
 $nombre = "";
 
-if($result->num_rows>=0){
+if($result->num_rows>0){
 	$consultar_expediente1 = $result->fetch_assoc();
 	$expediente = $consultar_expediente1['expediente'];
 	$nombre = $consultar_expediente1['nombre'];		
@@ -191,12 +233,15 @@ if($result->num_rows==0){
 		/*********************************************************************************************************************************************************************/
 		//AGREGAMOS LOS ARCHIVOS CARGADOS EN LA ENTIDAD CLINICO_DETALLES	
 		// Count total uploaded files
-		$totalfiles = count($_FILES['files']['name']);
+		$totalfiles = isset($_FILES['files']['name']) && is_array($_FILES['files']['name']) ? count($_FILES['files']['name']) : 0;
 
 		//RECORREMOS EL FILE INPUT
 		for($i=0;$i<$totalfiles;$i++){
+			if (empty($_FILES['files']['name'][$i]) || empty($_FILES['files']['tmp_name'][$i])) { continue; }
 			$notaoperacion_detalles_id = correlativo('notaoperacion_detalles_id', 'notaoperacion_detalles');	
-			$filename = 'no_'.$paciente.'_'.$_FILES['files']['name'][$i];
+			$nombre_archivo = basename($_FILES['files']['name'][$i]);
+			$nombre_archivo = preg_replace('/[^A-Za-z0-9._-]/', '_', $nombre_archivo);
+			$filename = 'no_'.$paciente.'_'.$nombre_archivo;
 				
 			//ESTABLECEMOS EL PATH DONDE SE GUARDARA EL DOCUMENTO
 			$path = $_SERVER["DOCUMENT_ROOT"].PRODUCT_PATH.$filename;

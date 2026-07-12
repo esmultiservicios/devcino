@@ -1,5 +1,7 @@
 <script>
 $(document).ready(function(){
+	$('#edi_post').remove();
+	limpiarEstadoVisualAtencion();
 	getSexo();
 	pagination(1);
 	getStatus();
@@ -2264,55 +2266,224 @@ function CulminarAtencionPacienteCirugia(pacientes_id, agenda_id){
 	  }	
 }
 
-function marcarAtencionCirugia(agenda_id, comentario, fecha){
-	var hoy = new Date();
-	fecha_actual = convertDate(hoy);
 
+// ============================================================================
+// ESTADO VISUAL DE LA ATENCIÓN
+// agenda.status:
+// 0 = Pendiente
+// 1 = Atención culminada
+// 2 = Ausencia
+// 4 = Eliminada
+// ============================================================================
+function establecerEstadoVisualAtencion(status){
+	status = parseInt(status, 10);
+
+	var $boton = $('#end_atencion');
+	var $badge = $('#estado_atencion');
+
+	if ($boton.length === 0 || $badge.length === 0) {
+		return false;
+	}
+
+	$badge
+		.removeClass('badge-success badge-warning badge-danger badge-secondary')
+		.hide();
+
+	if (status === 1) {
+		$boton.hide();
+
+		$badge
+			.addClass('badge-success')
+			.html('<i class="fas fa-check-circle"></i> Atención culminada')
+			.show();
+
+		return true;
+	}
+
+	if (status === 2) {
+		$boton.hide();
+
+		$badge
+			.addClass('badge-warning')
+			.html('<i class="fas fa-user-times"></i> Ausencia registrada')
+			.show();
+
+		return true;
+	}
+
+	if (status === 4) {
+		$boton.hide();
+
+		$badge
+			.addClass('badge-danger')
+			.html('<i class="fas fa-ban"></i> Atención eliminada')
+			.show();
+
+		return true;
+	}
+
+	// Estado pendiente o desconocido
+	$badge.hide();
+	$boton.show();
+
+	return true;
+}
+
+function limpiarEstadoVisualAtencion(){
+	$('#estado_atencion')
+		.removeClass('badge-success badge-warning badge-danger badge-secondary')
+		.hide()
+		.html('');
+
+	$('#end_atencion').hide();
+}
+
+function mostrarEstadoAtencion(agenda_id){
+	agenda_id = parseInt(agenda_id, 10);
+
+	if (!agenda_id || agenda_id <= 0) {
+		limpiarEstadoVisualAtencion();
+		return false;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CONSULTAR EL ESTADO REAL DE LA AGENDA
+	|--------------------------------------------------------------------------
+	| Se utiliza el PHP que ya existe en el sistema:
+	| getAtencionPaciente.php
+	|
+	| El error anterior era que se estaba llamando a getEstadoAgenda.php,
+	| archivo que no forma parte del flujo original. Al fallar esa petición,
+	| el JS mostraba nuevamente el botón como pendiente.
+	*/
+	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/getAtencionPaciente.php';
+
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: {
+			agenda_id: agenda_id
+		},
+		cache: false,
+		success: function(respuesta){
+			var status = parseInt($.trim(respuesta), 10);
+
+			if (isNaN(status)) {
+				status = 0;
+			}
+
+			establecerEstadoVisualAtencion(status);
+		},
+		error: function(xhr){
+			/*
+			| Si falla la consulta no se debe asumir que está pendiente,
+			| porque eso volvería a mostrar el botón incorrectamente.
+			*/
+			$('#end_atencion').hide();
+
+			$('#estado_atencion')
+				.removeClass('badge-success badge-warning badge-danger')
+				.addClass('badge-secondary')
+				.html('<i class="fas fa-exclamation-circle"></i> Estado no disponible')
+				.show();
+
+			console.error('No se pudo consultar el estado de la atención:', xhr.responseText);
+		}
+	});
+
+	return true;
+}
+
+function marcarAtencionCirugia(agenda_id, comentario){
 	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes/marcarAtencion.php';
-	
-    $.ajax({
-	  type:'POST',
-	  url:url,
-	  data:'agenda_id='+agenda_id+'&fecha='+fecha+'&comentario='+comentario,
-	  success: function(registro){
-		var datos = eval(registro);
-		
-		if (datos[1] == "AtencionMedica"){
-			showFacturaAgenda(datos[2]);//LLAMAMOS LA FACTURA .-Función se encuenta en myjava_atencioN_medica.js
-		}
-		
-		if(datos[0] == 1){
+	var fecha_actual = convertDate(new Date());
+
+	$.ajax({
+		type: 'POST',
+		url: url,
+		dataType: 'json',
+		data: {
+			agenda_id: agenda_id,
+			fecha: fecha_actual,
+			comentario: comentario
+		},
+		success: function(datos){
+			if(datos[0] == 1){
+				establecerEstadoVisualAtencion(1);
+				mostrarEstadoAtencion(agenda_id);
+				swal({
+					title: "Success", 
+					text: datos[3] ? datos[3] : "Atención marcada correctamente",
+					icon: "success",
+					timer: 3000,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+
+				if (datos[1] == "AtencionMedica"){
+					showFacturaAgenda(datos[2]);
+				}
+
+				if (typeof paginationAtencionCirugia === 'function'){
+					paginationAtencionCirugia(1);
+				}else if (typeof pagination === 'function'){
+					pagination(1);
+				}
+
+				return false;
+			}else if(datos[0] == 2){
+				swal({
+					title: "Error", 
+					text: datos[3] ? datos[3] : "Error al marcar la atención",
+					icon: "error", 
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+				return false;
+			}else if(datos[0] == 3){
+				swal({
+					title: "Atención no disponible", 
+					text: datos[3] ? datos[3] : "Esta atención no se puede marcar",
+					icon: "warning", 
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+
+				if (typeof paginationAtencionCirugia === 'function'){
+					paginationAtencionCirugia(1);
+				}else if (typeof pagination === 'function'){
+					pagination(1);
+				}
+
+				return false;
+			}else{
+				swal({
+					title: "Error", 
+					text: datos[3] ? datos[3] : "Error al ejecutar esta acción",
+					icon: "error", 
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+				return false;
+			}
+		},
+		error: function(xhr){
 			swal({
-				title: "Success", 
-				text: "Atencion marcada correctamente",
-				icon: "success",
-				timer: 3000, //timeOut for auto-close
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera				
-			});		
-		}else if(datos[0] == 2){
-			swal({
-				title: "Error", 
-				text: "Error al marcar la atención",
-				icon: "error", 
+				title: "Error",
+				text: "El servidor no devolvió una respuesta válida. Respuesta: " + xhr.responseText,
+				icon: "error",
 				dangerMode: true,
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
+				closeOnEsc: false,
+				closeOnClickOutside: false
 			});
-			return false;		 
-		}else{
-			swal({
-				title: "Error", 
-				text: "Error al ejecutar esta acción",
-				icon: "error", 
-				dangerMode: true,
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
-			});				
 		}
-	  }
-   });
-   return false;		
+	});
+
+	return false;
 }
 //FIN FUNCION QUITAR ATENCION
 
@@ -5207,6 +5378,121 @@ function mostrarArchivosNotaOperatoria(pacientes_id){
 	});	
 }
 
+
+// ============================================================================
+// CONTROL CENTRAL DE BOTONES REGISTRAR / EDITAR
+// ============================================================================
+
+
+function configurarModoFormularioCAMI(config, existeRegistro){
+	var $form = $(config.form);
+	var $registrar = $(config.registrar);
+	var $editar = $(config.editar);
+
+	if (existeRegistro) {
+		$registrar.hide();
+		$editar.show();
+
+		$form.attr({
+			'data-form': 'update',
+			'action': config.modificar
+		});
+	} else {
+		$editar.hide();
+		$registrar.show();
+
+		$form.attr({
+			'data-form': 'save',
+			'action': config.agregar
+		});
+	}
+}
+
+function actualizarBotonesAtencionesPaciente(pacientes_id, clinico_id){
+	pacientes_id = parseInt(pacientes_id, 10);
+	clinico_id = parseInt(clinico_id, 10);
+
+	if (!pacientes_id || pacientes_id <= 0) {
+		return false;
+	}
+
+	// PRIMERA CONSULTA:
+	// Si existe clinico_id, se muestra Editar. Si no existe, Registrar.
+	configurarModoFormularioCAMI({
+		form: '#formulario_atenciones',
+		registrar: '#reg_atencion',
+		editar: '#edi_atencion',
+		agregar: '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarExpedienteClinico.php',
+		modificar: '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarExpedienteClinico.php'
+	}, clinico_id > 0);
+
+	// PREOPERATORIO:
+	// El PHP devuelve un arreglo vacío cuando no existe y una fila cuando existe.
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo SERVERURL; ?>php/expedienteClinico/viewDatosPreOperatorio.php',
+		dataType: 'json',
+		cache: false,
+		data: {
+			pacientes_id: pacientes_id,
+			_t: new Date().getTime()
+		},
+		success: function(datos){
+			var existeRegistro = Array.isArray(datos) && datos.length > 0;
+
+			configurarModoFormularioCAMI({
+				form: '#formularioAtencionesPreoperatorio',
+				registrar: '#reg_pre',
+				editar: '#edi_pre',
+				agregar: '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarPreOperacion.php',
+				modificar: '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarPreOperacion.php'
+			}, existeRegistro);
+		},
+		error: function(xhr){
+			console.error('No se pudo comprobar el preoperatorio:', xhr.responseText);
+		}
+	});
+
+	// NOTA OPERATORIA:
+	// El PHP devuelve un arreglo vacío cuando no existe y una fila cuando existe.
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo SERVERURL; ?>php/expedienteClinico/viewDatosNotaOperatoria.php',
+		dataType: 'json',
+		cache: false,
+		data: {
+			pacientes_id: pacientes_id,
+			_t: new Date().getTime()
+		},
+		success: function(datos){
+			var existeRegistro = Array.isArray(datos) && datos.length > 0;
+
+			configurarModoFormularioCAMI({
+				form: '#formularioAtencionesNotaOperatoria',
+				registrar: '#reg_nota',
+				editar: '#edi_nota',
+				agregar: '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarNotaOperatoria.php',
+				modificar: '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarNotaOperatoria.php'
+			}, existeRegistro);
+		},
+		error: function(xhr){
+			console.error('No se pudo comprobar la nota operatoria:', xhr.responseText);
+		}
+	});
+
+	// POSTOPERATORIO:
+	// Cada ingreso es un seguimiento nuevo. Siempre debe permanecer en Registrar.
+	$('#edi_post').remove();
+	$('#reg_post').show();
+
+	$('#formularioAtencionesPostOperatoria').attr({
+		'data-form': 'save',
+		'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarPostOperatorio.php'
+	});
+
+	return true;
+}
+
 function setPreOperatorio(){
 	var url = '<?php echo SERVERURL; ?>php/pacientes/consultarDatosPreOperatorio.php';
 	
@@ -5216,21 +5502,7 @@ function setPreOperatorio(){
 		data:$('#formularioAtencionesPreoperatorio').serialize(),
 		success: function(valores){
 			var datos = eval(valores);
-
-			if(datos[0] == "" || datos[0] == null){
-				$('#reg_pre').show();
-				$('#edi_pre').hide();
-				$('#formularioAtencionesPreoperatorio #fechaConsultaGrupo').hide();	
-				$('#formularioAtencionesPreoperatorio #fecha_consulta').attr("readonly", true);					
-			}else{
-				$('#reg_pre').hide();
-				$('#edi_pre').show();
-				$('#formularioAtencionesPreoperatorio #fechaConsultaGrupo').show();
-				$('#formularioAtencionesPreoperatorio #fecha_consulta').val(datos[12]);	
-				$('#formularioAtencionesPreoperatorio #fecha_consulta').attr("readonly", true);					
-			}	
-
-			$('#formularioAtencionesPreoperatorio #pro').val('Edición');				
+$('#formularioAtencionesPreoperatorio #pro').val('Edición');				
 			$('#formularioAtencionesPreoperatorio #pre_peso_actual').val(datos[0]);	
 			$('#formularioAtencionesPreoperatorio #pre_peso_actual_kg').val(datos[1]);
 			$('#formularioAtencionesPreoperatorio #pre_peso_perdido').val(datos[2]);	
@@ -5289,21 +5561,7 @@ function setNotaOperatorio(){
 		data:$('#formularioAtencionesNotaOperatoria').serialize(),
 		success: function(valores){
 			var datos = eval(valores);
-
-			if(datos[0] == "" || datos[0] == null){
-				$('#reg_nota').show();
-				$('#edi_nota').hide();	
-				$('#formularioAtencionesNotaOperatoria #fechaConsultaGrupo').hide();	
-				$('#formularioAtencionesNotaOperatoria #fecha_consulta').attr("readonly", true);								
-			}else{
-				$('#reg_nota').hide();
-				$('#edi_nota').show();
-				$('#formularioAtencionesNotaOperatoria #fechaConsultaGrupo').show();
-				$('#formularioAtencionesNotaOperatoria #fecha_consulta').val(datos[21]);	
-				$('#formularioAtencionesNotaOperatoria #fecha_consulta').attr("readonly", true);					
-			}
-
-			$('#formularioAtencionesNotaOperatoria #pro').val('Edición');				
+$('#formularioAtencionesNotaOperatoria #pro').val('Edición');				
 			$('#formularioAtencionesNotaOperatoria #nota_peso_actual').val(datos[0]);	
 			$('#formularioAtencionesNotaOperatoria #nota_peso_actual_kg').val(datos[1]);
 			$('#formularioAtencionesNotaOperatoria #nota_peso_perdido').val(datos[2]);	
@@ -5808,418 +6066,498 @@ function getProfesionAtencionCirugiaPacientes(){
 	$("#formulario_atenciones").submit();
 });*/
 
-/*$('#reg_pre').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPreoperatorio').attr({ 'data-form': 'save' }); 
-	$('#formularioAtencionesPreoperatorio').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/agregarPreOperacion.php' });
-	$("#formularioAtencionesPreoperatorio").submit();
-});*/
+	// ============================================================================
+	// BOTONES ATENCIONES / PRE / NOTA / POST
+	// Lógica ordenada, sin handlers duplicados y sin JSON.parse manual
+	// ============================================================================
 
-$('#reg_atencion').on('click', (e) => {
-    e.preventDefault();
+	function respuestaAjaxCAMI(respuesta, callbackSuccess){
+		swal({
+			title: respuesta && respuesta.title ? respuesta.title : 'Error',
+			text: respuesta && respuesta.message ? respuesta.message : 'Respuesta no válida del servidor',
+			icon: respuesta && respuesta.type ? respuesta.type : 'error',
+			dangerMode: respuesta && respuesta.status === 'error',
+			closeOnEsc: false,
+			closeOnClickOutside: false
+		});
 
-    // Obtener los valores de los campos
-    let servicio_id = $('#atenciones_servicio_id').val();
+		if (respuesta && respuesta.status === 'success') {
+			if (typeof callbackSuccess === 'function') {
+				callbackSuccess(respuesta);
+			}
+		}
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            icon: 'error',
+		return false;
+	}
+
+	function errorAjaxCAMI(xhr){
+		var respuestaServidor = xhr && xhr.responseText ? xhr.responseText : 'Sin respuesta del servidor';
+
+		swal({
+			title: 'Error',
+			text: 'El servidor no devolvió JSON válido. Respuesta: ' + respuestaServidor,
+			icon: 'error',
 			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+			closeOnEsc: false,
+			closeOnClickOutside: false
+		});
 
-    // Si todas las validaciones pasan, enviar el formulario por AJAX
-    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarExpedienteClinico.php';
-    let formData = new FormData($('#formulario_atenciones')[0]);
+		return false;
+	}
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: formData,
-        processData: false, // Evitar que jQuery procese los datos
-        contentType: false, // Evitar que jQuery establezca el tipo de contenido
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+	// ============================================================================
+	// VALIDACIÓN DE CAMPOS REQUIRED
+	// Valida únicamente los controles visibles y habilitados del formulario.
+	// Los campos hidden del flujo (pacientes_id, agenda_id, etc.) no se muestran
+	// como errores required al usuario.
+	// ============================================================================
+	function obtenerNombreCampoRequired(campo){
+		var $campo = $(campo);
+		var id = $campo.attr('id');
+		var nombre = '';
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+		if (id) {
+			var $label = $('label[for="' + id + '"]').first();
 
-$('#edi_atencion').on('click', (e) => {
-    e.preventDefault();
+			if ($label.length > 0) {
+				nombre = $.trim($label.text().replace('*', ''));
+			}
+		}
 
-    // Obtener los valores de los campos
-    let servicio_id = $('#atenciones_servicio_id').val();
+		if (!nombre) {
+			var $contenedor = $campo.closest('.form-group, .form-row > div, .col-md-12, .col-md-6, .col-md-4, .col-md-3, .col-md-2');
+			var $labelCercano = $contenedor.find('label').first();
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+			if ($labelCercano.length > 0) {
+				nombre = $.trim($labelCercano.text().replace('*', ''));
+			}
+		}
 
-    // Si todas las validaciones pasan, enviar el formulario por AJAX
-    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarExpedienteClinico.php';
-    let formData = new FormData($('#formulario_atenciones')[0]);
+		if (!nombre) {
+			nombre = $campo.attr('placeholder') || $campo.attr('name') || 'Campo requerido';
+		}
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: formData,
-        processData: false, // Evitar que jQuery procese los datos
-        contentType: false, // Evitar que jQuery establezca el tipo de contenido
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+		return nombre;
+	}
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+	function mostrarCampoRequired(campo){
+		var $campo = $(campo);
+		var $tabPane = $campo.closest('.tab-pane');
 
-$('#reg_pre').on('click', (e) => {
-    e.preventDefault();
+		if ($tabPane.length > 0 && $tabPane.attr('id')) {
+			var tabId = $tabPane.attr('id');
+			var $tabLink = $('a[data-toggle="tab"][href="#' + tabId + '"]');
 
-    // Obtener los valores de los campos
-    let servicio_id = $('#servicio_preoperatorio_id').val();
-    let pre_fecha_cirugia = $('#pre_fecha_cirugia').val();
+			if ($tabLink.length > 0) {
+				$tabLink.tab('show');
+			}
+		}
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+		$campo.addClass('is-invalid');
 
-    // Validar que pre_fecha_cirugia no esté vacío
-    if (!pre_fecha_cirugia) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, ingresa la fecha de la cirugía.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si pre_fecha_cirugia está vacío
-    }
+		setTimeout(function(){
+			try {
+				$('html, body').animate({
+					scrollTop: Math.max($campo.offset().top - 150, 0)
+				}, 300);
+			} catch (error) {}
 
-    // Si todas las validaciones pasan, enviar el formulario por AJAX
-    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarPreOperacion.php';
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: $('#formularioAtencionesPreoperatorio').serialize(),
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+			if (!$campo.is(':disabled') && $campo.attr('type') !== 'hidden') {
+				$campo.trigger('focus');
+			}
+		}, 250);
+	}
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+	function validarRequiredFormularioCAMI(formSelector){
+		var $form = $(formSelector);
 
+		if ($form.length === 0) {
+			swal({
+				title: 'Error',
+				text: 'No se encontró el formulario: ' + formSelector,
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
 
-$('#edi_pre').on('click', (e) => {
-    e.preventDefault();
+		var campoInvalido = null;
 
-    // Obtener los valores de los campos
-    let servicio_id = $('#servicio_preoperatorio_id').val();
-    let pre_fecha_cirugia = $('#pre_fecha_cirugia').val();
+		$form.find('[required]').each(function(){
+			var $campo = $(this);
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            type: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+			if ($campo.is(':disabled') || $campo.attr('type') === 'hidden') {
+				return true;
+			}
 
-    // Validar que pre_fecha_cirugia no esté vacío
-    if (!pre_fecha_cirugia) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, ingresa la fecha de la cirugía.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si pre_fecha_cirugia está vacío
-    }	
-    
-    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarPreOperacion.php';
-    let formData = new FormData($('#formularioAtencionesPreoperatorio')[0]);
+			var tipo = ($campo.attr('type') || '').toLowerCase();
+			var valor = $.trim($campo.val() == null ? '' : $campo.val());
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+			if (tipo === 'radio') {
+				var nombreRadio = $campo.attr('name');
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+				if (nombreRadio && $form.find('input[type="radio"][name="' + nombreRadio + '"]:checked').length === 0) {
+					campoInvalido = this;
+					return false;
+				}
+			} else if (tipo === 'checkbox') {
+				if (!$campo.is(':checked')) {
+					campoInvalido = this;
+					return false;
+				}
+			} else if (valor === '') {
+				campoInvalido = this;
+				return false;
+			}
 
-$('#reg_nota').on('click', (e) => {
-    e.preventDefault();
-    
-    // Obtener los valores de los campos
-    let servicio_id = $('#servicio_notaOperatoria_id').val();
+			if (this.checkValidity && !this.checkValidity()) {
+				campoInvalido = this;
+				return false;
+			}
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+			$campo.removeClass('is-invalid');
+			return true;
+		});
 
-    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarNotaOperatoria.php';
-    let formData = new FormData($('#formularioAtencionesNotaOperatoria')[0]);
+		if (campoInvalido !== null) {
+			var nombreCampo = obtenerNombreCampoRequired(campoInvalido);
+			mostrarCampoRequired(campoInvalido);
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+			swal({
+				title: 'Información requerida',
+				text: 'Debe completar el campo: ' + nombreCampo + '.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+			return false;
+		}
 
-$('#edi_nota').on('click', (e) => {
-    e.preventDefault();
-    
-    // Obtener los valores de los campos
-    let servicio_id = $('#servicio_notaOperatoria_id').val();
+		return true;
+	}
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+	$(document).on('input change', 'form [required]', function(){
+		$(this).removeClass('is-invalid');
+	});
 
-    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarNotaOperatoria.php';
-    let formData = new FormData($('#formularioAtencionesNotaOperatoria')[0]);
+	// ============================================================================
+	// ACTUALIZAR LA VISTA DEL EXPEDIENTE DESPUÉS DE GUARDAR
+	// Vuelve a consultar viewDatosGenerales.php y las demás vistas sin recargar.
+	// ============================================================================
+	function actualizarViewExpedienteCAMI(formSelector){
+		var pacientes_id = parseInt($(formSelector).find('[name="pacientes_id"]').val(), 10);
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+		if (!pacientes_id || pacientes_id <= 0) {
+			return false;
+		}
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+		if (typeof viewExpediente === 'function') {
+			viewExpediente(pacientes_id);
+		}
 
-$('#reg_post').on('click', (e) => {
-    e.preventDefault();
-    
-	let servicio_id = $('#servicio_PostOperatorio_id').val();
+		return true;
+	}
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+	function enviarFormularioAtencionCAMI(config){
+		var form = $(config.formSelector);
 
-    let url = '<?php echo SERVERURL; ?>php/pacientes/agregarPostOperatorio.php';
-    let formData = new FormData($('#formularioAtencionesPostOperatoria')[0]);
+		if (form.length === 0) {
+			swal({
+				title: 'Error',
+				text: 'No se encontró el formulario: ' + config.formSelector,
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+		if (!validarRequiredFormularioCAMI(config.formSelector)) {
+			return false;
+		}
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+		var formData = new FormData(form[0]);
 
-$('#edi_nota').on('click', (e) => {
-    e.preventDefault();
-    
-	let servicio_id = $('#buscar_servicios_notaOperatoria_id').val();
+		$.ajax({
+			type: 'POST',
+			url: config.url,
+			data: formData,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			beforeSend: function(){
+				form.find('button[type="submit"], #reg_atencion, #edi_atencion, #reg_pre, #edi_pre, #reg_nota, #edi_nota, #reg_post')
+					.prop('disabled', true);
+			},
+			success: function(respuesta){
+				respuestaAjaxCAMI(respuesta, function(){
+					if (typeof pagination === 'function') {
+						pagination(1);
+					}
 
-    // Validar que servicio_id no esté vacío
-    if (!servicio_id) {
-        swal({
-            title: 'Error',
-            text: 'Por favor, selecciona un servicio.',
-            icon: 'error',
-			dangerMode: true,
-			closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-			closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-        });
-        return; // Detener el proceso si servicio_id está vacío
-    }
+					actualizarViewExpedienteCAMI(config.formSelector);
 
-    let url = '<?php echo SERVERURL; ?>php/pacientes/modificarNotaOperatoria.php';
-    let formData = new FormData($('#formularioAtencionesNotaOperatoria')[0]);
+					var pacientes_id_actual = parseInt(
+						$(config.formSelector).find('[name="pacientes_id"]').val(),
+						10
+					);
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: (respuesta) => {
-            respuesta = JSON.parse(respuesta);
+					if (pacientes_id_actual > 0) {
+						setTimeout(function(){
+							actualizarBotonesAtencionesPaciente(
+								pacientes_id_actual,
+								parseInt($('#formulario_buscarAtencion #expediente_nch').val(), 10)
+							);
+						}, 350);
+					}
 
-            swal({
-                title: respuesta.title, 
-                text: respuesta.message,
-                icon: respuesta.type, 
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera
-            });
-        }
-    });
-});
+					if (typeof config.success === 'function') {
+						config.success(respuesta);
+					}
+				});
+			},
+			error: function(xhr){
+				errorAjaxCAMI(xhr);
+			},
+			complete: function(){
+				form.find('button[type="submit"], #reg_atencion, #edi_atencion, #reg_pre, #edi_pre, #reg_nota, #edi_nota, #reg_post')
+					.prop('disabled', false);
+			}
+		});
 
-/*$('#reg_nota').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesNotaOperatoria').attr({ 'data-form': 'save' }); 
-	$('#formularioAtencionesNotaOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/agregarNotaOperatoria.php' });
-	$("#formularioAtencionesNotaOperatoria").submit();
-});*/
+		return false;
+	}
 
-/*$('#reg_post').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPostOperatoria').attr({ 'data-form': 'save' }); 
-	$('#formularioAtencionesPostOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/agregarPostOperatorio.php' });
-	$("#formularioAtencionesPostOperatoria").submit();
-});*/
+	// ============================================================================
+	// EXPEDIENTE CLÍNICO - REGISTRAR
+	// ============================================================================
+	$('#reg_atencion').off('click').on('click', function(e){
+		e.preventDefault();
 
-//EDITAR REGISTROS
-/*$('#edi_atencion').on('click', function(e){
-	e.preventDefault();	
-	$('#formulario_atenciones').attr({ 'data-form': 'update' }); 
-	$('#formulario_atenciones').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/modificarExpedienteClinico.php' });
-	$("#formulario_atenciones").submit();
-});*/
+		var servicio_id = $('#atenciones_servicio_id').val();
 
-/*$('#edi_pre').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPreoperatorio').attr({ 'data-form': 'update' }); 
-	$('#formularioAtencionesPreoperatorio').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/.php' });
-	$("#formularioAtencionesPreoperatorio").submit();
-});*/
+		if (!servicio_id) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, selecciona un servicio.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
 
-/*
-$('#edi_nota').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesNotaOperatoria').attr({ 'data-form': 'update' }); 
-	$('#formularioAtencionesNotaOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/modificarNotaOperatoria.php' });
-	$("#formularioAtencionesNotaOperatoria").submit();
-});*/
+		enviarFormularioAtencionCAMI({
+			formSelector: '#formulario_atenciones',
+			url: '<?php echo SERVERURL; ?>php/pacientes/agregarExpedienteClinico.php'
+		});
 
-$('#edi_post').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPostOperatoria').attr({ 'data-form': 'update' }); 
-	$('#formularioAtencionesPostOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/pacientes/modificarPostOperatorio.php' });
-	$("#formularioAtencionesPostOperatoria").submit();pacientes
-});
+		return false;
+	});
+
+	// ============================================================================
+	// EXPEDIENTE CLÍNICO - EDITAR
+	// ============================================================================
+	$('#edi_atencion').off('click').on('click', function(e){
+		e.preventDefault();
+
+		var servicio_id = $('#atenciones_servicio_id').val();
+
+		if (!servicio_id) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, selecciona un servicio.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		enviarFormularioAtencionCAMI({
+			formSelector: '#formulario_atenciones',
+			url: '<?php echo SERVERURL; ?>php/pacientes/modificarExpedienteClinico.php'
+		});
+
+		return false;
+	});
+
+	// ============================================================================
+	// PRE OPERATORIO - REGISTRAR
+	// ============================================================================
+	$('#reg_pre').off('click').on('click', function(e){
+		e.preventDefault();
+
+		var servicio_id = $('#servicio_preoperatorio_id').val();
+		var pre_fecha_cirugia = $('#pre_fecha_cirugia').val();
+
+		if (!servicio_id) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, selecciona un servicio.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		if (!pre_fecha_cirugia) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, ingresa la fecha de la cirugía.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		enviarFormularioAtencionCAMI({
+			formSelector: '#formularioAtencionesPreoperatorio',
+			url: '<?php echo SERVERURL; ?>php/pacientes/agregarPreOperacion.php'
+		});
+
+		return false;
+	});
+
+	// ============================================================================
+	// PRE OPERATORIO - EDITAR
+	// ============================================================================
+	$('#edi_pre').off('click').on('click', function(e){
+		e.preventDefault();
+
+		var servicio_id = $('#servicio_preoperatorio_id').val();
+		var pre_fecha_cirugia = $('#pre_fecha_cirugia').val();
+
+		if (!servicio_id) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, selecciona un servicio.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		if (!pre_fecha_cirugia) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, ingresa la fecha de la cirugía.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		enviarFormularioAtencionCAMI({
+			formSelector: '#formularioAtencionesPreoperatorio',
+			url: '<?php echo SERVERURL; ?>php/pacientes/modificarPreOperacion.php'
+		});
+
+		return false;
+	});
+
+	// ============================================================================
+	// NOTA OPERATORIA - REGISTRAR
+	// ============================================================================
+	$('#reg_nota').off('click').on('click', function(e){
+		e.preventDefault();
+
+		var servicio_id = $('#servicio_notaOperatoria_id').val();
+
+		if (!servicio_id) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, selecciona un servicio.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		enviarFormularioAtencionCAMI({
+			formSelector: '#formularioAtencionesNotaOperatoria',
+			url: '<?php echo SERVERURL; ?>php/pacientes/agregarNotaOperatoria.php'
+		});
+
+		return false;
+	});
+
+	// ============================================================================
+	// NOTA OPERATORIA - EDITAR
+	// ============================================================================
+	$('#edi_nota').off('click').on('click', function(e){
+		e.preventDefault();
+
+		var servicio_id = $('#servicio_notaOperatoria_id').val();
+
+		if (!servicio_id) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, selecciona un servicio.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		enviarFormularioAtencionCAMI({
+			formSelector: '#formularioAtencionesNotaOperatoria',
+			url: '<?php echo SERVERURL; ?>php/pacientes/modificarNotaOperatoria.php'
+		});
+
+		return false;
+	});
+
+	// ============================================================================
+	// POST OPERATORIO - REGISTRAR
+	// ============================================================================
+	$(document).off('click.camiRegPost', '#reg_post').on('click.camiRegPost', '#reg_post', function(e){
+		e.preventDefault();
+
+		var servicio_id = $('#servicio_PostOperatorio_id').val();
+
+		if (!servicio_id) {
+			swal({
+				title: 'Error',
+				text: 'Por favor, selecciona un servicio.',
+				icon: 'error',
+				dangerMode: true,
+				closeOnEsc: false,
+				closeOnClickOutside: false
+			});
+			return false;
+		}
+
+		enviarFormularioAtencionCAMI({
+			formSelector: '#formularioAtencionesPostOperatoria',
+			url: '<?php echo SERVERURL; ?>php/pacientes/agregarPostOperatorio.php'
+		});
+
+		return false;
+	});
+
+	// ============================================================================
+	// POST OPERATORIO - EDITAR
+	
 
 $('#formulario_atenciones #btn_actualizar').on('click', function(e){
 	e.preventDefault();	
@@ -6299,6 +6637,12 @@ function viewExpediente(pacientes_id){
 		data:'pacientes_id='+pacientes_id,
 		success: function(valores){
 			var datos = eval(valores);
+
+			actualizarBotonesAtencionesPaciente(pacientes_id, datos[65]);
+
+			// ACTUALIZAR BOTÓN/BADGE SEGÚN EL ESTADO REAL DE LA AGENDA
+			mostrarEstadoAtencion(datos[82]);
+
 			//INICIO EXPEDIENTE CLINICO
 			$('#formulario_atenciones #inicio_obesidad').val(datos[14]);	
 			$('#formulario_atenciones #habito_alimenticio').val(datos[15]);	
@@ -6556,22 +6900,9 @@ function viewExpediente(pacientes_id){
 
 			$('#formulario_atenciones #servicio_id').val(datos[64]);
 			$('#formulario_atenciones #colaborador_id').val(datos[81]);					
-			$('#formulario_atenciones #agenda_id').val(datos[82]);			
-
-			if(datos[65] == null || datos[65] == ""){
-				$('#reg_atencion').show();
-				$('#edi_atencion').hide();
-				$('#formulario_atenciones #fechaConsultaGrupo').hide();
-				$('#formulario_atenciones #fecha_consulta').attr("readonly", true);					
-			}else{
-				$('#reg_atencion').hide();
-				$('#edi_atencion').show();
-				$('#formulario_atenciones #fechaConsultaGrupo').show();
-				$('#formulario_atenciones #fecha_consulta').val(datos[13]);	
-				$('#formulario_atenciones #fecha_consulta').attr("readonly", true);					
-			}
-
-			//AGREGAMOS LA TALLA EN TODOS LAS PESTAÑAS
+			$('#formulario_atenciones #agenda_id').val(datos[82]);
+			mostrarEstadoAtencion(datos[82]);			
+//AGREGAMOS LA TALLA EN TODOS LAS PESTAÑAS
 			$('#formularioAtencionesPreoperatorio #pre_talla').val(datos[46]);
 			$('#formularioAtencionesNotaOperatoria #nota_talla').val(datos[46]);
 			$('#formularioAtencionesPostOperatoria #post_talla').val(datos[46]);
@@ -7885,55 +8216,93 @@ function CulminarAtencionPacienteNutricion(pacientes_id, agenda_id){
 	  }	
 }
 
-function marcarAtencionNutricion(agenda_id, comentario, fecha){
-	var hoy = new Date();
-	fecha_actual = convertDate(hoy);
-
+function marcarAtencionNutricion(agenda_id, comentario){
 	var url = '<?php echo SERVERURL; ?>php/atencion_pacientes_nutricion/marcarAtencion.php';
-	
-    $.ajax({
-	  type:'POST',
-	  url:url,
-	  data:'agenda_id='+agenda_id+'&fecha='+fecha+'&comentario='+comentario,
-	  success: function(registro){
-		var datos = eval(registro);
-		
-		if (datos[1] == "AtencionMedica"){
-			showFacturaAgendaNutricion(datos[2]);//LLAMAMOS LA FACTURA .-Función se encuenta en myjava_atencioN_medica.js
-		}
-		
-		if(datos[0] == 1){
+	var fecha_actual = convertDate(new Date());
+
+	$.ajax({
+		type: 'POST',
+		url: url,
+		dataType: 'json',
+		data: {
+			agenda_id: agenda_id,
+			fecha: fecha_actual,
+			comentario: comentario
+		},
+		success: function(datos){
+			if(datos[0] == 1){
+				swal({
+					title: "Success", 
+					text: datos[3] ? datos[3] : "Atención marcada correctamente",
+					icon: "success",
+					timer: 3000,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+
+				if (datos[1] == "AtencionMedica"){
+					showFacturaAgendaNutricion(datos[2]);
+				}
+
+				if (typeof paginationAtencionNutricion === 'function'){
+					paginationAtencionNutricion(1);
+				}else if (typeof pagination === 'function'){
+					pagination(1);
+				}
+
+				return false;
+			}else if(datos[0] == 2){
+				swal({
+					title: "Error", 
+					text: datos[3] ? datos[3] : "Error al marcar la atención",
+					icon: "error", 
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+				return false;
+			}else if(datos[0] == 3){
+				swal({
+					title: "Atención no disponible", 
+					text: datos[3] ? datos[3] : "Esta atención no se puede marcar",
+					icon: "warning", 
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+
+				if (typeof paginationAtencionNutricion === 'function'){
+					paginationAtencionNutricion(1);
+				}else if (typeof pagination === 'function'){
+					pagination(1);
+				}
+
+				return false;
+			}else{
+				swal({
+					title: "Error", 
+					text: datos[3] ? datos[3] : "Error al ejecutar esta acción",
+					icon: "error", 
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+				return false;
+			}
+		},
+		error: function(xhr){
 			swal({
-				title: "Success", 
-				text: "Atencion marcada correctamente",
-				icon: "success",
-				timer: 1000, //timeOut for auto-close
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera				
-			});
-		}else if(datos[0] == 2){
-			swal({
-				title: "Error", 
-				text: "Error al marcar la atención",
-				icon: "error", 
+				title: "Error",
+				text: "El servidor no devolvió una respuesta válida. Respuesta: " + xhr.responseText,
+				icon: "error",
 				dangerMode: true,
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
+				closeOnEsc: false,
+				closeOnClickOutside: false
 			});
-			return false;		 
-		}else{
-			swal({
-				title: "Error", 
-				text: "Error al ejecutar esta acción",
-				icon: "error", 
-				dangerMode: true,
-				closeOnEsc: false, // Desactiva el cierre con la tecla Esc
-				closeOnClickOutside: false // Desactiva el cierre al hacer clic fuera	
-			});				
 		}
-	  }
-   });
-   return false;		
+	});
+
+	return false;
 }
 //FIN FUNCION QUITAR ATENCION
 

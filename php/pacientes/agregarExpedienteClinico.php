@@ -5,66 +5,108 @@ include "../funtions.php";
 //CONEXION A DB
 $mysqli = connect_mysqli();
 
-$pacientes_id = $_POST['pacientes_id'];
-$colaborador_id = $_SESSION['colaborador_id'];
-$servicio_id = $_POST['atenciones_servicio_id'];
-$fecha = $_POST['fecha'];
-$edad = $_POST['edad_consulta'];
-$inicio_obesidad = cleanStringStrtolower($_POST['inicio_obesidad']);
-$habito_alimenticio = cleanStringStrtolower($_POST['habito_alimenticio']);
-$tipo_obesidad = cleanStringStrtolower($_POST['tipo_obesidad']);
-$intentos_perdida_peso = cleanStringStrtolower($_POST['intentos_perdida_peso']);
-$peso_maximo_alcanzado = cleanStringStrtolower($_POST['peso_maximo_alcanzado']);
-$peso_maximo_alcanzado_kg = cleanStringStrtolower($_POST['peso_maximo_alcanzado_kg']);
-$sedentarismo = cleanStringStrtolower($_POST['sedentarismo']);
-$usuario = $_SESSION['colaborador_id'];
+/*
+|--------------------------------------------------------------------------
+| FUNCIONES LOCALES DE ENTRADA
+|--------------------------------------------------------------------------
+| Conservan mayúsculas/minúsculas y protegen valores usados en SQL.
+*/
+function post_text($mysqli, $campo, $predeterminado = "") {
+    $valor = isset($_POST[$campo]) ? trim((string)$_POST[$campo]) : $predeterminado;
+    return $mysqli->real_escape_string($valor);
+}
 
-$ejercicio = isset($_POST['ejercicio_activo']) && $_POST['ejercicio_activo'] !== '' ? $_POST['ejercicio_activo'] : 2;
+function post_int($campo, $predeterminado = 0) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
+
+function session_int($campo, $predeterminado = 0) {
+    return isset($_SESSION[$campo]) && $_SESSION[$campo] !== ""
+        ? (int)$_SESSION[$campo]
+        : (int)$predeterminado;
+}
+
+function checkbox_value($campo, $predeterminado = 2) {
+    return isset($_POST[$campo]) && $_POST[$campo] !== ""
+        ? (int)$_POST[$campo]
+        : (int)$predeterminado;
+}
+
+if (session_int('colaborador_id') <= 0) {
+    echo json_encode([
+        "status" => "error",
+        "title" => "Error",
+        "message" => "Sesión expirada o usuario no válido",
+        "type" => "error",
+        "buttonClass" => "btn-danger"
+    ], JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
+}
+
+
+$pacientes_id = post_int('pacientes_id');
+$colaborador_id = session_int('colaborador_id');
+$servicio_id = post_int('atenciones_servicio_id');
+$fecha = post_text($mysqli, 'fecha');
+$edad = post_text($mysqli, 'edad_consulta');
+$inicio_obesidad = post_text($mysqli, 'inicio_obesidad');
+$habito_alimenticio = post_text($mysqli, 'habito_alimenticio');
+$tipo_obesidad = post_text($mysqli, 'tipo_obesidad');
+$intentos_perdida_peso = post_text($mysqli, 'intentos_perdida_peso');
+$peso_maximo_alcanzado = post_text($mysqli, 'peso_maximo_alcanzado');
+$peso_maximo_alcanzado_kg = post_text($mysqli, 'peso_maximo_alcanzado_kg');
+$sedentarismo = post_text($mysqli, 'sedentarismo');
+$usuario = session_int('colaborador_id');
+
+$ejercicio = checkbox_value('ejercicio_activo', 2);
 
 
 if(isset($_POST['ejercicio_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['ejercicio_respuesta'] == ""){
 		$ejercicio_respuesta = "";
 	}else{
-		$ejercicio_respuesta = $_POST['ejercicio_respuesta'];
+		$ejercicio_respuesta = post_text($mysqli, 'ejercicio_respuesta');
 	}
 }else{
 	$ejercicio_respuesta = "";
 }
 
 //INICIO PRIMERA FILA
-$erge = isset($_POST['erge_activo']) && $_POST['erge_activo'] !== '' ? $_POST['erge_activo'] : 2;
+$erge = checkbox_value('erge_activo', 2);
 
 if(isset($_POST['erge_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['erge_respuesta'] == ""){
 		$respuesta_erge = "";
 	}else{
-		$respuesta_erge = $_POST['erge_respuesta'];
+		$respuesta_erge = post_text($mysqli, 'erge_respuesta');
 	}
 }else{
 	$respuesta_erge = "";
 }
 
-$hta = isset($_POST['hta_activo']) && $_POST['hta_activo'] !== '' ? $_POST['hta_activo'] : 2;
+$hta = checkbox_value('hta_activo', 2);
 
 
 if(isset($_POST['hta_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['hta_respuesta'] == ""){
 		$respuesta_hta = "";
 	}else{
-		$respuesta_hta = $_POST['hta_respuesta'];
+		$respuesta_hta = post_text($mysqli, 'hta_respuesta');
 	}
 }else{
 	$respuesta_hta = "";
 }
 
-$higado_graso = isset($_POST['higado_graso_activo']) && $_POST['higado_graso_activo'] !== '' ? $_POST['higado_graso_activo'] : 2;
+$higado_graso = checkbox_value('higado_graso_activo', 2);
 
 if(isset($_POST['higado_graso_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['higado_graso_respuesta'] == ""){
 		$respuesta_higado_graso = "";
 	}else{
-		$respuesta_higado_graso = $_POST['higado_graso_respuesta'];
+		$respuesta_higado_graso = post_text($mysqli, 'higado_graso_respuesta');
 	}
 }else{
 	$respuesta_higado_graso = "";
@@ -74,7 +116,7 @@ if(isset($_POST['saos_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['saos_activo'] == ""){
 		$saos = 2;
 	}else{
-		$saos = $_POST['saos_activo'];
+		$saos = post_text($mysqli, 'saos_activo');
 	}
 }else{
 	$saos = 2;
@@ -84,7 +126,7 @@ if(isset($_POST['saos_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['saos_respuesta'] == ""){
 		$respuesta_saos = "";
 	}else{
-		$respuesta_saos = $_POST['saos_respuesta'];
+		$respuesta_saos = post_text($mysqli, 'saos_respuesta');
 	}
 }else{
 	$respuesta_saos = "";
@@ -94,7 +136,7 @@ if(isset($_POST['hipotiroidismo_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFIN
 	if($_POST['hipotiroidismo_activo'] == ""){
 		$hipotiroidismo = 2;
 	}else{
-		$hipotiroidismo = $_POST['hipotiroidismo_activo'];
+		$hipotiroidismo = post_text($mysqli, 'hipotiroidismo_activo');
 	}
 }else{
 	$hipotiroidismo = 2;
@@ -104,7 +146,7 @@ if(isset($_POST['hipotiroidismo_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DI
 	if($_POST['hipotiroidismo_respuesta'] == ""){
 		$respuesta_hipotiroidismo = "";
 	}else{
-		$respuesta_hipotiroidismo = $_POST['hipotiroidismo_respuesta'];
+		$respuesta_hipotiroidismo = post_text($mysqli, 'hipotiroidismo_respuesta');
 	}
 }else{
 	$respuesta_hipotiroidismo = "";
@@ -114,7 +156,7 @@ if(isset($_POST['articulares_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['articulares_activo'] == ""){
 		$articulares = 2;
 	}else{
-		$articulares = $_POST['articulares_activo'];
+		$articulares = post_text($mysqli, 'articulares_activo');
 	}
 }else{
 	$articulares = 2;
@@ -124,7 +166,7 @@ if(isset($_POST['articulares_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFIN
 	if($_POST['articulares_respuesta'] == ""){
 		$respuesta_articulares = "";
 	}else{
-		$respuesta_articulares = $_POST['articulares_respuesta'];
+		$respuesta_articulares = post_text($mysqli, 'articulares_respuesta');
 	}
 }else{
 	$respuesta_articulares = "";
@@ -137,7 +179,7 @@ if(isset($_POST['ovarios_poliquisticos_activo'])){//COMPRUEBO SI LA VARIABLE EST
 	if($_POST['ovarios_poliquisticos_activo'] == ""){
 		$ovarios_poliquisticos = 2;
 	}else{
-		$ovarios_poliquisticos = $_POST['ovarios_poliquisticos_activo'];
+		$ovarios_poliquisticos = post_text($mysqli, 'ovarios_poliquisticos_activo');
 	}
 }else{
 	$ovarios_poliquisticos = 2;
@@ -147,7 +189,7 @@ if(isset($_POST['ovarios_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['ovarios_respuesta'] == ""){
 		$respuesta_ovarios_poliquisticos = "";
 	}else{
-		$respuesta_ovarios_poliquisticos = $_POST['ovarios_respuesta'];
+		$respuesta_ovarios_poliquisticos = post_text($mysqli, 'ovarios_respuesta');
 	}
 }else{
 	$respuesta_ovarios_poliquisticos = "";
@@ -157,7 +199,7 @@ if(isset($_POST['varices_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['varices_activo'] == ""){
 		$varices = 2;
 	}else{
-		$varices = $_POST['varices_activo'];
+		$varices = post_text($mysqli, 'varices_activo');
 	}
 }else{
 	$varices = 2;
@@ -167,7 +209,7 @@ if(isset($_POST['varices_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['varices_respuesta'] == ""){
 		$respuesta_varices = "";
 	}else{
-		$respuesta_varices = $_POST['varices_respuesta'];
+		$respuesta_varices = post_text($mysqli, 'varices_respuesta');
 	}
 }else{
 	$respuesta_varices = "";
@@ -178,7 +220,7 @@ if(isset($_POST['drogas_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['drogas_activo'] == ""){
 		$drogas = 2;
 	}else{
-		$drogas = $_POST['drogas_activo'];
+		$drogas = post_text($mysqli, 'drogas_activo');
 	}
 }else{
 	$drogas = 2;
@@ -188,7 +230,7 @@ if(isset($_POST['drogas_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['drogas_respuesta'] == ""){
 		$respuesta_drogas = "";
 	}else{
-		$respuesta_drogas = $_POST['drogas_respuesta'];
+		$respuesta_drogas = post_text($mysqli, 'drogas_respuesta');
 	}
 }else{
 	$respuesta_drogas = "";
@@ -198,7 +240,7 @@ if(isset($_POST['antecedentes_fami_diabetes_activo'])){//COMPRUEBO SI LA VARIABL
 	if($_POST['antecedentes_fami_diabetes_activo'] == ""){
 		$ant_fami_diabetes = 2;
 	}else{
-		$ant_fami_diabetes = $_POST['antecedentes_fami_diabetes_activo'];
+		$ant_fami_diabetes = post_text($mysqli, 'antecedentes_fami_diabetes_activo');
 	}
 }else{
 	$ant_fami_diabetes = 2;
@@ -208,7 +250,7 @@ if(isset($_POST['ant_fam_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['ant_fam_respuesta'] == ""){
 		$respuesta_ant_fami_diabetes = "";
 	}else{
-		$respuesta_ant_fami_diabetes = $_POST['ant_fam_respuesta'];
+		$respuesta_ant_fami_diabetes = post_text($mysqli, 'ant_fam_respuesta');
 	}
 }else{
 	$respuesta_ant_fami_diabetes = "";
@@ -218,7 +260,7 @@ if(isset($_POST['antecedentes_fami_Obesidad_activo'])){//COMPRUEBO SI LA VARIABL
 	if($_POST['antecedentes_fami_Obesidad_activo'] == ""){
 		$ant_fami_obesidad = 2;
 	}else{
-		$ant_fami_obesidad = $_POST['antecedentes_fami_Obesidad_activo'];
+		$ant_fami_obesidad = post_text($mysqli, 'antecedentes_fami_Obesidad_activo');
 	}
 }else{
 	$ant_fami_obesidad = 2;
@@ -228,7 +270,7 @@ if(isset($_POST['ant_fam_obecidad_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA 
 	if($_POST['ant_fam_obecidad_respuesta'] == ""){
 		$respuesta_ant_fami_obesidad = "";
 	}else{
-		$respuesta_ant_fami_obesidad = $_POST['ant_fam_obecidad_respuesta'];
+		$respuesta_ant_fami_obesidad = post_text($mysqli, 'ant_fam_obecidad_respuesta');
 	}
 }else{
 	$respuesta_ant_fami_obesidad = "";
@@ -238,7 +280,7 @@ if(isset($_POST['antecedentes_fami_cancer_gastrico_activo'])){//COMPRUEBO SI LA 
 	if($_POST['antecedentes_fami_cancer_gastrico_activo'] == ""){
 		$ant_fami_cancer_gastrico = 2;
 	}else{
-		$ant_fami_cancer_gastrico = $_POST['antecedentes_fami_cancer_gastrico_activo'];
+		$ant_fami_cancer_gastrico = post_text($mysqli, 'antecedentes_fami_cancer_gastrico_activo');
 	}
 }else{
 	$ant_fami_cancer_gastrico = 2;
@@ -248,7 +290,7 @@ if(isset($_POST['ant_fam_gastrico_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA 
 	if($_POST['ant_fam_gastrico_respuesta'] == ""){
 		$respuesta_ant_fami_cancer_gastrico = "";
 	}else{
-		$respuesta_ant_fami_cancer_gastrico = $_POST['ant_fam_gastrico_respuesta'];
+		$respuesta_ant_fami_cancer_gastrico = post_text($mysqli, 'ant_fam_gastrico_respuesta');
 	}
 }else{
 	$respuesta_ant_fami_cancer_gastrico = "";
@@ -260,7 +302,7 @@ if(isset($_POST['antecedentes_fami_psiquiatricas_activo'])){//COMPRUEBO SI LA VA
 	if($_POST['antecedentes_fami_psiquiatricas_activo'] == ""){
 		$ant_fami_psiquiatricas = 2;
 	}else{
-		$ant_fami_psiquiatricas = $_POST['antecedentes_fami_psiquiatricas_activo'];
+		$ant_fami_psiquiatricas = post_text($mysqli, 'antecedentes_fami_psiquiatricas_activo');
 	}
 }else{
 	$ant_fami_psiquiatricas = 2;
@@ -270,7 +312,7 @@ if(isset($_POST['enf_psiquiatricas_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA
 	if($_POST['enf_psiquiatricas_respuesta'] == ""){
 		$respuesta_respuesta_ant_fami_psiquiatricas = "";
 	}else{
-		$respuesta_respuesta_ant_fami_psiquiatricas = $_POST['enf_psiquiatricas_respuesta'];
+		$respuesta_respuesta_ant_fami_psiquiatricas = post_text($mysqli, 'enf_psiquiatricas_respuesta');
 	}
 }else{
 	$respuesta_respuesta_ant_fami_psiquiatricas = "";
@@ -280,7 +322,7 @@ if(isset($_POST['antecedentes_dm_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFI
 	if($_POST['antecedentes_dm_activo'] == ""){
 		$ant_dm = 2;
 	}else{
-		$ant_dm = $_POST['antecedentes_dm_activo'];
+		$ant_dm = post_text($mysqli, 'antecedentes_dm_activo');
 	}
 }else{
 	$ant_dm = 2;
@@ -290,7 +332,7 @@ if(isset($_POST['dm_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['dm_respuesta'] == ""){
 		$respuesta_ant_dm = "";
 	}else{
-		$respuesta_ant_dm = $_POST['dm_respuesta'];
+		$respuesta_ant_dm = post_text($mysqli, 'dm_respuesta');
 	}
 }else{
 	$respuesta_ant_dm = "";
@@ -300,7 +342,7 @@ if(isset($_POST['alergias_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['alergias_activo'] == ""){
 		$alergias = 2;
 	}else{
-		$alergias = $_POST['alergias_activo'];
+		$alergias = post_text($mysqli, 'alergias_activo');
 	}
 }else{
 	$alergias = 2;
@@ -310,7 +352,7 @@ if(isset($_POST['alergias_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['alergias_respuesta'] == ""){
 		$respuesta_alergias = "";
 	}else{
-		$respuesta_alergias = $_POST['alergias_respuesta'];
+		$respuesta_alergias = post_text($mysqli, 'alergias_respuesta');
 	}
 }else{
 	$respuesta_alergias = "";
@@ -320,7 +362,7 @@ if(isset($_POST['alcohol_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['alcohol_activo'] == ""){
 		$alcohol = 2;
 	}else{
-		$alcohol = $_POST['alcohol_activo'];
+		$alcohol = post_text($mysqli, 'alcohol_activo');
 	}
 }else{
 	$alcohol = 2;
@@ -330,7 +372,7 @@ if(isset($_POST['alcohol_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['alcohol_respuesta'] == ""){
 		$respuesta_alcohol = "";
 	}else{
-		$respuesta_alcohol = $_POST['alcohol_respuesta'];
+		$respuesta_alcohol = post_text($mysqli, 'alcohol_respuesta');
 	}
 }else{
 	$respuesta_alcohol = "";
@@ -340,7 +382,7 @@ if(isset($_POST['tabaquismo_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINIDA
 	if($_POST['tabaquismo_activo'] == ""){
 		$tabaquismo = 2;
 	}else{
-		$tabaquismo = $_POST['tabaquismo_activo'];
+		$tabaquismo = post_text($mysqli, 'tabaquismo_activo');
 	}
 }else{
 	$tabaquismo = 2;
@@ -350,7 +392,7 @@ if(isset($_POST['tabaquismo_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINI
 	if($_POST['tabaquismo_respuesta'] == ""){
 		$respuesta_tabaquismo = "";
 	}else{
-		$respuesta_tabaquismo = $_POST['tabaquismo_respuesta'];
+		$respuesta_tabaquismo = post_text($mysqli, 'tabaquismo_respuesta');
 	}
 }else{
 	$respuesta_tabaquismo = "";
@@ -360,7 +402,7 @@ if(isset($_POST['dislipidemia_activo'])){//COMPRUEBO SI LA VARIABLE ESTA DIFINID
 	if($_POST['dislipidemia_activo'] == ""){
 		$dislipidemia = 2;
 	}else{
-		$dislipidemia = $_POST['dislipidemia_activo'];
+		$dislipidemia = post_text($mysqli, 'dislipidemia_activo');
 	}
 }else{
 	$dislipidemia = 2;
@@ -370,29 +412,29 @@ if(isset($_POST['dislipidemia_respuesta'])){//COMPRUEBO SI LA VARIABLE ESTA DIFI
 	if($_POST['dislipidemia_respuesta'] == ""){
 		$respuesta_dislipidemia = "";
 	}else{
-		$respuesta_dislipidemia = $_POST['dislipidemia_respuesta'];
+		$respuesta_dislipidemia = post_text($mysqli, 'dislipidemia_respuesta');
 	}
 }else{
 	$respuesta_dislipidemia = "";
 }
 //FIN TERCERA FILA
 
-$otros = cleanStringStrtolower($_POST['otros']);
-$cirugia_abdominal_expediente = cleanStringStrtolower($_POST['cirugia_abdominal_expediente']);
-$talla = cleanStringStrtolower($_POST['talla']);
-$peso_ideal = cleanStringStrtolower($_POST['peso_ideal']);
-$peso_ideal_kg = cleanStringStrtolower($_POST['peso_ideal_kg']);
-$peso = cleanStringStrtolower($_POST['peso']);
-$peso_kg = cleanStringStrtolower($_POST['peso_kg']);
-$exceso_peso = cleanStringStrtolower($_POST['exceso_peso']);
-$exceso_peso_kg = cleanStringStrtolower($_POST['exceso_peso_kg']);
-$imc = cleanStringStrtolower($_POST['imc']);
-$diagnostico = cleanStringStrtolower($_POST['diagnostico']);
-$estudios_imagenes = cleanStringStrtolower($_POST['estudios_imagenes']);
-$referencia_a = cleanStringStrtolower($_POST['referencia_a']);
-$recomendaciones = cleanStringStrtolower($_POST['recomendaciones_quirurgicas']);
-$presupuesto = cleanStringStrtolower($_POST['presupuesto']);
-$expe_observaciones = cleanStringStrtolower($_POST['expe_observaciones']);
+$otros = post_text($mysqli, 'otros');
+$cirugia_abdominal_expediente = post_text($mysqli, 'cirugia_abdominal_expediente');
+$talla = post_text($mysqli, 'talla');
+$peso_ideal = post_text($mysqli, 'peso_ideal');
+$peso_ideal_kg = post_text($mysqli, 'peso_ideal_kg');
+$peso = post_text($mysqli, 'peso');
+$peso_kg = post_text($mysqli, 'peso_kg');
+$exceso_peso = post_text($mysqli, 'exceso_peso');
+$exceso_peso_kg = post_text($mysqli, 'exceso_peso_kg');
+$imc = post_text($mysqli, 'imc');
+$diagnostico = post_text($mysqli, 'diagnostico');
+$estudios_imagenes = post_text($mysqli, 'estudios_imagenes');
+$referencia_a = post_text($mysqli, 'referencia_a');
+$recomendaciones = post_text($mysqli, 'recomendaciones_quirurgicas');
+$presupuesto = post_text($mysqli, 'presupuesto');
+$expe_observaciones = post_text($mysqli, 'expe_observaciones');
 $fecha_registro = date("Y-m-d H:i:s");
 $estado = 1;//ACTIVO
 
@@ -405,7 +447,7 @@ $result = $mysqli->query($consulta_puesto);
 
 $puesto_colaborador = "";
 
-if($result->num_rows>=0){
+if($result->num_rows>0){
 	$consulta_puesto1 = $result->fetch_assoc(); 
 	$puesto_colaborador = $consulta_puesto1['puesto_id'];	
 }
@@ -421,7 +463,7 @@ $result_tipo_paciente = $mysqli->query($query_tipo_paciente) or die($mysqli->err
 $tipo_paciente = 'N';
 $color = '#008000'; //VERDE;
 
-if($result->num_rows>0) {
+if($result_tipo_paciente->num_rows > 0){
 	$tipo_paciente = 'S';
 	$color = '#0071c5'; //AZUL;
 }	
@@ -505,12 +547,16 @@ if($result->num_rows==0){
 		/*********************************************************************************************************************************************************************/
 		//AGREGAMOS LOS ARCHIVOS CARGADOS EN LA ENTIDAD CLINICO_DETALLES	
 		// Count total uploaded files
-		$totalfiles = count($_FILES['files']['name']);
+		$totalfiles = isset($_FILES['files']['name']) && is_array($_FILES['files']['name']) ? count($_FILES['files']['name']) : 0;
 
 		//RECORREMOS EL FILE INPUT
-		for($i=1;$i<$totalfiles;$i++){
+		for($i=0;$i<$totalfiles;$i++){
+			if (empty($_FILES['files']['name'][$i]) || empty($_FILES['files']['tmp_name'][$i])) { continue; }
+			if (empty($_FILES['files']['name'][$i]) || empty($_FILES['files']['tmp_name'][$i])) { continue; }
 			$clinico_detalles_id = correlativo('clinico_detalles_id', 'clinico_detalles');	
-			$filename = 'ec_'.$paciente.'_'.$_FILES['files']['name'][$i];
+			$nombre_archivo = basename($_FILES['files']['name'][$i]);
+			$nombre_archivo = preg_replace('/[^A-Za-z0-9._-]/', '_', $nombre_archivo);
+			$filename = 'ec_'.$paciente.'_'.$nombre_archivo;
 				
 			//ESTABLECEMOS EL PATH DONDE SE GUARDARA EL DOCUMENTO
 			$path = $_SERVER["DOCUMENT_ROOT"].PRODUCT_PATH.$filename;
@@ -553,4 +599,3 @@ if($result->num_rows==0){
 }
 
 echo json_encode($datos);
-?>

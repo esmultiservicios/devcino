@@ -27,9 +27,22 @@
 	<li class="nav-item waves-effect waves-light">
 		<a class="nav-link" id="home-tab" data-toggle="tab" href="#home_form3_hc_nutricion" role="tab" aria-controls="home_form1" aria-selected="false">Historia Clínica Nutrición</a>
 	</li>		
-	<li class="nav-item waves-effect waves-light">
-		<button class="btn btn-dark ml-2" type="submit" id="end_atencion"><div class="sb-nav-link-icon"></div><i class="fas fa-window-close"></i> Finalizar Atención</button>
-	</li>			
+	<li class="nav-item waves-effect waves-light" id="contenedor_estado_atencion">
+
+		<button class="btn btn-dark ml-2" type="button" id="end_atencion">
+			<div class="sb-nav-link-icon"></div>
+			<i class="fas fa-window-close"></i> Finalizar Atención
+		</button>
+
+		<span
+			id="estado_atencion"
+			class="badge badge-success ml-2"
+			style="display: none; padding: 10px 14px; font-size: 14px;"
+		>
+			<i class="fas fa-check-circle"></i> Atención culminada
+		</span>
+
+	</li>		
 </ul>
 <!--FIN MENU TAB CONTENT-->
 

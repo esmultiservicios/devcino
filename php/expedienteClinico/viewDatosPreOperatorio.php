@@ -1,26 +1,43 @@
 <?php
-session_start();   
+session_start();
 include "../funtions.php";
-	
-//CONEXION A DB
+
+header('Content-Type: application/json; charset=utf-8');
+
 $mysqli = connect_mysqli();
 
-$pacientes_id = $_POST['pacientes_id'];
-$usuario = $_SESSION['colaborador_id'];	
-
-$consulta_expediente = "SELECT pre.*
-	FROM preoperacion AS pre
-	INNER JOIN pacientes AS p
-	ON pre.pacientes_id = p.pacientes_id
-	WHERE pre.pacientes_id = '$pacientes_id'
-	ORDER BY pre.fecha DESC";
-$result = $mysqli->query($consulta_expediente);   
-
+$pacientes_id = isset($_POST['pacientes_id']) ? (int)$_POST['pacientes_id'] : 0;
 $arreglo = array();
 
-while( $row = $result->fetch_assoc()){
-	$arreglo[] = $row;  
-}	
+if ($pacientes_id <= 0) {
+    echo json_encode($arreglo, JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
+}
 
-echo json_encode($arreglo);
+$sql = "SELECT pre.*
+        FROM preoperacion AS pre
+        WHERE pre.pacientes_id = ?
+        ORDER BY pre.fecha DESC";
+
+$stmt = $mysqli->prepare($sql);
+
+if (!$stmt) {
+    echo json_encode($arreglo, JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
+}
+
+$stmt->bind_param("i", $pacientes_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $arreglo[] = $row;
+}
+
+echo json_encode($arreglo, JSON_UNESCAPED_UNICODE);
+
+$stmt->close();
+$mysqli->close();
 ?>

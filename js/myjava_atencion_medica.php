@@ -874,8 +874,8 @@ $(document).ready(function() {
 		if (getUsuarioSistema() == 1 || getUsuarioSistema() == 2 || getUsuarioSistema() == 3 || getUsuarioSistema() == 4){
 			$('#formularioAtencionesPostOperatoria')[0].reset();	
 			$('#formularioAtencionesPostOperatoria #pro_Postoperatoria').val('Registro');	
+			$('#edi_post').remove();
 			$('#reg_post').show();
-			$('#edi_post').hide();
 
 			$('#formularioAtencionesPostOperatoria #post_paciente_consulta').attr('disabled', false);
 			$('#formularioAtencionesPostOperatoria #post_fecha').attr('readonly', true);
@@ -5768,73 +5768,598 @@ var view_profesion_busqueda_dataTable = function(tbody, table){
 //FIN BUSQUEDA PROFESION
 //INICIO DATOS DEL PACIENTE
 
+//CONFIGURACION CENTRALIZADA DE RUTAS PARA REGISTRAR Y EDITAR ATENCIONES
+//Evita que cualquier formulario se envíe con action vacío, tanto al crear como al editar.
+var rutasFormulariosAtencion = {
+	'#formulario_atenciones': {
+		save: '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarExpedienteClinico.php',
+		update: '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarExpedienteClinico.php',
+		botonGuardar: '#reg_atencion',
+		botonEditar: '#edi_atencion'
+	},
+	'#formularioAtencionesPreoperatorio': {
+		save: '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarPreOperacion.php',
+		update: '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarPreOperacion.php',
+		botonGuardar: '#reg_pre',
+		botonEditar: '#edi_pre'
+	},
+	'#formularioAtencionesNotaOperatoria': {
+		save: '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarNotaOperatoria.php',
+		update: '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarNotaOperatoria.php',
+		botonGuardar: '#reg_nota',
+		botonEditar: '#edi_nota'
+	},
+	'#formularioAtencionesPostOperatoria': {
+		save: '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarPostOperatorio.php',
+		botonGuardar: '#reg_post',
+		siempreRegistrar: true
+	}
+};
+
+function configurarFormularioAtencion(formularioSelector, modo){
+	var configuracion = rutasFormulariosAtencion[formularioSelector];
+	var formulario = $(formularioSelector);
+
+	if(!configuracion || formulario.length === 0){
+		return false;
+	}
+
+	if(configuracion.siempreRegistrar === true){
+		modo = 'save';
+		$('#edi_post').remove();
+		$('#reg_post').show();
+	}
+
+	if(modo !== 'update'){
+		modo = 'save';
+	}
+
+	if(!configuracion[modo]){
+		modo = 'save';
+	}
+
+	formulario.attr('data-form', modo);
+	formulario.attr('action', configuracion[modo]);
+	formulario.data('modo-atencion', modo);
+
+	return true;
+}
+
+function obtenerModoFormularioAtencion(formularioSelector){
+	var configuracion = rutasFormulariosAtencion[formularioSelector];
+	var formulario = $(formularioSelector);
+
+	if(!configuracion || formulario.length === 0){
+		return 'save';
+	}
+
+	if(configuracion.siempreRegistrar === true){
+		return 'save';
+	}
+
+	if(
+		configuracion.botonEditar &&
+		$(configuracion.botonEditar).is(':visible') &&
+		!$(configuracion.botonEditar).is(':disabled')
+	){
+		return 'update';
+	}
+
+	if(
+		configuracion.botonGuardar &&
+		$(configuracion.botonGuardar).is(':visible') &&
+		!$(configuracion.botonGuardar).is(':disabled')
+	){
+		return 'save';
+	}
+
+	var modoActual = formulario.attr('data-form');
+
+	if(modoActual === 'save' || modoActual === 'update'){
+		return modoActual;
+	}
+
+	return 'save';
+}
+
+
+var enviandoFormularioAtencion = false;
+
+function obtenerEtiquetaCampoAtencion(campo){
+	var $campo = $(campo);
+	var id = $campo.attr('id');
+	var etiqueta = '';
+
+	if(id){
+		var $label = $('label[for="' + id + '"]').first();
+
+		if($label.length){
+			etiqueta = $.trim($label.text().replace(/\*/g, ''));
+		}
+	}
+
+	if(!etiqueta){
+		var $grupo = $campo.closest(
+			'.form-group, .form-row > div, .col-md-12, .col-md-6, ' +
+			'.col-md-4, .col-md-3, .col-md-2'
+		);
+
+		var $labelGrupo = $grupo.find('label').first();
+
+		if($labelGrupo.length){
+			etiqueta = $.trim($labelGrupo.text().replace(/\*/g, ''));
+		}
+	}
+
+	if(!etiqueta){
+		etiqueta = $campo.attr('placeholder') ||
+			$campo.attr('name') ||
+			'Campo requerido';
+	}
+
+	return etiqueta;
+}
+
+function validarFormularioAtencionRequired(formularioSelector){
+	var $formulario = $(formularioSelector);
+
+	if(!$formulario.length){
+		swal({
+			title: 'Error',
+			text: 'No se encontró el formulario que se intentó enviar.',
+			icon: 'error',
+			dangerMode: true,
+			closeOnEsc: false,
+			closeOnClickOutside: false
+		});
+		return false;
+	}
+
+	var campoInvalido = null;
+
+	$formulario.find('[required]').each(function(){
+		var $campo = $(this);
+
+		if(
+			$campo.is(':disabled') ||
+			$campo.attr('type') === 'hidden' ||
+			!$campo.is(':visible')
+		){
+			return true;
+		}
+
+		var tipo = ($campo.attr('type') || '').toLowerCase();
+		var valor = $.trim($campo.val() == null ? '' : $campo.val());
+
+		if(tipo === 'radio'){
+			var nombreRadio = $campo.attr('name');
+
+			if(
+				nombreRadio &&
+				$formulario.find(
+					'input[type="radio"][name="' + nombreRadio + '"]:checked'
+				).length === 0
+			){
+				campoInvalido = this;
+				return false;
+			}
+		}else if(tipo === 'checkbox'){
+			if(!$campo.is(':checked')){
+				campoInvalido = this;
+				return false;
+			}
+		}else if(valor === ''){
+			campoInvalido = this;
+			return false;
+		}
+
+		if(this.checkValidity && !this.checkValidity()){
+			campoInvalido = this;
+			return false;
+		}
+
+		$campo.removeClass('is-invalid');
+		return true;
+	});
+
+	if(campoInvalido){
+		var $campo = $(campoInvalido);
+		var $tabPane = $campo.closest('.tab-pane');
+
+		if($tabPane.length && $tabPane.attr('id')){
+			$('a[data-toggle="tab"][href="#' + $tabPane.attr('id') + '"]').tab('show');
+		}
+
+		$campo.addClass('is-invalid');
+
+		setTimeout(function(){
+			try{
+				$('html, body').animate({
+					scrollTop: Math.max($campo.offset().top - 140, 0)
+				}, 250);
+			}catch(error){}
+
+			$campo.trigger('focus');
+		}, 200);
+
+		swal({
+			title: 'Información requerida',
+			text: 'Debe completar el campo: ' +
+				obtenerEtiquetaCampoAtencion(campoInvalido) + '.',
+			icon: 'error',
+			dangerMode: true,
+			closeOnEsc: false,
+			closeOnClickOutside: false
+		});
+
+		return false;
+	}
+
+	return true;
+}
+
+function normalizarRespuestaAtencion(respuesta){
+	if(typeof respuesta === 'string'){
+		var texto = $.trim(respuesta);
+
+		try{
+			respuesta = JSON.parse(texto);
+		}catch(error){
+			try{
+				respuesta = eval(texto);
+			}catch(errorEval){
+				return {
+					status: 'error',
+					title: 'Error',
+					message: texto || 'Respuesta no válida del servidor',
+					type: 'error',
+					buttonClass: 'btn-danger'
+				};
+			}
+		}
+	}
+
+	if(Array.isArray(respuesta)){
+		return {
+			status: (
+				respuesta[0] === 1 ||
+				respuesta[0] === '1' ||
+				respuesta[0] === 'Almacenado' ||
+				respuesta[0] === 'Editado'
+			) ? 'success' : 'error',
+			title: respuesta[0] || 'Respuesta',
+			message: respuesta[1] || respuesta[3] || 'Proceso completado',
+			type: respuesta[2] || 'success',
+			buttonClass: respuesta[3] || 'btn-primary'
+		};
+	}
+
+	if(respuesta && typeof respuesta === 'object'){
+		return respuesta;
+	}
+
+	return {
+		status: 'error',
+		title: 'Error',
+		message: 'El servidor devolvió una respuesta no válida',
+		type: 'error',
+		buttonClass: 'btn-danger'
+	};
+}
+
+function actualizarVistaDespuesDeGuardarAtencion(formularioSelector, respuesta){
+	var pacientes_id = parseInt(
+		$(formularioSelector).find('[name="pacientes_id"]').val(),
+		10
+	);
+
+	if(typeof pagination === 'function'){
+		pagination(1);
+	}
+
+	if(!pacientes_id || pacientes_id <= 0){
+		return;
+	}
+
+	setTimeout(function(){
+		if(formularioSelector === '#formulario_atenciones'){
+			if(typeof viewExpediente === 'function'){
+				viewExpediente(pacientes_id);
+			}
+
+			$('#reg_atencion').hide();
+			$('#edi_atencion').show();
+
+			configurarFormularioAtencion(
+				'#formulario_atenciones',
+				'update'
+			);
+		}
+
+		if(formularioSelector === '#formularioAtencionesPreoperatorio'){
+			if(typeof setPreOperatorio === 'function'){
+				setPreOperatorio();
+			}
+
+			$('#reg_pre').hide();
+			$('#edi_pre').show();
+
+			configurarFormularioAtencion(
+				'#formularioAtencionesPreoperatorio',
+				'update'
+			);
+		}
+
+		if(formularioSelector === '#formularioAtencionesNotaOperatoria'){
+			if(typeof setNotaOperatorio === 'function'){
+				setNotaOperatorio();
+			}
+
+			$('#reg_nota').hide();
+			$('#edi_nota').show();
+
+			configurarFormularioAtencion(
+				'#formularioAtencionesNotaOperatoria',
+				'update'
+			);
+		}
+
+		if(formularioSelector === '#formularioAtencionesPostOperatoria'){
+			if(typeof viewPostOperatorio === 'function'){
+				viewPostOperatorio(pacientes_id);
+			}
+
+			if(typeof paginationSeguimiento1 === 'function'){
+				paginationSeguimiento1(1);
+			}
+
+			$('#edi_post').remove();
+			$('#reg_post').show();
+
+			configurarFormularioAtencion(
+				'#formularioAtencionesPostOperatoria',
+				'save'
+			);
+		}
+	}, 150);
+}
+
+function enviarFormularioAtencionAjax(formularioSelector, modo){
+	if(enviandoFormularioAtencion){
+		return false;
+	}
+
+	if(!configurarFormularioAtencion(formularioSelector, modo)){
+		return false;
+	}
+
+	if(!validarFormularioAtencionRequired(formularioSelector)){
+		return false;
+	}
+
+	var $formulario = $(formularioSelector);
+	var action = $.trim($formulario.attr('action') || '');
+
+	if(action === ''){
+		swal({
+			title: 'Error',
+			text: 'No se pudo determinar el destino para guardar la información.',
+			icon: 'error',
+			dangerMode: true,
+			closeOnEsc: false,
+			closeOnClickOutside: false
+		});
+		return false;
+	}
+
+	swal({
+		title: '¿Está seguro?',
+		text: modo === 'update'
+			? 'Los datos del sistema serán actualizados'
+			: 'Los datos que enviará quedarán almacenados en el sistema',
+		icon: 'info',
+		buttons: {
+			cancel: 'Cancelar',
+			confirm: {
+				text: modo === 'update' ? 'Actualizar' : 'Guardar',
+				closeModal: false
+			}
+		},
+		closeOnEsc: false,
+		closeOnClickOutside: false
+	}).then(function(confirmado){
+		if(!confirmado){
+			return false;
+		}
+
+		enviandoFormularioAtencion = true;
+
+		var formData = new FormData($formulario[0]);
+		var $botones = $formulario.find(
+			'button[type="submit"], #reg_atencion, #edi_atencion, ' +
+			'#reg_pre, #edi_pre, #reg_nota, #edi_nota, #reg_post'
+		);
+
+		$botones.prop('disabled', true);
+
+		$.ajax({
+			type: 'POST',
+			url: action,
+			data: formData,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			cache: false,
+			success: function(respuestaServidor){
+				var respuesta = normalizarRespuestaAtencion(respuestaServidor);
+
+				swal.close();
+
+				if(respuesta.status === 'success'){
+					swal({
+						title: respuesta.title || 'Success',
+						text: respuesta.message || 'Registro almacenado correctamente',
+						icon: 'success',
+						timer: 2500,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+
+					actualizarVistaDespuesDeGuardarAtencion(
+						formularioSelector,
+						respuesta
+					);
+				}else{
+					swal({
+						title: respuesta.title || 'Error',
+						text: respuesta.message || 'No se pudo completar la operación',
+						icon: 'error',
+						dangerMode: true,
+						closeOnEsc: false,
+						closeOnClickOutside: false
+					});
+				}
+			},
+			error: function(xhr){
+				swal.close();
+
+				var mensaje = 'No se pudo completar la solicitud';
+
+				if(xhr.responseText){
+					try{
+						var respuestaError = normalizarRespuestaAtencion(xhr.responseText);
+						mensaje = respuestaError.message || mensaje;
+					}catch(error){}
+				}
+
+				swal({
+					title: 'Error',
+					text: mensaje,
+					icon: 'error',
+					dangerMode: true,
+					closeOnEsc: false,
+					closeOnClickOutside: false
+				});
+			},
+			complete: function(){
+				enviandoFormularioAtencion = false;
+				$botones.prop('disabled', false);
+			}
+		});
+
+		return false;
+	});
+
+	return false;
+}
+
+function prepararEnvioFormularioAtencion(formularioSelector, modo){
+	return enviarFormularioAtencionAjax(formularioSelector, modo);
+}
+
+//RUTAS PREDETERMINADAS. Si el formulario se abre desde agenda, historial,
+//paciente nuevo u otro flujo, nunca quedará con action vacío.
+$(document).ready(function(){
+	$.each(rutasFormulariosAtencion, function(formularioSelector){
+		configurarFormularioAtencion(formularioSelector, obtenerModoFormularioAtencion(formularioSelector));
+	});
+});
+
+//PROTECCION ANTES DE CUALQUIER SUBMIT, INCLUSO SI SE ENVIA CON ENTER.
+//Se usa captura nativa para establecer la ruta antes del manejador AJAX global de main.js.
+document.addEventListener('submit', function(evento){
+	var formulario = evento.target;
+
+	if(!formulario || !formulario.id){
+		return;
+	}
+
+	var formularioSelector = '#' + formulario.id;
+
+	if(!rutasFormulariosAtencion[formularioSelector]){
+		return;
+	}
+
+	evento.preventDefault();
+	evento.stopImmediatePropagation();
+	evento.stopPropagation();
+
+	var modo = obtenerModoFormularioAtencion(formularioSelector);
+
+	enviarFormularioAtencionAjax(
+		formularioSelector,
+		modo
+	);
+
+	return false;
+}, true);
+
 //GUARDA REGISTROS
-$('#reg_atencion').on('click', function(e){
-	e.preventDefault();	
-	$('#formulario_atenciones').attr({ 'data-form': 'save' }); 
-	$('#formulario_atenciones').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarExpedienteClinico.php' });
-	$("#formulario_atenciones").submit();
-});
+//Se utilizan eventos delegados porque estos botones y formularios pueden cargarse dinámicamente.
+$(document)
+	.off('click.camiAtencionGuardar', '#reg_atencion')
+	.on('click.camiAtencionGuardar', '#reg_atencion', function(e){
+		e.preventDefault();
+		prepararEnvioFormularioAtencion('#formulario_atenciones', 'save');
+	});
 
-$('#reg_pre').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPreoperatorio').attr({ 'data-form': 'save' }); 
-	$('#formularioAtencionesPreoperatorio').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarPreOperacion.php' });
-	$("#formularioAtencionesPreoperatorio").submit();
-});
+$(document)
+	.off('click.camiAtencionGuardar', '#reg_pre')
+	.on('click.camiAtencionGuardar', '#reg_pre', function(e){
+		e.preventDefault();
+		prepararEnvioFormularioAtencion('#formularioAtencionesPreoperatorio', 'save');
+	});
 
-$('#reg_nota').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesNotaOperatoria').attr({ 'data-form': 'save' }); 
-	$('#formularioAtencionesNotaOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarNotaOperatoria.php' });
-	$("#formularioAtencionesNotaOperatoria").submit();
-});
+$(document)
+	.off('click.camiAtencionGuardar', '#reg_nota')
+	.on('click.camiAtencionGuardar', '#reg_nota', function(e){
+		e.preventDefault();
+		prepararEnvioFormularioAtencion('#formularioAtencionesNotaOperatoria', 'save');
+	});
 
-$('#reg_post').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPostOperatoria').attr({ 'data-form': 'save' }); 
-	$('#formularioAtencionesPostOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/agregarPostOperatorio.php' });
-	$("#formularioAtencionesPostOperatoria").submit();
-});
+$(document)
+	.off('click.camiAtencionGuardar', '#reg_post')
+	.on('click.camiAtencionGuardar', '#reg_post', function(e){
+		e.preventDefault();
+		prepararEnvioFormularioAtencion('#formularioAtencionesPostOperatoria', 'save');
+	});
 
 //EDITAR REGISTROS
-$('#edi_atencion').on('click', function(e){
-	e.preventDefault();	
-	$('#formulario_atenciones').attr({ 'data-form': 'update' }); 
-	$('#formulario_atenciones').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarExpedienteClinico.php' });
-	$("#formulario_atenciones").submit();
-});
+$(document)
+	.off('click.camiAtencionEditar', '#edi_atencion')
+	.on('click.camiAtencionEditar', '#edi_atencion', function(e){
+		e.preventDefault();
+		prepararEnvioFormularioAtencion('#formulario_atenciones', 'update');
+	});
 
-$('#edi_pre').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPreoperatorio').attr({ 'data-form': 'update' }); 
-	$('#formularioAtencionesPreoperatorio').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarPreOperacion.php' });
-	$("#formularioAtencionesPreoperatorio").submit();
-});
+$(document)
+	.off('click.camiAtencionEditar', '#edi_pre')
+	.on('click.camiAtencionEditar', '#edi_pre', function(e){
+		e.preventDefault();
+		prepararEnvioFormularioAtencion('#formularioAtencionesPreoperatorio', 'update');
+	});
 
-$('#edi_nota').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesNotaOperatoria').attr({ 'data-form': 'update' }); 
-	$('#formularioAtencionesNotaOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarNotaOperatoria.php' });
-	$("#formularioAtencionesNotaOperatoria").submit();
-});
+$(document)
+	.off('click.camiAtencionEditar', '#edi_nota')
+	.on('click.camiAtencionEditar', '#edi_nota', function(e){
+		e.preventDefault();
+		prepararEnvioFormularioAtencion('#formularioAtencionesNotaOperatoria', 'update');
+	});
 
-$('#edi_post').on('click', function(e){
-	e.preventDefault();	
-	$('#formularioAtencionesPostOperatoria').attr({ 'data-form': 'update' }); 
-	$('#formularioAtencionesPostOperatoria').attr({ 'action': '<?php echo SERVERURL; ?>php/atencion_pacientes/modificarPostOperatorio.php' });
-	$("#formularioAtencionesPostOperatoria").submit();
-});
 
-$('#formulario_atenciones #btn_actualizar').on('click', function(e){
-	e.preventDefault();	
-	mostrarArchivos($('#formulario_atenciones #pacientes_id').val());	
-});
+$(document)
+	.off('click.camiAtencionArchivos', '#formulario_atenciones #btn_actualizar')
+	.on('click.camiAtencionArchivos', '#formulario_atenciones #btn_actualizar', function(e){
+		e.preventDefault();
+		mostrarArchivos($('#formulario_atenciones #pacientes_id').val());
+	});
 
-$('#formularioAtencionesNotaOperatoria #btn_actualizar').on('click', function(e){
-	e.preventDefault();	
-	mostrarArchivosNotaOperatoria(($('#formularioAtencionesNotaOperatoria #pacientes_id').val()));	
-});
+$(document)
+	.off('click.camiAtencionArchivos', '#formularioAtencionesNotaOperatoria #btn_actualizar')
+	.on('click.camiAtencionArchivos', '#formularioAtencionesNotaOperatoria #btn_actualizar', function(e){
+		e.preventDefault();
+		mostrarArchivosNotaOperatoria($('#formularioAtencionesNotaOperatoria #pacientes_id').val());
+	});
 
 //FINALIZAR ATENCION
 $('#end_atencion').on('click', function(e){
@@ -8696,4 +9221,17 @@ function getFechaActualNutricion(){
 	return fecha_actual;	
 }
 //FIN NUTRICION
+
+
+$(document).on(
+	'input change',
+	'#formulario_atenciones [required], ' +
+	'#formularioAtencionesPreoperatorio [required], ' +
+	'#formularioAtencionesNotaOperatoria [required], ' +
+	'#formularioAtencionesPostOperatoria [required]',
+	function(){
+		$(this).removeClass('is-invalid');
+	}
+);
+
 </script>

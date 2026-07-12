@@ -1,313 +1,224 @@
 <?php
-session_start();   
+session_start();
 include "../funtions.php";
-	
-//CONEXION A DB
+
+header('Content-Type: application/json; charset=utf-8');
+
 $mysqli = connect_mysqli();
 
-$pacientes_id = $_POST['pacientes_id'];
-$usuario = $_SESSION['colaborador_id'];	
+$pacientes_id = isset($_POST['pacientes_id']) ? (int)$_POST['pacientes_id'] : 0;
 
-$consulta_expediente = "SELECT c.*, p.expediente AS 'expediente', p.pacientes_id AS 'pacientes_id', p.identidad AS 'identidad', CONCAT(p.nombre, ' ', p.apellido) AS 'cliente', p.telefono1 AS 'telefono',
-(CASE WHEN p.genero = 'H' THEN 'Hombre' ELSE 'Mujer' END) AS 'genero', p.fecha_nacimiento AS 'fecha_nacimiento', d.nombre AS 'departamento', m.nombre AS 'municipio', p.localidad AS 'localidad', pr.nombre AS 'profesion', p.email AS 'correo', p.referidopor AS 'referido', 
-(CASE WHEN p.genero = 'H' THEN 'Hombre' ELSE 'Mujer' END) AS 'genero', p.fecha_nacimiento AS 'fecha_nacimiento', d.nombre AS 'departamento', m.nombre AS 'municipio', p.localidad AS 'localidad', pr.nombre AS 'profesion', p.email AS 'correo', p.referidopor AS 'referido'
-	FROM pacientes AS p
-	INNER JOIN departamentos AS d
-	ON p.departamento_id = d.departamento_id
-	INNER JOIN municipios AS m
-	ON p.municipio_id = m.municipio_id
-	LEFT JOIN profesion AS pr
-	ON p.profesion_id = pr.profesion_id
-	LEFT JOIN clinico AS c
-	ON p.pacientes_id = c.pacientes_id
-	WHERE p.pacientes_id = '$pacientes_id'";	
-$result = $mysqli->query($consulta_expediente);   
+/*
+|--------------------------------------------------------------------------
+| VALORES PREDETERMINADOS
+|--------------------------------------------------------------------------
+| Se conserva exactamente el mismo orden del arreglo que espera el JS.
+*/
+$datos = array_fill(0, 83, "");
 
-$expediente = "";
-$identidad = "";
-$fecha_nacimiento = "";
-$cliente = "";
-$telefono = "";
-$departamento = "";
-$municipio = "";
-$procedencia = "";
-$profesion = "";
-$nch = "";
-$departamento = "";
-$correo = "";
-$genero = "";
-$referido = "";
-$fecha = "";
-$inicio_obesidad = "";
-$habito_alimenticio = "";
-$tipo_obesidad = "";
-$intentos_perdida_peso = "";
-$peso_maximo_alcansado = "";
-$sedentarismo = "";
-$ejercicio = 0;
-$ejercicio_respuesta = "";
-$alergias = 0;
-$respuesta_alergias = "";
-$erge = 0;
-$hta = 0;
-$dislipidemia = 0;
-$higado_graso = 0;
-$saos = 0;
-$hipotiroidismo = 0;
-$articulares = 0;
-$ovarios_poliquisticos = 0;
-$varices = 0;
-$tabaquismo = 0;
-$respuesta_tabaquismo = "";
-$alcohol = 0;
-$respuesta_alcohol = "";
-$drogas = 0;
-$respuesta_drogas = "";
-$ant_fami_diabetes = 0;
-$ant_fami_obesidad = 0;
-$ant_fami_cancer_gastrico = 0;
-$ant_fami_psiquiatricas = 0;
-$ant_dm = 0;
-$otros = "";
-$cirugia_abdominal ="";
-$talla = "";
-$peso_ideal = "";
-$peso = "";
-$exceso_peso = "";
-$imc = "";
-$diagnostico = "";
-$estudios_imagenes = "";
-$referencia_a = "";
-$recomendaciones = "";
-$presupuesto = "";
-$paciente = "";
-$estado	= "";
-$fecha_registro = "";
-$peso_maximo_alcansado_kg = "";
-$peso_ideal_kg = "";
-$peso_kg ="";
-$exceso_peso_kg = "";
-$edad = 0;
-$servicio_id = 0;
-$clinico_id = "";
-$observaciones = "";
-$respuesta_dislipidemia = "";
-$respuesta_higado_graso = "";
-$respuesta_hipotiroidismo = "";
-$respuesta_articulares = "";
-$respuesta_ovarios_poliquisticos = "";
-$respuesta_varices = "";
-$respuesta_ant_fami_diabetes = "";
-$respuesta_ant_fami_obesidad = "";
-$respuesta_ant_fami_cancer_gastrico = "";
-$respuesta_respuesta_ant_fami_psiquiatricas = "";
-$respuesta_ant_dm = "";
-$respuesta_saos = "";
-$respuesta_erge = "";
-$respuesta_hta  = "";
-$anos = 0;
-$meses = 0;	  
-$dias = 0;
-$colaborador_id = 0;
-$agenda_id = 0;
+$datos[3] = "0 Año, 0 Mes y 0 Día";
+$datos[20] = 0;
+$datos[22] = 0;
+$datos[24] = 0;
+$datos[25] = 0;
+$datos[26] = 0;
+$datos[27] = 0;
+$datos[28] = 0;
+$datos[29] = 0;
+$datos[30] = 0;
+$datos[31] = 0;
+$datos[32] = 0;
+$datos[33] = 0;
+$datos[35] = 0;
+$datos[37] = 0;
+$datos[39] = 0;
+$datos[40] = 0;
+$datos[41] = 0;
+$datos[42] = 0;
+$datos[43] = 0;
+$datos[63] = 0;
+$datos[64] = 0;
+$datos[81] = 0;
+$datos[82] = 0;
 
-if($result->num_rows>0){
-	$consulta_expediente1 = $result->fetch_assoc();
-	$expediente = $consulta_expediente1['expediente'];
-	$identidad = $consulta_expediente1['identidad'];
-	$cliente = $consulta_expediente1['cliente'];
-	$fecha_nacimiento = $consulta_expediente1['fecha_nacimiento'];
-	$telefono = $consulta_expediente1['telefono'];
-	$departamento = $consulta_expediente1['departamento'];
-	$municipio = $consulta_expediente1['municipio'];
-	$procedencia = $consulta_expediente1['localidad'];
-	$profesion = $consulta_expediente1['profesion'];
-	$nch = $consulta_expediente1['clinico_id'];
-	$correo = $consulta_expediente1['correo'];	
-	$genero = $consulta_expediente1['genero'];
-	$referido = $consulta_expediente1['referido'];
-	$fecha = $consulta_expediente1['fecha'];
-	$inicio_obesidad = $consulta_expediente1['inicio_obesidad'];
-	$habito_alimenticio = $consulta_expediente1['habito_alimenticio'];
-	$tipo_obesidad = $consulta_expediente1['tipo_obesidad'];
-	$intentos_perdida_peso = $consulta_expediente1['intentos_perdida_peso'];
-	$peso_maximo_alcansado = $consulta_expediente1['peso_maximo_alcansado'];					
-	$sedentarismo = $consulta_expediente1['sedentarismo'];
-	$ejercicio = $consulta_expediente1['ejercicio'];					
-	$ejercicio_respuesta = $consulta_expediente1['ejercicio_respuesta'];		
-	$alergias = $consulta_expediente1['alergias'];	
-	$respuesta_alergias = $consulta_expediente1['respuesta_alergias'];
-	$erge = $consulta_expediente1['erge'];
-	$hta = $consulta_expediente1['hta'];
-	$dislipidemia = $consulta_expediente1['dislipidemia'];
-	$higado_graso = $consulta_expediente1['higado_graso'];
-	$saos = $consulta_expediente1['saos'];
-	$hipotiroidismo = $consulta_expediente1['hipotiroidismo'];
-	$articulares = $consulta_expediente1['articulares'];
-	$ovarios_poliquisticos = $consulta_expediente1['ovarios_poliquisticos'];
-	$varices = $consulta_expediente1['varices'];
-	$tabaquismo = $consulta_expediente1['tabaquismo'];
-	$respuesta_tabaquismo = $consulta_expediente1['respuesta_tabaquismo'];
-	$alcohol = $consulta_expediente1['alcohol'];
-	$respuesta_alcohol = $consulta_expediente1['respuesta_alcohol'];
-	$drogas = $consulta_expediente1['drogas'];
-	$respuesta_drogas = $consulta_expediente1['respuesta_drogas'];
-	$ant_fami_diabetes = $consulta_expediente1['ant_fami_diabetes']; 
-	$ant_fami_obesidad = $consulta_expediente1['ant_fami_obesidad'];
-	$ant_fami_cancer_gastrico = $consulta_expediente1['ant_fami_cancer_gastrico'];
-	$ant_fami_psiquiatricas = $consulta_expediente1['ant_fami_psiquiatricas'];
-	$ant_dm = $consulta_expediente1['ant_dm'];
-	$otros = $consulta_expediente1['otros'];
-	$cirugia_abdominal = $consulta_expediente1['cirugia_abdominal'];
-	$talla = $consulta_expediente1['talla'];
-	$peso_ideal = $consulta_expediente1['peso_ideal'];
-	$peso = $consulta_expediente1['peso'];
-	$exceso_peso = $consulta_expediente1['exceso_peso'];
-	$imc = $consulta_expediente1['imc'];
-	$diagnostico = $consulta_expediente1['diagnostico'];
-	$estudios_imagenes = $consulta_expediente1['estudios_imagenes'];
-	$referencia_a = $consulta_expediente1['referencia_a'];
-	$recomendaciones = $consulta_expediente1['recomendaciones'];
-	$presupuesto = $consulta_expediente1['presupuesto'];
-	$paciente = $consulta_expediente1['paciente'];
-	$estado	= $consulta_expediente1['estado'];
-	$fecha_registro = $consulta_expediente1['fecha_registro'];
-	$peso_maximo_alcansado_kg = $consulta_expediente1['peso_maximo_alcansado_kg'];
-	$peso_ideal_kg = $consulta_expediente1['peso_ideal_kg'];
-	$peso_kg = $consulta_expediente1['peso_kg'];
-	$exceso_peso_kg = $consulta_expediente1['exceso_peso_kg'];
-	$edad = $consulta_expediente1['edad'];
-	$servicio_id = $consulta_expediente1['servicio_id'];
-	$clinico_id = $consulta_expediente1['clinico_id'];
-	$observaciones = $consulta_expediente1['observaciones'];
-	$respuesta_dislipidemia = $consulta_expediente1['respuesta_dislipidemia'];
-	$respuesta_higado_graso = $consulta_expediente1['respuesta_higado_graso'];
-	$respuesta_hipotiroidismo = $consulta_expediente1['respuesta_hipotiroidismo'];
-	$respuesta_articulares = $consulta_expediente1['respuesta_articulares'];
-	$respuesta_ovarios_poliquisticos = $consulta_expediente1['respuesta_ovarios_poliquisticos'];
-	$respuesta_varices = $consulta_expediente1['respuesta_varices'];
-	$respuesta_ant_fami_diabetes = $consulta_expediente1['respuesta_ant_fami_diabetes'];
-	$respuesta_ant_fami_obesidad = $consulta_expediente1['respuesta_ant_fami_obesidad'];
-	$respuesta_ant_fami_cancer_gastrico = $consulta_expediente1['respuesta_ant_fami_cancer_gastrico'];
-	$respuesta_respuesta_ant_fami_psiquiatricas = $consulta_expediente1['respuesta_respuesta_ant_fami_psiquiatricas'];
-	$respuesta_ant_dm = $consulta_expediente1['respuesta_ant_dm'];
-	$respuesta_saos = $consulta_expediente1['respuesta_saos'];	
-	$respuesta_erge = $consulta_expediente1['respuesta_erge'];
-	$respuesta_hta = $consulta_expediente1['respuesta_hta'];
-	$colaborador_id = $consulta_expediente1['colaborador_id'];	
-	$agenda_id = $consulta_expediente1['agenda_id'];	
-
-	$valores_array = getEdad($fecha_nacimiento);
-	$anos = $valores_array['anos'];
-	$meses = $valores_array['meses'];	  
-	$dias = $valores_array['dias'];	
+if ($pacientes_id <= 0) {
+    echo json_encode($datos, JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
 }
 
-//OBTENER LA EDAD DEL USUARIO 
-/*********************************************************************************/
-/*********************************************************************************/
-if ($anos>1 ){
-   $palabra_anos = "Años";
-}else{
-  $palabra_anos = "Año";
+/*
+|--------------------------------------------------------------------------
+| CONSULTAR PACIENTE Y SU ÚLTIMO EXPEDIENTE CLÍNICO
+|--------------------------------------------------------------------------
+| departamentos, municipios y profesión son LEFT JOIN.
+| Si el paciente tiene 0 o un catálogo faltante, el paciente igual se muestra.
+*/
+$sql = "SELECT
+            c.*,
+            p.expediente,
+            p.pacientes_id,
+            p.identidad,
+            CONCAT(p.nombre, ' ', p.apellido) AS cliente,
+            p.telefono1 AS telefono,
+            CASE
+                WHEN p.genero = 'H' THEN 'Hombre'
+                WHEN p.genero = 'M' THEN 'Mujer'
+                ELSE ''
+            END AS genero,
+            p.fecha_nacimiento,
+            COALESCE(d.nombre, '') AS departamento,
+            COALESCE(m.nombre, '') AS municipio,
+            p.localidad,
+            COALESCE(pr.nombre, '') AS profesion,
+            p.email AS correo,
+            p.referidopor AS referido
+        FROM pacientes AS p
+        LEFT JOIN departamentos AS d
+            ON p.departamento_id = d.departamento_id
+        LEFT JOIN municipios AS m
+            ON p.municipio_id = m.municipio_id
+        LEFT JOIN profesion AS pr
+            ON p.profesion_id = pr.profesion_id
+        LEFT JOIN clinico AS c
+            ON c.clinico_id = (
+                SELECT c2.clinico_id
+                FROM clinico AS c2
+                WHERE c2.pacientes_id = p.pacientes_id
+                ORDER BY c2.fecha DESC, c2.clinico_id DESC
+                LIMIT 1
+            )
+        WHERE p.pacientes_id = ?
+        LIMIT 1";
+
+$stmt = $mysqli->prepare($sql);
+
+if (!$stmt) {
+    echo json_encode($datos, JSON_UNESCAPED_UNICODE);
+    $mysqli->close();
+    exit;
 }
 
-if ($meses>1 ){
-   $palabra_mes = "Meses";
-}else{
-  $palabra_mes = "Mes";
+$stmt->bind_param("i", $pacientes_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $fila = $result->fetch_assoc();
+
+    $fecha_nacimiento = isset($fila['fecha_nacimiento']) ? $fila['fecha_nacimiento'] : "";
+
+    $anos = 0;
+    $meses = 0;
+    $dias = 0;
+
+    if ($fecha_nacimiento !== "" && $fecha_nacimiento !== "0000-00-00") {
+        $edad_calculada = getEdad($fecha_nacimiento);
+        $anos = isset($edad_calculada['anos']) ? (int)$edad_calculada['anos'] : 0;
+        $meses = isset($edad_calculada['meses']) ? (int)$edad_calculada['meses'] : 0;
+        $dias = isset($edad_calculada['dias']) ? (int)$edad_calculada['dias'] : 0;
+    }
+
+    $palabra_anos = $anos === 1 ? "Año" : "Años";
+    $palabra_meses = $meses === 1 ? "Mes" : "Meses";
+    $palabra_dias = $dias === 1 ? "Día" : "Días";
+
+    $datos[0] = $fila['identidad'] ?? "";
+    $datos[1] = $fila['cliente'] ?? "";
+    $datos[2] = $fecha_nacimiento;
+    $datos[3] = $anos." ".$palabra_anos.", ".$meses." ".$palabra_meses." y ".$dias." ".$palabra_dias;
+    $datos[4] = $fila['telefono'] ?? "";
+    $datos[5] = $fila['departamento'] ?? "";
+    $datos[6] = $fila['municipio'] ?? "";
+    $datos[7] = $fila['localidad'] ?? "";
+    $datos[8] = $fila['profesion'] ?? "";
+    $datos[9] = $fila['clinico_id'] ?? "";
+    $datos[10] = $fila['correo'] ?? "";
+    $datos[11] = $fila['genero'] ?? "";
+    $datos[12] = $fila['referido'] ?? "";
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATOS CLÍNICOS
+    |--------------------------------------------------------------------------
+    | Solo se asignan si sí existe clinico_id.
+    */
+    if (!empty($fila['clinico_id'])) {
+        $datos[13] = $fila['fecha'] ?? "";
+        $datos[14] = $fila['inicio_obesidad'] ?? "";
+        $datos[15] = $fila['habito_alimenticio'] ?? "";
+        $datos[16] = $fila['tipo_obesidad'] ?? "";
+        $datos[17] = $fila['intentos_perdida_peso'] ?? "";
+        $datos[18] = $fila['peso_maximo_alcansado'] ?? "";
+        $datos[19] = $fila['sedentarismo'] ?? "";
+        $datos[20] = isset($fila['ejercicio']) ? (int)$fila['ejercicio'] : 0;
+        $datos[21] = $fila['ejercicio_respuesta'] ?? "";
+        $datos[22] = isset($fila['alergias']) ? (int)$fila['alergias'] : 0;
+        $datos[23] = $fila['respuesta_alergias'] ?? "";
+        $datos[24] = isset($fila['erge']) ? (int)$fila['erge'] : 0;
+        $datos[25] = isset($fila['hta']) ? (int)$fila['hta'] : 0;
+        $datos[26] = isset($fila['dislipidemia']) ? (int)$fila['dislipidemia'] : 0;
+        $datos[27] = isset($fila['higado_graso']) ? (int)$fila['higado_graso'] : 0;
+        $datos[28] = isset($fila['saos']) ? (int)$fila['saos'] : 0;
+        $datos[29] = isset($fila['hipotiroidismo']) ? (int)$fila['hipotiroidismo'] : 0;
+        $datos[30] = isset($fila['articulares']) ? (int)$fila['articulares'] : 0;
+        $datos[31] = isset($fila['ovarios_poliquisticos']) ? (int)$fila['ovarios_poliquisticos'] : 0;
+        $datos[32] = isset($fila['varices']) ? (int)$fila['varices'] : 0;
+        $datos[33] = isset($fila['tabaquismo']) ? (int)$fila['tabaquismo'] : 0;
+        $datos[34] = $fila['respuesta_tabaquismo'] ?? "";
+        $datos[35] = isset($fila['alcohol']) ? (int)$fila['alcohol'] : 0;
+        $datos[36] = $fila['respuesta_alcohol'] ?? "";
+        $datos[37] = isset($fila['drogas']) ? (int)$fila['drogas'] : 0;
+        $datos[38] = $fila['respuesta_drogas'] ?? "";
+        $datos[39] = isset($fila['ant_fami_diabetes']) ? (int)$fila['ant_fami_diabetes'] : 0;
+        $datos[40] = isset($fila['ant_fami_obesidad']) ? (int)$fila['ant_fami_obesidad'] : 0;
+        $datos[41] = isset($fila['ant_fami_cancer_gastrico']) ? (int)$fila['ant_fami_cancer_gastrico'] : 0;
+        $datos[42] = isset($fila['ant_fami_psiquiatricas']) ? (int)$fila['ant_fami_psiquiatricas'] : 0;
+        $datos[43] = isset($fila['ant_dm']) ? (int)$fila['ant_dm'] : 0;
+        $datos[44] = $fila['otros'] ?? "";
+        $datos[45] = $fila['cirugia_abdominal'] ?? "";
+        $datos[46] = $fila['talla'] ?? "";
+        $datos[47] = $fila['peso_ideal'] ?? "";
+        $datos[48] = $fila['peso'] ?? "";
+        $datos[49] = $fila['exceso_peso'] ?? "";
+        $datos[50] = $fila['imc'] ?? "";
+        $datos[51] = $fila['diagnostico'] ?? "";
+        $datos[52] = $fila['estudios_imagenes'] ?? "";
+        $datos[53] = $fila['referencia_a'] ?? "";
+        $datos[54] = $fila['recomendaciones'] ?? "";
+        $datos[55] = $fila['presupuesto'] ?? "";
+        $datos[56] = $fila['paciente'] ?? "";
+        $datos[57] = $fila['estado'] ?? "";
+        $datos[58] = $fila['fecha_registro'] ?? "";
+        $datos[59] = $fila['peso_maximo_alcansado_kg'] ?? "";
+        $datos[60] = $fila['peso_ideal_kg'] ?? "";
+        $datos[61] = $fila['peso_kg'] ?? "";
+        $datos[62] = $fila['exceso_peso_kg'] ?? "";
+        $datos[63] = isset($fila['edad']) ? (int)$fila['edad'] : 0;
+        $datos[64] = isset($fila['servicio_id']) ? (int)$fila['servicio_id'] : 0;
+        $datos[65] = $fila['clinico_id'] ?? "";
+        $datos[66] = $fila['observaciones'] ?? "";
+        $datos[67] = $fila['respuesta_erge'] ?? "";
+        $datos[68] = $fila['respuesta_hta'] ?? "";
+        $datos[69] = $fila['respuesta_dislipidemia'] ?? "";
+        $datos[70] = $fila['respuesta_higado_graso'] ?? "";
+        $datos[71] = $fila['respuesta_hipotiroidismo'] ?? "";
+        $datos[72] = $fila['respuesta_articulares'] ?? "";
+        $datos[73] = $fila['respuesta_ovarios_poliquisticos'] ?? "";
+        $datos[74] = $fila['respuesta_varices'] ?? "";
+        $datos[75] = $fila['respuesta_ant_fami_diabetes'] ?? "";
+        $datos[76] = $fila['respuesta_ant_fami_obesidad'] ?? "";
+        $datos[77] = $fila['respuesta_ant_fami_cancer_gastrico'] ?? "";
+        $datos[78] = $fila['respuesta_respuesta_ant_fami_psiquiatricas'] ?? "";
+        $datos[79] = $fila['respuesta_ant_dm'] ?? "";
+        $datos[80] = $fila['respuesta_saos'] ?? "";
+        $datos[81] = isset($fila['colaborador_id']) ? (int)$fila['colaborador_id'] : 0;
+        $datos[82] = isset($fila['agenda_id']) ? (int)$fila['agenda_id'] : 0;
+    }
 }
 
-if($dias>1){
-	$palabra_dia = "Días";
-}else{
-	$palabra_dia = "Día";
-}
+echo json_encode($datos, JSON_UNESCAPED_UNICODE);
 
-$datos = array(
-	0 => $identidad,
-	1 => $cliente,
-	2 => $fecha_nacimiento,
-	3 => $anos." ".$palabra_anos.", ".$meses." ".$palabra_mes." y ".$dias." ".$palabra_dia,	
-	4 => $telefono,	
-	5 => $departamento,
-	6 => $municipio,	
-	7 => $procedencia,	
-	8 => $profesion,	
-	9 => $nch,	
-	10 => $correo,
-	11 => $genero,	
-	12 => $referido,	
-	13 => $fecha,
-	14 => $inicio_obesidad,
-	15 => $habito_alimenticio,
-	16 => $tipo_obesidad,
-	17 => $intentos_perdida_peso,
-	18 => $peso_maximo_alcansado,																		
-	19 => $sedentarismo,	
-	20 => $ejercicio,																		
-	21 => $ejercicio_respuesta,	
-	22 => $alergias,	
-	23 => $respuesta_alergias,
-	24 => $erge,
-	25 => $hta,
-	26 => $dislipidemia,
-	27 => $higado_graso,
-	28 => $saos,																		
-	29 => $hipotiroidismo,	
-	30 => $articulares,																		
-	31 => $ovarios_poliquisticos,	
-	32 => $varices,	
-	33 => $tabaquismo,
-	34 => $respuesta_tabaquismo,			
-	35 => $alcohol,	
-	36 => $respuesta_alcohol,	
-	37 => $drogas,	
-	38 => $respuesta_drogas,	
-	39 => $ant_fami_diabetes,
-	40 => $ant_fami_obesidad,
-	41 => $ant_fami_cancer_gastrico,
-	42 => $ant_fami_psiquiatricas,
-	43 => $ant_dm,	
-	44 => $otros,
-	45 => $cirugia_abdominal,	
-	46 => $talla,
-	47 => $peso_ideal,
-	48 => $peso,
-	49 => $exceso_peso,
-	50 => $imc,	
-	51 => $diagnostico,	
-	52 => $estudios_imagenes,	
-	53 => $referencia_a,
-	54 => $recomendaciones,
-	55 => $presupuesto,
-	56 => $paciente,
-	57 => $estado,	
-	58 => $fecha_registro,		
-	59 => $peso_maximo_alcansado_kg,
-	60 => $peso_ideal_kg,
-	61 => $peso_kg,
-	62 => $exceso_peso_kg,
-	63 => $edad,
-	64 => $servicio_id,	
-	65 => $clinico_id,	
-	66 => $observaciones,
-	67 => $respuesta_erge,
-	68 => $respuesta_hta,
-	69 => $respuesta_dislipidemia,
-	70 => $respuesta_higado_graso,
-	71 => $respuesta_hipotiroidismo,
-	72 => $respuesta_articulares,	
-	73 => $respuesta_ovarios_poliquisticos,	
-	74 => $respuesta_varices,
-	75 => $respuesta_ant_fami_diabetes,
-	76 => $respuesta_ant_fami_obesidad,
-	77 => $respuesta_ant_fami_cancer_gastrico,
-	78 => $respuesta_respuesta_ant_fami_psiquiatricas,
-	79 => $respuesta_ant_dm,
-	80 => $respuesta_saos,
-	81 => $colaborador_id,
-	82 => $agenda_id
-);
-echo json_encode($datos);
+$stmt->close();
+$mysqli->close();
 ?>
