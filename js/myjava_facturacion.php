@@ -5,7 +5,7 @@ $(document).ready(function() {
 	$('.footer').show();
 	$('.footer1').hide();
 	getTotalFacturasDisponibles();
-	setInterval('pagination(1)',22000);
+	setInterval(function(){ pagination(1); }, 22000);
 
 	//LLAMADA A LAS FUNCIONES
 	funciones();
@@ -172,35 +172,141 @@ function funciones(){
 //FIN FUNCION PARA OBTENER LAS FUNCIONES
 
 //INICIO PAGINACION DE REGISTROS
+function normalizarFechaListadoFacturacion(fecha){
+	fecha = $.trim(fecha || '');
+
+	if(fecha === ''){
+		return '';
+	}
+
+	// La fecha ya viene en el formato utilizado por MySQL.
+	if(/^\d{4}-\d{2}-\d{2}$/.test(fecha)){
+		return fecha;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| FORMATO MOSTRADO POR EL DATEPICKER
+	|--------------------------------------------------------------------------
+	| En esta vista se muestra MM/DD/YYYY, por ejemplo 07/12/2026.
+	| La tabla facturas guarda YYYY-MM-DD, por ejemplo 2026-07-12.
+	*/
+	var partes = fecha.split('/');
+
+	if(partes.length === 3){
+		var mes = String(partes[0]).padStart(2, '0');
+		var dia = String(partes[1]).padStart(2, '0');
+		var anio = String(partes[2]);
+
+		if(
+			/^\d{4}$/.test(anio) &&
+			parseInt(mes, 10) >= 1 &&
+			parseInt(mes, 10) <= 12 &&
+			parseInt(dia, 10) >= 1 &&
+			parseInt(dia, 10) <= 31
+		){
+			return anio + '-' + mes + '-' + dia;
+		}
+	}
+
+	return fecha;
+}
+
+//INICIO PAGINACION DE REGISTROS
 function pagination(partida){
 	var url = '<?php echo SERVERURL; ?>php/facturacion/paginar.php';
 
-	var fechai = $('#form_main_facturacion #fecha_b').val();
-	var fechaf = $('#form_main_facturacion #fecha_f').val();
-	var dato =  $('#form_main_facturacion #bs_regis').val()
-	var clientes = $('#form_main_facturacion #clientes').val();
-	var profesional = $('#form_main_facturacion #profesional').val();
-	var estado = '';
+	var fechai = normalizarFechaListadoFacturacion(
+		$('#form_main_facturacion #fecha_b').val()
+	);
 
-  if($('#form_main_facturacion #estado').val() == ""){
-    estado = 1;
-  }else{
-    estado = $('#form_main_facturacion #estado').val();
-  }
+	var fechaf = normalizarFechaListadoFacturacion(
+		$('#form_main_facturacion #fecha_f').val()
+	);
+
+	var dato = $.trim(
+		$('#form_main_facturacion #bs_regis').val() || ''
+	);
+
+	var profesional =
+		$('#form_main_facturacion #profesional').val() || '';
+
+	var estado = $('#form_main_facturacion #estado').val();
+
+	if(
+		estado === '' ||
+		estado === null ||
+		typeof estado === 'undefined'
+	){
+		estado = 1;
+	}
 
 	$.ajax({
-		type:'POST',
-		url:url,
+		type: 'POST',
+		url: url,
 		async: true,
-		data:'partida='+partida+'&fechai='+fechai+'&fechaf='+fechaf+'&dato='+dato+'&clientes='+clientes+'&profesional='+profesional+'&estado='+estado,
-		success:function(data){
-			var array = eval(data);
-			$('#agrega-registros').html(array[0]);
-			$('#pagination').html(array[1]);
+		dataType: 'json',
+		cache: false,
+		data: {
+			partida: partida,
+			fechai: fechai,
+			fechaf: fechaf,
+			dato: dato,
+			profesional: profesional,
+			estado: estado,
+			_t: new Date().getTime()
+		},
+		success: function(respuesta){
+			if(!Array.isArray(respuesta)){
+				console.error(
+					'Respuesta no válida de paginar.php:',
+					respuesta
+				);
+
+				$('#agrega-registros').html(
+					'<table class="table table-striped table-condensed table-hover">' +
+						'<tr>' +
+							'<td colspan="13" style="color:#C7030D">' +
+								'El servidor devolvió una respuesta no válida' +
+							'</td>' +
+						'</tr>' +
+					'</table>'
+				);
+
+				$('#pagination').html('');
+				return false;
+			}
+
+			$('#agrega-registros').html(respuesta[0]);
+			$('#pagination').html(respuesta[1]);
+
+			$('[data-toggle="tooltip"]').tooltip();
+
+			return false;
+		},
+		error: function(xhr){
+			console.error(
+				'Error cargando facturas:',
+				xhr.responseText
+			);
+
+			$('#agrega-registros').html(
+				'<table class="table table-striped table-condensed table-hover">' +
+					'<tr>' +
+						'<td colspan="13" style="color:#C7030D">' +
+							'No se pudo cargar el listado de facturas' +
+						'</td>' +
+					'</tr>' +
+				'</table>'
+			);
+
+			$('#pagination').html('');
 		}
 	});
+
 	return false;
 }
+//FIN PAGINACION DE REGISTROS
 //FIN PAGINACION DE REGISTROS
 
 //INICIO FUNCION PARA OBTENER LOS PACIENTES
